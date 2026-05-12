@@ -10,7 +10,7 @@ Caplia exposes a **Model Context Protocol (MCP)** server that wraps the REST API
 
 ```
 Production (live):    https://mcp.venture.caplia.ai/
-Sandbox  (staging):   https://bilxeepjovvotbrmtmon.supabase.co/functions/v1/mcp-v1/
+Sandbox  (staging):   https://mcp-sandbox.venture.caplia.ai/
 ```
 
 Transport: **Streamable HTTP** (single POST endpoint, JSON-RPC 2.0). Protocol version `2024-11-05`.
@@ -128,13 +128,23 @@ The agent calls the relevant tools, parses the JSON responses, and reasons over 
 
 ## Sandbox vs production
 
-The production MCP server (`mcp.venture.caplia.ai`) only accepts `cap_inv_live_*` keys minted from production Caplia.
+Two parallel environments, each with its own branded URL and its own key prefix:
 
-For testing integrations without affecting production data:
+|  | Production | Sandbox |
+|---|---|---|
+| MCP URL | `https://mcp.venture.caplia.ai/` | `https://mcp-sandbox.venture.caplia.ai/` |
+| REST URL | `https://api.venture.caplia.ai/` | `https://api-sandbox.venture.caplia.ai/` |
+| Accepts | `cap_inv_live_*` keys only | `cap_inv_test_*` keys only |
+| Mint key from | Production Caplia portal | Staging Caplia portal |
+| Data | Your real pipeline | Sandbox / test data, isolated |
+
+A `cap_inv_live_*` key hitting a sandbox URL gets `401`, and a `cap_inv_test_*` key hitting a production URL gets `401`. Fail-closed in both directions, so leaking a key into the wrong environment can't accidentally read or write real data.
+
+For testing integrations without affecting production:
 
 - Mint a `cap_inv_test_*` key from your staging Caplia portal
-- Point your MCP client at the staging MCP URL (shown at the top of this page)
-- Same tools, isolated data
+- Point your MCP client at `https://mcp-sandbox.venture.caplia.ai/`
+- Same tools, same protocol, isolated dataset
 
 ## Limitations
 

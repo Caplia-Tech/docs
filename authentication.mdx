@@ -31,7 +31,7 @@ Two environment prefixes are minted depending on which Caplia portal you create 
 | Prefix | Mint from | Accepted by | What it sees |
 |---|---|---|---|
 | `cap_inv_live_` | The production Caplia portal | `api.venture.caplia.ai` and `mcp.venture.caplia.ai` | Your real pipeline data |
-| `cap_inv_test_` | The staging Caplia portal | Staging api-v1 and mcp-v1 endpoints | Sandbox / test data, isolated from production |
+| `cap_inv_test_` | The staging Caplia portal | `api-sandbox.venture.caplia.ai` and `mcp-sandbox.venture.caplia.ai` | Sandbox / test data, isolated from production |
 
 Use `test` keys when developing or testing an integration so that you can't accidentally create or read against real deals. The production endpoints reject `test` keys with `401` and vice-versa, so leaking a key into the wrong environment fails closed.
 

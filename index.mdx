@@ -46,8 +46,15 @@ https://api.venture.caplia.ai/v1
 
 ## Environments
 
-- **Production.** `api.venture.caplia.ai` — accepts `cap_inv_live_*` keys minted from your live Caplia portal. Your pipeline data.
-- **Sandbox.** Use the staging Caplia portal to mint `cap_inv_test_*` keys against a separate staging Supabase project. The same endpoints and tools work, but the data is isolated from production. Ask your team for the staging URL if you don't already have it.
+|  | Production | Sandbox |
+|---|---|---|
+| REST | `https://api.venture.caplia.ai/v1/...` | `https://api-sandbox.venture.caplia.ai/v1/...` |
+| MCP | `https://mcp.venture.caplia.ai/` | `https://mcp-sandbox.venture.caplia.ai/` |
+| Key prefix | `cap_inv_live_*` | `cap_inv_test_*` |
+| Mint from | Production Caplia portal | Staging Caplia portal |
+| Data | Real pipeline | Sandbox / test data |
+
+Cross-environment leaks fail closed: a `live` key hitting a `-sandbox` URL returns `401`, and a `test` key hitting a production URL returns `401`. Same code on both — only the data and the accepting key prefix differ.
 
 ## Coming soon
 
