@@ -1,0 +1,164 @@
+---
+title: "Authentication"
+description: "Personal Access Tokens, scopes, and the Bearer header."
+icon: "key"
+---
+
+The Caplia API uses **Personal Access Tokens (PATs)** sent as Bearer tokens in the `Authorization` header. Every request to an authenticated endpoint must include:
+
+```
+Authorization: Bearer cap_inv_live_<32 alphanumeric chars>
+```
+
+There is no other authentication method — no OAuth, no session cookies, no IP allowlists. PATs are tied to your individual user account; they inherit your permissions inside Caplia via row-level security.
+
+## Key format
+
+```
+cap_inv_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS
+└─┬─┘ ─┬─ ─┬─  └────────────┬──────────────┘
+  │    │   │                 │
+  │    │   │                 └── 32-char alphanumeric (base62) — ~190 bits of entropy
+  │    │   └──────────────────── env: `live` (production); `test` reserved for future sandbox
+  │    └──────────────────────── portal: `inv` (investor); `fnd` reserved for founder portal
+  └───────────────────────────── vendor prefix
+```
+
+The prefix makes leaked keys instantly identifiable and greppable in logs. If you see `cap_inv_live_*` anywhere it shouldn't be, treat it as a leak and revoke immediately.
+
+## Creating a key
+
+1. Sign in to Caplia
+2. **Settings → API Keys → Create new key**
+3. Give it a descriptive name (you'll see this in the list later — "CRM integration", "Zapier prod", etc.)
+4. Pick scope: `read` or `write` (see below)
+5. Click **Create**
+
+The plaintext is shown **exactly once**, then never again. Caplia stores only a hash. Copy it to your secret manager immediately.
+
+<Warning>
+If you lose the plaintext, the key cannot be recovered — you must revoke and create a new one. This is deliberate; it means a Caplia DB leak doesn't leak your API keys.
+</Warning>
+
+## Scopes
+
+v1 has two scopes. A key carries one or both.
+
+<ResponseField name="read" type="scope">
+  Read access to all `GET` endpoints — companies, scores, metrics, documents, theses, views, jobs.
+</ResponseField>
+
+<ResponseField name="write" type="scope">
+  Read access (everything `read` allows) **plus** `POST` endpoints — create companies, upload decks, attach documents, add notes.
+</ResponseField>
+
+Pick `read` for dashboard-style integrations that only consume Caplia data. Pick `write` when you also need to push deals or documents in.
+
+Finer-grained scopes (`companies:write`, `decks:write`) will come in a future version when there's real demand for delegated permissions.
+
+## Using the token
+
+Every authenticated request needs the header:
+
+```bash
+curl https://api.venture.caplia.ai/v1/companies \
+  -H "Authorization: Bearer cap_inv_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS"
+```
+
+Or in your language of choice:
+
+<CodeGroup>
+```javascript Node.js
+const response = await fetch('https://api.venture.caplia.ai/v1/companies', {
+  headers: {
+    'Authorization': `Bearer ${process.env.CAPLIA_KEY}`,
+  },
+});
+const companies = await response.json();
+```
+
+```python Python
+import os, requests
+
+response = requests.get(
+    'https://api.venture.caplia.ai/v1/companies',
+    headers={'Authorization': f'Bearer {os.environ["CAPLIA_KEY"]}'},
+)
+companies = response.json()
+```
+
+```go Go
+req, _ := http.NewRequest("GET", "https://api.venture.caplia.ai/v1/companies", nil)
+req.Header.Set("Authorization", "Bearer " + os.Getenv("CAPLIA_KEY"))
+resp, _ := http.DefaultClient.Do(req)
+```
+
+```ruby Ruby
+require 'net/http'
+
+uri = URI('https://api.venture.caplia.ai/v1/companies')
+req = Net::HTTP::Get.new(uri)
+req['Authorization'] = "Bearer #{ENV['CAPLIA_KEY']}"
+res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(req) }
+```
+</CodeGroup>
+
+## Error responses
+
+If the header is missing or malformed:
+
+```json 401 Unauthorized
+{
+  "error": {
+    "code": "unauthenticated",
+    "message": "Missing or malformed Authorization header",
+    "request_id": "req_8H3jK9pQ"
+  }
+}
+```
+
+If the key is valid but doesn't carry the scope this endpoint requires:
+
+```json 403 Forbidden
+{
+  "error": {
+    "code": "forbidden_scope",
+    "message": "This endpoint requires the `write` scope",
+    "request_id": "req_..."
+  }
+}
+```
+
+The `request_id` value is useful when emailing support — it lets us trace your exact request in our logs.
+
+## Revoking a key
+
+In **Settings → API Keys**, click the **Revoke** button on the row. Revocation is immediate — the next request with that key returns `401` within seconds.
+
+If you suspect a key has leaked:
+
+1. **Revoke first** — don't wait
+2. Then investigate where it leaked (commit history, logs, screenshots)
+3. Mint a new key, rotate any integrations that use the old one
+
+## Security best practices
+
+- **Never commit keys to source control.** Use environment variables or a secret manager.
+- **Use one key per integration.** If your CRM and your internal dashboard both call the API, give them separate keys. If one leaks you can revoke without breaking the other.
+- **Use the least-privilege scope.** Use `read` if the integration only reads. Reserve `write` for systems that actually push data in.
+- **Rotate periodically.** Caplia doesn't enforce expiration today, but rotating every 90 days is good hygiene.
+- **Watch the `last_used_at` timestamp** in Settings → API Keys. A key that should be active but isn't has either been replaced or your integration is broken.
+
+## What lives in logs
+
+We log:
+- The first 12 characters of the key (`cap_inv_live`) plus the last 4 characters
+- The endpoint, status code, and request_id
+- The user the key belongs to
+
+We **never** log:
+- The full plaintext key
+- The `Authorization` header
+- Request bodies (including uploaded files)
+
+If you see a full key in a log line anywhere — Caplia's, your CRM's, your own — treat it as a leak.

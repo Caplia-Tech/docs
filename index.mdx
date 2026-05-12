@@ -1,133 +1,58 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
-icon: 'star'
+title: "Caplia API"
+description: "Read deals, submit decks, poll async results — programmatic access to your Caplia pipeline."
+icon: "rocket"
 ---
 
-## Setting up
+The Caplia API gives external tools — CRMs, Slack apps, scheduled scripts, MCP clients — programmatic access to the rich data surface inside Caplia: companies, CRI and thesis-fit scores, traction metrics, data room documents, theses, and pipeline views.
 
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
+## What you can do
 
 <Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+  <Card title="Read your pipeline" icon="list" href="/api-reference/introduction">
+    List companies in any of your pipeline views, fetch a company profile, pull its CRI score, thesis matches, traction metrics, and data room contents.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Push deals in" icon="upload" href="/api-reference/introduction">
+    Send pitch decks from anywhere — they flow into the same intake pipeline as your web uploads and email forwards, auto-extracted and scored on arrival.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Poll for results" icon="rotate" href="/api-reference/introduction">
+    The deck upload is async. Poll the jobs endpoint to watch the company appear, then the CRI score, then the thesis matches — surface partial results to your users as they land.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Get signed download URLs" icon="file-arrow-down" href="/api-reference/introduction">
+    Pull individual data room documents through the API with 1-hour signed URLs — the file bytes never pass through Caplia's API tier, keeping latency low even for large PDFs.
   </Card>
 </Columns>
 
-## Create beautiful pages
+## Start here
 
-Everything you need to create world-class documentation.
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="bolt" href="/quickstart" horizontal>
+    Get your first request returning data in under three minutes.
+  </Card>
+  <Card title="Authentication" icon="key" href="/authentication" horizontal>
+    How API keys work, scopes, and the Bearer auth header.
+  </Card>
+</CardGroup>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## API versioning
 
-## Make your content agent ready
+This is **v1**. All paths are prefixed with `/v1`. We do not break v1 — additive changes only. When `/v2` ships, v1 remains supported indefinitely.
 
-Make your docs work for humans and AI agents alike.
+## Base URL
 
-<Columns cols={2}>
-  <Card
-    title="Prompt component"
-    icon="robot"
-    href="/agent-ready/prompt"
-  >
-    Embed shareable AI prompts readers can copy or open in Cursor.
-  </Card>
-  <Card
-    title="Visibility"
-    icon="eye"
-    href="/agent-ready/visibility"
-  >
-    Show different content to humans and agents reading your docs.
-  </Card>
-  <Card
-    title="Contextual menu"
-    icon="bolt"
-    href="/agent-ready/contextual"
-  >
-    Give readers one-click access to Claude, ChatGPT, Cursor, and more.
-  </Card>
-  <Card
-    title="AI coding tools"
-    icon="wand-magic-sparkles"
-    href="/ai-tools/claude-code"
-  >
-    Set up Claude Code, Cursor, or Windsurf with Mintlify's skill.
-  </Card>
-</Columns>
+```
+https://api.venture.caplia.ai/v1
+```
 
-## Need inspiration?
+## Out of scope for v1
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+- **Updates and deletes.** Only `POST` (create) and `GET` (read). Update and delete endpoints land in v1.1 after we see how callers use the API.
+- **Webhooks.** Polling only — the [jobs endpoint](/api-reference/introduction) is the async surface. Webhooks land in v1.1.
+- **MCP server.** [`mcp.venture.caplia.ai`](https://mcp.venture.caplia.ai) is the future home of the MCP server. The server gets its own spec and builds on top of these REST endpoints.
+- **Per-resource scopes.** Two scopes: `read` and `write`. Finer scopes (`companies:write`, `decks:write`) wait for real demand.
+- **Sandbox / test keys.** No separate sandbox environment exists. Test keys (`cap_inv_test_*`) are reserved in the format but not minted.
+
+## Need help?
+
+- **API issues**: email <a href="mailto:hi@caplia.ai">hi@caplia.ai</a>
+- **Status**: check [status.caplia.ai](https://status.caplia.ai)

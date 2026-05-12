@@ -1,81 +1,186 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
-icon: 'rocket'
+description: "Mint a key, send a deck, get back enriched company data — under three minutes."
+icon: "bolt"
 ---
 
-## Get started in three steps
+By the end of this page, you'll have:
 
-Get your documentation site running locally and make your first customization.
+1. ✅ Minted a personal access token from your Caplia settings
+2. ✅ Hit `/v1/health` to confirm auth works
+3. ✅ Submitted a pitch deck via `POST /v1/decks`
+4. ✅ Polled the resulting job until the company appears with its CRI score
 
-### Step 1: Set up your local environment
+Total time: about three minutes. You'll need a terminal with `curl`.
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+## Step 1 — Create an API key
 
-### Step 2: Deploy your changes
+In the Caplia portal, go to **Settings → API Keys → Create new key**:
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+1. Give it a name (e.g. "CRM integration", "Zapier test")
+2. Choose scope: pick `write` if you're sending decks; `read` is enough for read-only integrations
+3. Click **Create**
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+You'll see the plaintext key **exactly once** — it looks like:
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+```
+cap_inv_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS
+```
 
-### Step 3: Go live
+Copy it somewhere safe. If you lose it, you'll need to revoke and create a new one — Caplia never stores the plaintext.
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+<Tip>
+Set it as an environment variable in your shell so the rest of this guide is copy-paste-able:
 
-## Next steps
+```bash
+export CAPLIA_KEY=cap_inv_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS
+```
+</Tip>
 
-Now that you have your docs running, explore these key features:
+## Step 2 — Confirm the key works
 
-<CardGroup cols={2}>
+The `/v1/health` endpoint doesn't require auth, but it's a useful first check:
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+```bash
+curl https://api.venture.caplia.ai/v1/health
+```
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+```json Response
+{
+  "status": "ok",
+  "version": "v1"
+}
+```
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+Now try an authenticated request — list companies in your pipeline:
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+```bash
+curl https://api.venture.caplia.ai/v1/companies \
+  -H "Authorization: Bearer $CAPLIA_KEY"
+```
 
-</CardGroup>
+```json Response
+[
+  {
+    "id": "5a1c...",
+    "name": "Tesla",
+    "industry": "Energy",
+    "stage": "Series A",
+    ...
+  },
+  ...
+]
+```
+
+If you see a `401`, double-check the `Authorization` header — it should be `Bearer cap_inv_live_...` with a single space between.
+
+## Step 3 — Submit a pitch deck
+
+This is the main "push deals in" flow. The deck goes through Caplia's intake pipeline, gets text-extracted, the company is created, then CRI and thesis scores compute in the background.
+
+```bash
+curl -X POST https://api.venture.caplia.ai/v1/decks \
+  -H "Authorization: Bearer $CAPLIA_KEY" \
+  -F "file=@pitch.pdf" \
+  -F "company_name=Tesla" \
+  -F "company_url=https://tesla.com" \
+  -F "notes=Met them at YC demo day — interesting battery tech angle"
+```
+
+```json Response (202 Accepted)
+{
+  "job_id": "intake-event-uuid-here",
+  "status": "queued",
+  "poll_url": "https://api.venture.caplia.ai/v1/jobs/intake-event-uuid-here"
+}
+```
+
+The response comes back fast — the actual processing happens asynchronously. `company_name`, `company_url`, and `notes` are optional but help the worker create a cleaner company record.
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+The deck file must be a PDF, ≤ 50 MB. Decks submitted via the API auto-approve into your pipeline — the act of holding a scoped API key is sufficient trust.
 </Note>
+
+## Step 4 — Poll the job
+
+The job moves through `queued → processing → completed`. Poll every 3 seconds:
+
+```bash
+curl https://api.venture.caplia.ai/v1/jobs/JOB_ID \
+  -H "Authorization: Bearer $CAPLIA_KEY"
+```
+
+Early in the job lifecycle:
+
+```json
+{
+  "job_id": "...",
+  "status": "queued",
+  "company_id": null,
+  "created_at": "2026-05-12T10:32:00Z",
+  "completed_at": null,
+  "results": null,
+  "errors": []
+}
+```
+
+Once the company has been created (typically 10-30 seconds in):
+
+```json
+{
+  "job_id": "...",
+  "status": "processing",
+  "company_id": "5a1c...",
+  "results": {
+    "company": {
+      "id": "5a1c...",
+      "name": "Tesla",
+      "problem_statement": "Affordable electric vehicles for mass adoption",
+      "industry": "Energy",
+      "stage": "Series A",
+      "website": "https://tesla.com"
+    }
+  },
+  "errors": []
+}
+```
+
+When scoring completes (typically 1-2 minutes in):
+
+```json
+{
+  "job_id": "...",
+  "status": "completed",
+  "completed_at": "2026-05-12T10:33:14Z",
+  "results": {
+    "company": { /* ... */ },
+    "cri": {
+      "score": 78,
+      "scored_at": "2026-05-12T10:33:01Z",
+      "domains": [ /* ... */ ]
+    },
+    "thesis_matches": [
+      {
+        "thesis_id": "...",
+        "thesis_name": "Climate Series A",
+        "score": 0.74,
+        "scoring_status": "scored"
+      }
+    ]
+  },
+  "errors": []
+}
+```
+
+Surface `results.company` as soon as it appears so your users see something useful; layer in `results.cri` and `results.thesis_matches` as they land.
+
+## What's next
+
+<CardGroup cols={2}>
+  <Card title="Authentication details" icon="key" href="/authentication" horizontal>
+    Key format, scopes, rotation, security best practices.
+  </Card>
+  <Card title="Full API reference" icon="terminal" href="/api-reference/introduction" horizontal>
+    Every endpoint, every parameter, with try-it-yourself examples.
+  </Card>
+</CardGroup>

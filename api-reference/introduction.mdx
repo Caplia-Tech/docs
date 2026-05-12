@@ -1,33 +1,126 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "API Reference"
+description: "Every Caplia API endpoint, with try-it-yourself examples."
+icon: "terminal"
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+This section contains the full reference for every endpoint in v1 of the Caplia API. Each endpoint page has:
 
-## Welcome
+- Path, method, required scope
+- Path / query / body parameters with types
+- Example requests in curl, Node, Python, Go, Ruby
+- Example success and error responses
+- A live "Try it" playground (paste your key, hit run)
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Conventions
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+### Base URL
 
-## Authentication
+```
+https://api.venture.caplia.ai
+```
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All paths shown in this reference are appended to that base.
+
+### Authentication
+
+Every endpoint except `GET /v1/health` and `GET /v1/openapi.json` requires the `Authorization: Bearer cap_inv_live_...` header. See [Authentication](/authentication) for key format, scopes, and rotation.
+
+### Response shape
+
+**Success** — bare resource (no envelope):
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "id": "5a1c...",
+  "name": "Tesla",
+  ...
+}
 ```
+
+**Error** — always envelope-wrapped:
+
+```json
+{
+  "error": {
+    "code": "company_not_found",
+    "message": "No company with id abc-123 in your pipeline",
+    "request_id": "req_8H3jK9pQ"
+  }
+}
+```
+
+Always include `request_id` when contacting support.
+
+### Status codes
+
+| Code | Meaning |
+|---|---|
+| `200` | Read success |
+| `201` | Create success |
+| `202` | Accepted but async — see `/v1/jobs/{id}` to track |
+| `400` | Bad input (validation) |
+| `401` | Missing or invalid API key |
+| `403` | Key valid, but doesn't carry the required scope |
+| `404` | Resource not found, or outside your team's visibility |
+| `409` | Conflict (e.g. duplicate submission) |
+| `429` | Rate limited (not yet enforced in v1) |
+| `500` | Unexpected server error — please report with `request_id` |
+
+<Note>
+We deliberately return `404` rather than `403` when you query a resource you can see structurally but don't own — this prevents enumeration of other teams' data.
+</Note>
+
+### Pagination
+
+Endpoints that return lists support cursor-based pagination:
+
+```bash
+curl "https://api.venture.caplia.ai/v1/companies?limit=50&cursor=Y3Vyc29yX2RhdGE="
+```
+
+When more results are available, the response includes a `next_cursor`:
+
+```json
+{
+  "data": [ /* ... */ ],
+  "next_cursor": "Y3Vyc29yX2RhdGE="
+}
+```
+
+Pass that value back as `cursor` to fetch the next page. Default `limit` is 25, max is 100.
+
+### OpenAPI spec
+
+The machine-readable spec lives at:
+
+```
+https://api.venture.caplia.ai/v1/openapi.json
+```
+
+You can pipe this into Postman, Insomnia, or any OpenAPI-aware tool. It's regenerated automatically from the live API on every deploy, so it's always in sync with what the server actually does.
+
+## Endpoints by category
+
+<CardGroup cols={2}>
+  <Card title="Companies" icon="building" href="/api-reference/introduction">
+    List, get, create, search companies in your pipeline.
+  </Card>
+  <Card title="Scores & metrics" icon="chart-line" href="/api-reference/introduction">
+    CRI scores, thesis matches, traction metrics, key metrics.
+  </Card>
+  <Card title="Data rooms" icon="folder-open" href="/api-reference/introduction">
+    List folders, documents; get signed download URLs; upload new documents.
+  </Card>
+  <Card title="Deck intake" icon="upload" href="/api-reference/introduction">
+    Submit pitch decks; poll job status; receive enriched results.
+  </Card>
+  <Card title="Theses & views" icon="list-check" href="/api-reference/introduction">
+    Your team's investment theses and pipeline view configurations.
+  </Card>
+  <Card title="Health & meta" icon="heart-pulse" href="/api-reference/introduction">
+    Liveness check and machine-readable OpenAPI spec.
+  </Card>
+</CardGroup>
+
+Use the sidebar to jump to a specific endpoint.
