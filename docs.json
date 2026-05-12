@@ -4,11 +4,15 @@
   "name": "Caplia API",
   "description": "Read deals, submit decks, poll async results. Public REST API for the Caplia venture platform.",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#22C55E",
-    "dark": "#15803D"
+    "primary": "#344365",
+    "light": "#02A0FD",
+    "dark": "#1F2940"
   },
   "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
   "navigation": {
     "tabs": [
       {
