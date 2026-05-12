@@ -29,7 +29,7 @@
           {
             "group": "Integrations",
             "pages": [
-              "mcp"
+              "integrations/mcp"
             ]
           }
         ]
