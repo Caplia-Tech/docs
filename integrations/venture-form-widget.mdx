@@ -1,12 +1,29 @@
 ---
-title: "Awards Form Widget"
-description: "Drop a pitch-deck upload widget into any Webflow, WordPress, or HTML form. The PDF goes straight to Caplia for scoring; everything else in your form keeps flowing to your existing CRM."
+title: "Venture Form Widget"
+description: "Drop a pitch-deck upload widget into any Webflow, WordPress, or HTML form. The PDF goes straight to Caplia for scoring; everything else in your form keeps flowing to your existing CRM. Built for VCs, accelerators, awards programmes, and corp-dev intakes."
 icon: "upload"
 ---
 
-**The Caplia Awards Form Widget is a single block of HTML you paste into your existing application form.** Entrants pick a PDF, the widget uploads it directly to Caplia, and writes the resulting job ID into a hidden form field that flows on to your CRM (HubSpot, Salesforce, anywhere). No backend changes on your side, no API key in the browser.
+**The Caplia Venture Form Widget is a single block of HTML you paste into your existing application form.** Entrants pick a PDF, the widget uploads it directly to Caplia, and writes the resulting job ID into a hidden form field that flows on to your CRM (HubSpot, Salesforce, anywhere). No backend changes on your side, no API key in the browser.
 
-Built for **awards programmes**, **accelerator cohort intakes**, **investor pitch competitions**, and any other public form where the entrant uploads a pitch deck.
+Built for any public form where the entrant uploads a pitch deck.
+
+## Who it's for
+
+<CardGroup cols={2}>
+  <Card title="Venture funds" icon="building-columns">
+    Your fund's public "submit your deck" form. Cold inbound lands in Caplia pre-scored, sorted by CRI quality and thesis fit, ready for partner review.
+  </Card>
+  <Card title="Accelerators" icon="rocket">
+    Cohort application forms. Every submitted deck is scored on arrival; selection committees see a ranked shortlist instead of a Google Drive folder.
+  </Card>
+  <Card title="Awards programmes" icon="trophy">
+    Innovation award entries, pitch competitions, founder prizes. Judges work from CRI scores and per-category thesis fit instead of reading every deck cold.
+  </Card>
+  <Card title="Corporate development" icon="handshake">
+    Partnership intake forms. Inbound startup approaches are scored against your strategic thesis automatically before a BD lead picks them up.
+  </Card>
+</CardGroup>
 
 ## How it works
 
@@ -24,22 +41,22 @@ Built for **awards programmes**, **accelerator cohort intakes**, **investor pitc
     The widget writes the `job_id` into a hidden input named `caplia_job_id`. When the entrant submits the rest of the form, that ID lands in HubSpot (or wherever) alongside their other fields.
   </Step>
   <Step title="Scoring lands in your Caplia dashboard">
-    The deck is processed asynchronously. Once scored, the entry appears in your awards dashboard with CRI score, per-thesis fit, and is queryable by the application ID you supplied.
+    The deck is processed asynchronously. Once scored, the entry appears in your Caplia pipeline with CRI score, per-thesis fit, and is queryable by the application ID you supplied.
   </Step>
 </Steps>
 
 ## Onboarding
 
-Before pasting the widget, get an **`award_id`** from your Caplia contact (Connor, or `paul@caplia.ai`). It's an opaque string like `acme-awards-2026` that maps to your team and the user submissions land under. We allowlist it server-side in the same step.
+Before pasting the widget, get a **`form_id`** from your Caplia contact (Connor, or <a href="mailto:paul@caplia.ai">paul@caplia.ai</a>). It's an opaque string like `acme-2026` or `fund-x-inbound` that maps to your team and the user submissions land under. We allowlist it server-side in the same step.
 
 ## The snippet
 
 Paste this whole block into a single **Webflow Embed element** (or any HTML container that allows inline `<script>`) placed inside your application form, where your "deck URL" field used to be.
 
 ```html
-<!-- Caplia Awards Upload Widget v1 -->
+<!-- Caplia Venture Form Widget v1 -->
 <div data-caplia-upload
-     data-award-id="REPLACE_WITH_AWARD_ID"
+     data-form-id="REPLACE_WITH_FORM_ID"
      data-application-id-field="application_number"
      data-api-base="https://api.venture.caplia.ai">
   <input type="file" accept=".pdf,application/pdf" hidden>
@@ -68,7 +85,7 @@ Paste this whole block into a single **Webflow Embed element** (or any HTML cont
 (function () {
   document.querySelectorAll('[data-caplia-upload]:not([data-caplia-init])').forEach(function (root) {
     root.setAttribute('data-caplia-init','true');
-    var awardId=root.dataset.awardId, appIdField=root.dataset.applicationIdField||'',
+    var formId=root.dataset.formId, appIdField=root.dataset.applicationIdField||'',
         apiBase=(root.dataset.apiBase||'https://api.venture.caplia.ai').replace(/\/+$/, '');
     var fileInput=root.querySelector('input[type="file"]'),
         pickBtn=root.querySelector('.caplia-pick'),
@@ -77,8 +94,8 @@ Paste this whole block into a single **Webflow Embed element** (or any HTML cont
         filenameInput=root.querySelector('input[name="caplia_deck_filename"]'),
         form=root.closest('form');
 
-    if (!awardId || awardId==='REPLACE_WITH_AWARD_ID') {
-      statusEl.textContent='Widget not configured: missing award id.';
+    if (!formId || formId==='REPLACE_WITH_FORM_ID') {
+      statusEl.textContent='Widget not configured: missing form id.';
       root.classList.add('is-error'); return;
     }
     function setStatus(m,k){root.classList.remove('is-uploading','is-error','is-success');if(k)root.classList.add('is-'+k);statusEl.textContent=m||'';}
@@ -93,7 +110,7 @@ Paste this whole block into a single **Webflow Embed element** (or any HTML cont
       setStatus('Uploading '+file.name+'…','uploading'); jobIdInput.value=''; filenameInput.value='';
       try{
         var signRes=await fetch(apiBase+'/v1/uploads/sign',{method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({award_id:awardId,application_id:getApplicationId()})});
+          body:JSON.stringify({form_id:formId,application_id:getApplicationId()})});
         if(!signRes.ok){var e=await signRes.json().catch(function(){return{};});throw new Error((e.error&&e.error.message)||'Could not start upload ('+signRes.status+').');}
         var sign=await signRes.json();
         var fd=new FormData(); fd.append('file',file);
@@ -116,8 +133,8 @@ Three data attributes on the root `<div>`:
 
 | Attribute | Required | Description |
 |---|---|---|
-| `data-award-id` | **Yes** | Opaque identifier issued by Caplia onboarding (e.g. `acme-awards-2026`). Must match the entry we allowlisted server-side, or the widget will refuse to upload. |
-| `data-application-id-field` | No | The `name` attribute of an existing form field that holds the entrant's application number. The widget reads its value at upload time so the Caplia entry can be matched back to your CRM row. Omit it if you don't have one. |
+| `data-form-id` | **Yes** | Opaque identifier issued by Caplia onboarding (e.g. `acme-2026`, `fund-x-inbound`). Must match the entry we allowlisted server-side, or the widget will refuse to upload. |
+| `data-application-id-field` | No | The `name` attribute of an existing form field that holds the entrant's application number / candidate ID. The widget reads its value at upload time so the Caplia entry can be matched back to your CRM row. Omit it if you don't have one. |
 | `data-api-base` | No | API origin override. Defaults to `https://api.venture.caplia.ai` (production). Set to `https://api-sandbox.venture.caplia.ai` during testing. |
 
 ## Fields the widget writes
@@ -126,7 +143,7 @@ Make sure your form has two corresponding fields (they can be hidden — the wid
 
 | Field name | Purpose |
 |---|---|
-| `caplia_job_id` | The Caplia job ID (UUID). Map this to a HubSpot property like "Caplia Job ID". Use it later to fetch scoring data via [`GET /v1/jobs/{id}`](/api-reference/introduction) with your `cap_inv_live_*` key. |
+| `caplia_job_id` | The Caplia job ID (UUID). Map this to a CRM property like "Caplia Job ID". Use it later to fetch scoring data via [`GET /v1/jobs/{id}`](/api-reference/introduction) with your `cap_inv_live_*` key. |
 | `caplia_deck_filename` | The entrant's original PDF filename. Useful for your CRM record. |
 
 ## Webflow setup
@@ -136,10 +153,10 @@ Make sure your form has two corresponding fields (they can be hidden — the wid
     In the Webflow designer, drop a Code Embed component inside the Form block, where your old "deck URL" field used to be.
   </Step>
   <Step title="Paste the widget">
-    Paste the snippet above into the Embed. Replace `REPLACE_WITH_AWARD_ID` with the `award_id` Caplia gave you.
+    Paste the snippet above into the Embed. Replace `REPLACE_WITH_FORM_ID` with the `form_id` Caplia gave you.
   </Step>
   <Step title="Set the application-id field name">
-    Change `data-application-id-field="application_number"` to whatever the `name` of your existing Application Number field is. (Right-click the field in Webflow → Settings → Name.)
+    Change `data-application-id-field="application_number"` to whatever the `name` of your existing Application Number / Candidate ID field is. (Right-click the field in Webflow → Settings → Name.)
   </Step>
   <Step title="Add hidden form fields for the widget's outputs">
     Add two **Form** components inside the same form, type "Text", with names `caplia_job_id` and `caplia_deck_filename`. Set them to hidden in the Webflow designer (or via custom CSS). HubSpot will receive their values on form submit.
@@ -148,7 +165,7 @@ Make sure your form has two corresponding fields (they can be hidden — the wid
     In your existing Webflow → HubSpot mapping, add the two new fields. `caplia_job_id` is the important one — store it as a contact (or deal) property so you can cross-reference back to Caplia later.
   </Step>
   <Step title="Test on the staging Webflow domain">
-    Set `data-api-base="https://api-sandbox.venture.caplia.ai"` and use the sandbox `award_id` we provision for you. Submit a test entry, confirm the `caplia_job_id` lands in HubSpot, then flip to production by removing the `data-api-base` override.
+    Set `data-api-base="https://api-sandbox.venture.caplia.ai"` and use the sandbox `form_id` we provision for you. Submit a test entry, confirm the `caplia_job_id` lands in HubSpot, then flip to production by removing the `data-api-base` override.
   </Step>
 </Steps>
 
@@ -158,12 +175,12 @@ The widget calls two endpoints. Both are public — no API key required from the
 
 ### `POST /v1/uploads/sign`
 
-Issues a short-lived `cap_upload_<jwt>` token bound to one upload. The `award_id` must be allowlisted server-side.
+Issues a short-lived `cap_upload_<jwt>` token bound to one upload. The `form_id` must be allowlisted server-side.
 
 ```bash
 curl -X POST https://api.venture.caplia.ai/v1/uploads/sign \
   -H "Content-Type: application/json" \
-  -d '{"award_id":"acme-awards-2026","application_id":"APP-1234"}'
+  -d '{"form_id":"acme-2026","application_id":"APP-1234"}'
 ```
 
 ```json
@@ -197,7 +214,7 @@ curl -X POST https://api.venture.caplia.ai/v1/uploads/decks \
 
 ## Pulling scoring data back into your CRM
 
-Once you have the `job_id` on the HubSpot side, your back-office tooling can fetch results with the regular Caplia REST API using a `cap_inv_live_*` key — see [Authentication](/authentication).
+Once you have the `job_id` on the CRM side, your back-office tooling can fetch results with the regular Caplia REST API using a `cap_inv_live_*` key — see [Authentication](/authentication).
 
 ```bash
 # Poll the job (returns company_id once intake is done)
@@ -209,7 +226,7 @@ curl https://api.venture.caplia.ai/v1/companies/{company_id}/scores \
   -H "Authorization: Bearer cap_inv_live_..."
 ```
 
-A scheduled HubSpot workflow that pings `/v1/jobs/{job_id}` every few minutes and writes scoring data back onto the contact is the simplest production pattern.
+A scheduled HubSpot workflow (or Salesforce flow) that pings `/v1/jobs/{job_id}` every few minutes and writes scoring data back onto the contact is the simplest production pattern.
 
 ## Security model
 
@@ -219,7 +236,7 @@ A scheduled HubSpot workflow that pings `/v1/jobs/{job_id}` every few minutes an
   </Accordion>
 
   <Accordion title="What stops random sites from spamming uploads?" icon="shield">
-    Two gates. First, only `award_id`s that have been **explicitly allowlisted on the Caplia side** can mint tokens — random `award_id` strings return 404. Second, each token has a 5-minute TTL and is bound to a single upload. We add per-IP rate limits and optional Cloudflare Turnstile challenges on top once a programme grows beyond a small expected entrant pool.
+    Two gates. First, only `form_id`s that have been **explicitly allowlisted on the Caplia side** can mint tokens — random `form_id` strings return 404. Second, each token has a 5-minute TTL and is bound to a single upload. We add per-IP rate limits and optional Cloudflare Turnstile challenges on top once a programme grows beyond a small expected entrant pool.
   </Accordion>
 
   <Accordion title="Where does the deck land?" icon="folder">
@@ -227,7 +244,7 @@ A scheduled HubSpot workflow that pings `/v1/jobs/{job_id}` every few minutes an
   </Accordion>
 
   <Accordion title="GDPR / data subject rights" icon="user-shield">
-    Entrants' decks are processed on the basis of the consent they give in your application form. We provide tooling to bulk-export or bulk-delete an award programme's entries when it concludes — talk to Connor about retention windows for your programme.
+    Entrants' decks are processed on the basis of the consent they give in your application form. We provide tooling to bulk-export or bulk-delete a form's entries when a programme concludes — talk to Connor about retention windows.
   </Accordion>
 </AccordionGroup>
 
@@ -240,6 +257,6 @@ A scheduled HubSpot workflow that pings `/v1/jobs/{job_id}` every few minutes an
 
 ## Need help?
 
-- **Onboarding & `award_id` provisioning**: <a href="mailto:paul@caplia.ai">paul@caplia.ai</a>
+- **Onboarding & `form_id` provisioning**: <a href="mailto:paul@caplia.ai">paul@caplia.ai</a>
 - **REST API docs**: [API Reference](/api-reference/introduction)
 - **Authentication**: [Authentication](/authentication)
