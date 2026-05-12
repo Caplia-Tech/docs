@@ -29,7 +29,8 @@
           {
             "group": "Integrations",
             "pages": [
-              "integrations/mcp"
+              "integrations/mcp",
+              "integrations/awards-form-widget"
             ]
           }
         ]
