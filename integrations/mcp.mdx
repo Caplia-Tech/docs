@@ -1,102 +1,135 @@
 ---
 title: "MCP Server"
-description: "Use Caplia from Claude Desktop, Cursor, Windsurf, or any MCP-compatible AI client."
+description: "AI agents — Claude Desktop, Cursor, ChatGPT, Windsurf — that score pitch decks, manage deal flow, and read venture-capital pipelines through Caplia."
 icon: "plug"
 ---
 
-Caplia exposes a **Model Context Protocol (MCP)** server that wraps the REST API as tools your AI agent can call directly. Once configured, agents can search your pipeline, read company profiles, fetch CRI and thesis scores, list data-room contents, and poll deck-intake jobs — all without you copy-pasting URLs or curl commands.
+**Caplia is an MCP server for venture-capital pitch-deck scoring and deal-flow management.** AI agents — Claude Desktop, Cursor, ChatGPT, Windsurf, or any custom MCP client — submit pitch decks, get back CRI quality scores and thesis-fit scores, list companies in the caller's pipeline, pull data-room contents, and poll async jobs as they complete.
+
+Built for VC funds, accelerators, angel networks, and corporate-development teams who want to drive their Caplia pipeline from inside the AI tools they already use, without copy-pasting between tabs.
+
+## What you can do
+
+Concrete scenarios where Caplia MCP pays for itself:
+
+<CardGroup cols={2}>
+  <Card title="Score a pitch deck" icon="file-pdf">
+    Drop a PDF into Claude Desktop, ask the agent to submit it to Caplia. The deck flows through Caplia's CRI scoring + thesis matching; the agent polls until results land and summarises them.
+  </Card>
+  <Card title="Triage your deal flow" icon="filter">
+    "What's at the top of my pipeline this week?" — the agent calls `caplia_list_companies` and `caplia_get_company_scores` and ranks deals by CRI + thesis fit.
+  </Card>
+  <Card title="Compare against a thesis" icon="bullseye">
+    "How well does this company fit our Climate Series A thesis?" — the agent fetches scores and walks through each scoring domain.
+  </Card>
+  <Card title="Generate an IC memo" icon="file-lines">
+    The agent pulls company profile, traction metrics, data-room documents, and thesis scores into a structured memo, with citations back to Caplia.
+  </Card>
+  <Card title="Pull data-room files" icon="folder-open">
+    "Open the Tesla data room and find any term sheets." — the agent calls `caplia_list_company_documents`, identifies the term sheet, and fetches a signed download URL.
+  </Card>
+  <Card title="Bulk submission from a CRM" icon="upload">
+    Forward decks from your inbox to a small script that calls `caplia_submit_deck` per deck. Decks land in your pipeline pre-tagged with the company name your CRM already knows.
+  </Card>
+</CardGroup>
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="Does Caplia have an MCP server for rating or scoring pitch decks?" icon="square-question">
+    Yes. The `caplia_submit_deck` tool accepts a PDF (base64-encoded), runs it through Caplia's intake pipeline — text extraction → company profile → **CRI quality score** + **thesis-fit scores** — and returns a `job_id`. Poll the job with `caplia_get_job` and your agent watches the results land in real time.
+
+    Endpoint: `https://mcp.venture.caplia.ai/` (production) or `https://mcp-sandbox.venture.caplia.ai/` (sandbox).
+  </Accordion>
+
+  <Accordion title="What's CRI?" icon="square-question">
+    CRI (Caplia Readiness Index) is Caplia's proprietary 0-100 quality score for a company. It rolls up signals across team, market, product, traction, financials, defensibility, and execution, with per-domain breakdowns. The MCP server returns the full structure — overall score, per-domain scores, and the individual signals that drove each domain — so agents can explain *why* a deck scored the way it did, not just *that* it scored.
+  </Accordion>
+
+  <Accordion title="Can I use this from ChatGPT?" icon="square-question">
+    Yes. ChatGPT supports remote MCP servers via custom GPT actions and through the ChatGPT desktop MCP integration. Point it at `https://mcp.venture.caplia.ai/` with an `Authorization: Bearer cap_inv_live_*` header. See [Configure your MCP client](#configure-your-mcp-client) for the analogous config — same JSON shape, just different settings UI.
+  </Accordion>
+
+  <Accordion title="What about Claude Desktop, Cursor, or Windsurf?" icon="square-question">
+    All three work the same way — they're MCP clients that accept a remote MCP server URL plus an Authorization header. Setup snippets for each are below in [Configure your MCP client](#configure-your-mcp-client).
+  </Accordion>
+
+  <Accordion title="Is this for VCs only, or also accelerators and angels?" icon="square-question">
+    Both. Caplia is used by venture funds, accelerator programmes, angel networks, and corporate-development teams. The MCP server reflects whatever pipeline structure your Caplia account has — your views, your theses, your stages. There's nothing VC-specific in the protocol itself.
+  </Accordion>
+
+  <Accordion title="What does it cost?" icon="square-question">
+    Caplia's MCP server is free for any Caplia customer — there's no separate "API tier" or per-call charge in v1. Rate limits are enforced organically (a key that abuses the API gets revoked); we'll add explicit usage tiers if and when there's a real need.
+  </Accordion>
+
+  <Accordion title="How is this different from analysing a PDF directly in an LLM?" icon="square-question">
+    Two big differences. **First, scoring is consistent and explainable.** CRI uses the same scoring rubric across every deck, with traceable per-domain signals — not the LLM's mood that day. **Second, it lives in your pipeline.** Scored companies show up in your existing Caplia views, theses, and team dashboards. They're not one-off chat outputs that disappear after the conversation ends.
+  </Accordion>
+
+  <Accordion title="Is data isolated between customers and environments?" icon="square-question">
+    Yes. Every MCP request runs under the calling user's row-level security in Postgres — same isolation as the web app. Cross-tenant access is structurally impossible. There's also a **sandbox environment** (`mcp-sandbox.venture.caplia.ai`, `cap_inv_test_*` keys) with isolated test data, so integrators can develop without touching production.
+  </Accordion>
+
+  <Accordion title="Can I integrate without an AI agent — just programmatically?" icon="square-question">
+    Yes, use the [REST API](/api-reference/introduction) directly: `POST /v1/decks` for submission, `GET /v1/jobs/{id}` for polling. The MCP server wraps these same endpoints. Same keys, same scopes, same data.
+  </Accordion>
+
+  <Accordion title="Where do API keys come from?" icon="square-question">
+    Mint them yourself: **Caplia portal → Settings → API Keys → Create new key**. Pick `read` for read-only integrations or `write` if you need to submit decks. Keys are shown once at creation; copy to a secret manager. See [Authentication](/authentication) for the full key format and security guidance.
+  </Accordion>
+</AccordionGroup>
 
 ## Endpoints
 
 ```
-Production (live):    https://mcp.venture.caplia.ai/
-Sandbox  (staging):   https://mcp-sandbox.venture.caplia.ai/
+Production:    https://mcp.venture.caplia.ai/
+Sandbox:       https://mcp-sandbox.venture.caplia.ai/
 ```
 
 Transport: **Streamable HTTP** (single POST endpoint, JSON-RPC 2.0). Protocol version `2024-11-05`.
 
 ## Authentication
 
-Same Bearer-token model as the REST API:
+Bearer-token, same model as the REST API:
 
 ```
 Authorization: Bearer cap_inv_live_<32 chars>   # production
-Authorization: Bearer cap_inv_test_<32 chars>   # sandbox (staging)
+Authorization: Bearer cap_inv_test_<32 chars>   # sandbox
 ```
 
-Mint a key in **Settings → API Keys** in the Caplia app. See the [Authentication](/authentication) page for full details on key format, scopes, and security best practices.
+Mint a key in **Settings → API Keys** inside Caplia. See [Authentication](/authentication) for full details on key format, scopes, and security best practices.
 
 ## Tools
 
-The MCP server exposes 12 tools that map 1:1 to REST endpoints. All tools inherit your row-level security — you only see data your account already has access to in the web app.
+12 tools that map 1:1 to REST endpoints. All tools inherit row-level security — you only see data your account already has access to in the web app.
 
 ### Read tools (require `read` scope)
 
-| Tool | Description |
+| Tool | What an agent asks for it |
 |---|---|
-| `caplia_search` | Search the caller's pipeline by company name (max 25 results) |
-| `caplia_list_companies` | List companies in the caller's pipeline, with cursor pagination and optional stage/view filters |
-| `caplia_get_company` | Fetch the full profile of one company by UUID |
-| `caplia_get_company_scores` | CRI score + per-thesis match scores |
-| `caplia_get_company_metrics` | Traction and key metrics |
-| `caplia_list_company_documents` | List data-room files attached to a company |
-| `caplia_get_document_url` | 1-hour signed download URL for a single document |
-| `caplia_list_theses` | The team's active investment theses |
-| `caplia_list_views` | The team's configured pipeline views |
-| `caplia_get_view_companies` | Companies in a specific pipeline view |
-| `caplia_get_job` | Poll the status of an async deck-intake job |
+| `caplia_search` | "Find any companies in my pipeline named Tesla" |
+| `caplia_list_companies` | "Show me companies at the seed stage" |
+| `caplia_get_company` | "Tell me everything about company X" |
+| `caplia_get_company_scores` | "What's the CRI score and thesis fit for company X?" |
+| `caplia_get_company_metrics` | "Show me traction metrics for company X" |
+| `caplia_list_company_documents` | "What's in company X's data room?" |
+| `caplia_get_document_url` | "Download the pitch deck for company X" |
+| `caplia_list_theses` | "What investment theses does my team have?" |
+| `caplia_list_views` | "What pipeline views are configured?" |
+| `caplia_get_view_companies` | "Show me everything in the Monday screening view" |
+| `caplia_get_job` | "What's the status of the deck I just submitted?" |
 
 ### Write tools (require `write` scope)
 
-| Tool | Description |
+| Tool | What an agent asks for it |
 |---|---|
-| `caplia_submit_deck` | Submit a pitch deck (PDF) to the caller's pipeline. Args: `file_b64` (base64-encoded PDF), optional `filename`, `company_name`, `company_url`, `notes`. Returns `{job_id, status: "queued", poll_url}` — poll with `caplia_get_job`. Max 50 MB decoded. |
+| `caplia_submit_deck` | "Submit this PDF as a new deal" |
 
-Other write endpoints (create company shell, attach documents, add notes) are exposed by the REST API today and will be wrapped as MCP tools as customer demand surfaces.
+Max 50 MB per deck (base64-encoded). Other write endpoints (create company shell, attach documents, add notes) exist on the REST API and will be wrapped as MCP tools as customer demand surfaces.
 
-### Submitting a pitch deck from Claude Desktop
+## Configure your MCP client
 
-An agent with file access (Claude Desktop, Cursor) reads a local PDF, base64-encodes its bytes, and calls `caplia_submit_deck`:
-
-```
-"Submit ~/Downloads/tesla-seed-deck.pdf to my Caplia pipeline.
-Company name: Tesla, website: https://tesla.com, notes: YC demo day intro."
-```
-
-The agent reads the file, encodes, calls the tool, gets back a `job_id`, then can optionally poll `caplia_get_job` every few seconds to watch the company appear and the CRI/thesis scores land.
-
-## Quick test from the terminal
-
-If you want to verify the server works before wiring up an agent, use plain `curl`:
-
-```bash
-# Health check (no auth)
-curl https://mcp.venture.caplia.ai/health
-# → {"status":"ok","server":"caplia-api","version":"1.0.0",...}
-
-# Initialize handshake (no auth required for capability negotiation)
-curl -X POST https://mcp.venture.caplia.ai/ \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}'
-
-# List tools (no auth)
-curl -X POST https://mcp.venture.caplia.ai/ \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
-
-# Call a tool (auth required)
-curl -X POST https://mcp.venture.caplia.ai/ \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer cap_inv_live_..." \
-  -d '{
-    "jsonrpc":"2.0",
-    "id":3,
-    "method":"tools/call",
-    "params":{"name":"caplia_list_views","arguments":{}}
-  }'
-```
-
-## Configure Claude Desktop
+### Claude Desktop
 
 Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
@@ -113,9 +146,9 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 }
 ```
 
-Restart Claude Desktop. The Caplia tools appear under the connection icon at the bottom-left of any chat.
+Restart Claude Desktop. The Caplia tools appear under the plug icon at the bottom-left of any chat.
 
-## Configure Cursor
+### Cursor
 
 In Cursor settings → **Features → MCP → Add new MCP server**:
 
@@ -124,55 +157,139 @@ In Cursor settings → **Features → MCP → Add new MCP server**:
 - **URL**: `https://mcp.venture.caplia.ai/`
 - **Header**: `Authorization: Bearer cap_inv_live_YOUR_KEY_HERE`
 
-## Configure Windsurf, Cody, generic clients
+### Windsurf, Cody, ChatGPT, generic clients
 
 Most MCP clients accept the same three things:
 
-1. A URL: `https://mcp.venture.caplia.ai/`
-2. An `Authorization` header: `Bearer cap_inv_(live|test)_<key>`
-3. (Sometimes) a server name: `caplia`
+1. URL: `https://mcp.venture.caplia.ai/`
+2. `Authorization` header: `Bearer cap_inv_(live|test)_<key>`
+3. (Optional) Server name: `caplia`
 
-Refer to your client's MCP docs for the exact config file location.
+Refer to your client's MCP documentation for the exact config-file location.
 
-## Example agent prompts
+## Quick test from the terminal
 
-Once configured, you can ask your agent things like:
+If you want to verify the server works before wiring it into an agent:
 
-> "What companies are in my Caplia pipeline that are at the seed stage?"
-> "What's the CRI score for Intercom?"
-> "List documents in Tesla's data room and tell me which are pitch decks."
-> "Which theses does Revolut match against?"
+```bash
+# Health check (no auth)
+curl https://mcp.venture.caplia.ai/health
+# → {"status":"ok","server":"caplia-api","version":"1.0.0",...}
 
-The agent calls the relevant tools, parses the JSON responses, and reasons over them — no need to know the underlying REST API.
+# Initialize handshake
+curl -X POST https://mcp.venture.caplia.ai/ \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}'
 
-## Sandbox vs production
+# List tools (no auth)
+curl -X POST https://mcp.venture.caplia.ai/ \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
 
-Two parallel environments, each with its own branded URL and its own key prefix:
-
-|  | Production | Sandbox |
-|---|---|---|
-| MCP URL | `https://mcp.venture.caplia.ai/` | `https://mcp-sandbox.venture.caplia.ai/` |
-| REST URL | `https://api.venture.caplia.ai/` | `https://api-sandbox.venture.caplia.ai/` |
-| Accepts | `cap_inv_live_*` keys only | `cap_inv_test_*` keys only |
-| Mint key from | Production Caplia portal | Staging Caplia portal |
-| Data | Your real pipeline | Sandbox / test data, isolated |
-
-A `cap_inv_live_*` key hitting a sandbox URL gets `401`, and a `cap_inv_test_*` key hitting a production URL gets `401`. Fail-closed in both directions, so leaking a key into the wrong environment can't accidentally read or write real data.
-
-For testing integrations without affecting production:
-
-- Mint a `cap_inv_test_*` key from your staging Caplia portal
-- Point your MCP client at `https://mcp-sandbox.venture.caplia.ai/`
-- Same tools, same protocol, isolated dataset
+# Submit a pitch deck (requires write scope)
+B64=$(base64 -i deck.pdf | tr -d '\n')
+curl -X POST https://mcp.venture.caplia.ai/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer cap_inv_live_..." \
+  -d "$(jq -n --arg b64 "$B64" '{
+    jsonrpc:"2.0", id:1, method:"tools/call",
+    params:{
+      name:"caplia_submit_deck",
+      arguments:{file_b64:$b64, filename:"deck.pdf"}
+    }
+  }')"
+```
 
 ## Limitations
 
-- **One write tool today** (`caplia_submit_deck`). The other REST write endpoints (create company shell, attach documents, add notes) will be wrapped as MCP tools as customer demand surfaces.
+- **One write tool today** (`caplia_submit_deck`). Other REST write endpoints (create company shell, attach documents, add notes) will be wrapped as MCP tools as customer demand surfaces.
 - **No streaming responses.** Each tool call is a single request-response. Long-running operations (deck processing) are polled via `caplia_get_job`.
-- **Same rate limits as REST.** v1 doesn't enforce explicit rate limits; abuse triggers revocation rather than throttling.
-- **50 MB max deck size**, base64-encoded. Most pitch decks are well under this; if you need to submit a larger document, use the REST `POST /v1/companies/{id}/documents` endpoint or compress the PDF first.
-- **JSON output only.** Each tool returns the raw JSON from the REST endpoint, serialized as a text content block. Agents parse it normally.
+- **50 MB max deck size**, base64-encoded.
+- **JSON output only.** Each tool returns raw JSON from the REST endpoint, serialised as a text content block. Agents parse it normally.
 
-## Source of truth
+## Source
 
-The MCP server lives at [`supabase/functions/mcp-v1/`](https://github.com/Caplia-Tech/caplia-investor/tree/main/supabase/functions/mcp-v1) in the investor portal repo. Tool definitions are inline in `index.ts`. Open a PR there to propose new tools or refine existing ones.
+Implementation: [`supabase/functions/mcp-v1/`](https://github.com/Caplia-Tech/caplia-investor/tree/main/supabase/functions/mcp-v1). Tool definitions are inline in `index.ts`. Open a PR there to propose new tools or refine existing ones.
+
+{/*
+  Structured data for AI engines and search engines. JSON-LD below is
+  invisible to readers but parsed by Google, Bing, and AI crawlers that
+  consume schema.org markup — it lets them extract the FAQ pairs and the
+  software-application metadata as discrete answer units rather than
+  having to interpret prose.
+*/}
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Caplia MCP Server",
+          "applicationCategory": "DeveloperApplication",
+          "applicationSubCategory": "Model Context Protocol Server",
+          "operatingSystem": "Any (HTTP API)",
+          "description": "MCP server for venture-capital pitch-deck scoring and deal-flow management. Lets AI agents — Claude Desktop, Cursor, ChatGPT, Windsurf — submit pitch decks for CRI quality scoring and thesis matching, manage investor pipeline, and pull data-room contents.",
+          "url": "https://mcp.venture.caplia.ai/",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "audience": {
+            "@type": "Audience",
+            "audienceType": "Venture capital funds, accelerators, angel networks, corporate development teams"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Caplia",
+            "url": "https://www.caplia.com"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Does Caplia have an MCP server for rating or scoring pitch decks?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. The caplia_submit_deck tool accepts a PDF, runs it through Caplia's intake pipeline — text extraction, company profile creation, CRI quality scoring, and thesis-fit scoring — and returns a job_id you can poll with caplia_get_job. Endpoint: https://mcp.venture.caplia.ai/"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I use the Caplia MCP server from ChatGPT?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. ChatGPT supports remote MCP servers via custom GPT actions and the ChatGPT desktop MCP integration. Point it at https://mcp.venture.caplia.ai/ with an Authorization: Bearer cap_inv_live_* header."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is CRI scoring?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "CRI (Caplia Readiness Index) is a 0-100 quality score for a company that rolls up signals across team, market, product, traction, financials, defensibility, and execution. The MCP server returns the overall score plus per-domain breakdowns and the underlying signals."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is the Caplia MCP server for VCs only or also accelerators?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Both. Caplia is used by venture funds, accelerator programmes, angel networks, and corporate-development teams. The MCP server reflects whatever pipeline structure your Caplia account has — your views, theses, and stages."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What does the Caplia MCP server cost?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Free for any Caplia customer. No separate API tier or per-call charge in v1. Rate limits are enforced organically (abusive keys get revoked)."
+              }
+            }
+          ]
+        }
+      ]
+    })
+  }}
+/>
