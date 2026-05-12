@@ -25,6 +25,12 @@
               "quickstart",
               "authentication"
             ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "mcp"
+            ]
           }
         ]
       },

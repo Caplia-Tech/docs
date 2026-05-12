@@ -18,8 +18,8 @@ The Caplia API gives external tools - CRMs, Slack apps, scheduled scripts, MCP c
   <Card title="Poll for results" icon="rotate" href="/api-reference/introduction">
     The deck upload is async. Poll the jobs endpoint to watch the company appear, then the CRI score, then the thesis matches - surface partial results to your users as they land.
   </Card>
-  <Card title="Get signed download URLs" icon="file-arrow-down" href="/api-reference/introduction">
-    Pull individual data room documents through the API with 1-hour signed URLs - the file bytes never pass through Caplia's API tier, keeping latency low even for large PDFs.
+  <Card title="Use it from AI agents" icon="plug" href="/mcp">
+    A Model Context Protocol (MCP) server at `mcp.venture.caplia.ai` lets Claude Desktop, Cursor, Windsurf, and other MCP-aware clients call Caplia tools directly.
   </Card>
 </Columns>
 
@@ -44,13 +44,16 @@ This is **v1**. All paths are prefixed with `/v1`. We do not break v1 - additive
 https://api.venture.caplia.ai/v1
 ```
 
+## Environments
+
+- **Production.** `api.venture.caplia.ai` — accepts `cap_inv_live_*` keys minted from your live Caplia portal. Your pipeline data.
+- **Sandbox.** Use the staging Caplia portal to mint `cap_inv_test_*` keys against a separate staging Supabase project. The same endpoints and tools work, but the data is isolated from production. Ask your team for the staging URL if you don't already have it.
+
 ## Coming soon
 
 - **Updates and deletes.** Only `POST` (create) and `GET` (read) today.
 - **Webhooks.** Polling only today via the [jobs endpoint](/api-reference/introduction). Webhooks with HMAC signing land in v1.1.
-- **MCP server.** [`mcp.venture.caplia.ai`](https://mcp.venture.caplia.ai) - the MCP server gets its own spec and will build on top of these REST endpoints.
-- **Per-resource scopes.** Two scopes today: `read` and `write`. Finer scopes (`companies:write`, `decks:write`).
-- **Sandbox / test keys.** Test keys (`cap_inv_test_*`) are reserved in the format and a separate sandbox environment is on the roadmap.
+- **MCP write tools.** The [MCP server](/mcp) exposes 11 read-only tools today; write tools (create company, submit deck) land in v1.1.
 
 ## Need help?
 

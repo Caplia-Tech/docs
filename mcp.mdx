@@ -1,0 +1,148 @@
+---
+title: "MCP Server"
+description: "Use Caplia from Claude Desktop, Cursor, Windsurf, or any MCP-compatible AI client."
+icon: "plug"
+---
+
+Caplia exposes a **Model Context Protocol (MCP)** server that wraps the REST API as tools your AI agent can call directly. Once configured, agents can search your pipeline, read company profiles, fetch CRI and thesis scores, list data-room contents, and poll deck-intake jobs — all without you copy-pasting URLs or curl commands.
+
+## Endpoints
+
+```
+Production (live):    https://mcp.venture.caplia.ai/
+Sandbox  (staging):   https://bilxeepjovvotbrmtmon.supabase.co/functions/v1/mcp-v1/
+```
+
+Transport: **Streamable HTTP** (single POST endpoint, JSON-RPC 2.0). Protocol version `2024-11-05`.
+
+## Authentication
+
+Same Bearer-token model as the REST API:
+
+```
+Authorization: Bearer cap_inv_live_<32 chars>   # production
+Authorization: Bearer cap_inv_test_<32 chars>   # sandbox (staging)
+```
+
+Mint a key in **Settings → API Keys** in the Caplia app. See the [Authentication](/authentication) page for full details on key format, scopes, and security best practices.
+
+## Tools
+
+The MCP server exposes 11 read-only tools that map 1:1 to REST endpoints. All tools inherit your row-level security — you only see data your account already has access to in the web app.
+
+| Tool | Description |
+|---|---|
+| `caplia_search` | Search the caller's pipeline by company name (max 25 results) |
+| `caplia_list_companies` | List companies in the caller's pipeline, with cursor pagination and optional stage/view filters |
+| `caplia_get_company` | Fetch the full profile of one company by UUID |
+| `caplia_get_company_scores` | CRI score + per-thesis match scores |
+| `caplia_get_company_metrics` | Traction and key metrics |
+| `caplia_list_company_documents` | List data-room files attached to a company |
+| `caplia_get_document_url` | 1-hour signed download URL for a single document |
+| `caplia_list_theses` | The team's active investment theses |
+| `caplia_list_views` | The team's configured pipeline views |
+| `caplia_get_view_companies` | Companies in a specific pipeline view |
+| `caplia_get_job` | Poll the status of an async deck-intake job |
+
+Write endpoints (create company, submit deck) are not yet exposed via MCP. They'll land in v1.1.
+
+## Quick test from the terminal
+
+If you want to verify the server works before wiring up an agent, use plain `curl`:
+
+```bash
+# Health check (no auth)
+curl https://mcp.venture.caplia.ai/health
+# → {"status":"ok","server":"caplia-api","version":"1.0.0",...}
+
+# Initialize handshake (no auth required for capability negotiation)
+curl -X POST https://mcp.venture.caplia.ai/ \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}'
+
+# List tools (no auth)
+curl -X POST https://mcp.venture.caplia.ai/ \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
+
+# Call a tool (auth required)
+curl -X POST https://mcp.venture.caplia.ai/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer cap_inv_live_..." \
+  -d '{
+    "jsonrpc":"2.0",
+    "id":3,
+    "method":"tools/call",
+    "params":{"name":"caplia_list_views","arguments":{}}
+  }'
+```
+
+## Configure Claude Desktop
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "caplia": {
+      "url": "https://mcp.venture.caplia.ai/",
+      "headers": {
+        "Authorization": "Bearer cap_inv_live_YOUR_KEY_HERE"
+      }
+    }
+  }
+}
+```
+
+Restart Claude Desktop. The Caplia tools appear under the connection icon at the bottom-left of any chat.
+
+## Configure Cursor
+
+In Cursor settings → **Features → MCP → Add new MCP server**:
+
+- **Name**: `caplia`
+- **Type**: `sse` (streamable HTTP)
+- **URL**: `https://mcp.venture.caplia.ai/`
+- **Header**: `Authorization: Bearer cap_inv_live_YOUR_KEY_HERE`
+
+## Configure Windsurf, Cody, generic clients
+
+Most MCP clients accept the same three things:
+
+1. A URL: `https://mcp.venture.caplia.ai/`
+2. An `Authorization` header: `Bearer cap_inv_(live|test)_<key>`
+3. (Sometimes) a server name: `caplia`
+
+Refer to your client's MCP docs for the exact config file location.
+
+## Example agent prompts
+
+Once configured, you can ask your agent things like:
+
+> "What companies are in my Caplia pipeline that are at the seed stage?"
+> "What's the CRI score for Intercom?"
+> "List documents in Tesla's data room and tell me which are pitch decks."
+> "Which theses does Revolut match against?"
+
+The agent calls the relevant tools, parses the JSON responses, and reasons over them — no need to know the underlying REST API.
+
+## Sandbox vs production
+
+The production MCP server (`mcp.venture.caplia.ai`) only accepts `cap_inv_live_*` keys minted from production Caplia.
+
+For testing integrations without affecting production data:
+
+- Mint a `cap_inv_test_*` key from your staging Caplia portal
+- Point your MCP client at the staging MCP URL (shown at the top of this page)
+- Same tools, isolated data
+
+## Limitations
+
+- **Read-only in v1.** Write operations (create company, submit deck) land in v1.1.
+- **No streaming responses.** Each tool call is a single request-response. Long-running operations (deck processing) are polled via `caplia_get_job`.
+- **Same rate limits as REST.** v1 doesn't enforce explicit rate limits; abuse triggers revocation rather than throttling.
+- **JSON output only.** Each tool returns the raw JSON from the REST endpoint, serialized as a text content block. Agents parse it normally.
+
+## Source of truth
+
+The MCP server lives at [`supabase/functions/mcp-v1/`](https://github.com/Caplia-Tech/caplia-investor/tree/main/supabase/functions/mcp-v1) in the investor portal repo. Tool definitions are inline in `index.ts`. Open a PR there to propose new tools or refine existing ones.
