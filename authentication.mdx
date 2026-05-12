@@ -142,6 +142,18 @@ If the key is valid but doesn't carry the scope this endpoint requires:
 
 The `request_id` value is useful when emailing support - it lets us trace your exact request in our logs.
 
+## Short-lived upload tokens (`cap_upload_*`)
+
+The Venture Form Widget — used to embed pitch-deck upload into public application forms — does **not** use Personal Access Tokens. Long-lived `cap_inv_*` keys must never ship to a browser. Instead, public form uploads use a two-step token flow that mirrors S3 presigned POSTs:
+
+1. The widget calls `POST /v1/uploads/sign` with an opaque, server-allowlisted `form_id`. No auth header required.
+2. Caplia returns a `cap_upload_<jwt>` token — HMAC-signed, 5-minute TTL, single-use, bound to one upload with a max size and MIME type.
+3. The widget POSTs the PDF to `POST /v1/uploads/decks` with `Authorization: Bearer cap_upload_<jwt>`.
+
+You never mint or manage `cap_upload_*` tokens by hand — Caplia issues them on behalf of allowlisted forms. They're not interchangeable with `cap_inv_*` keys and they can't read any data; they exist purely to authorise a single deck submission.
+
+See [Venture Form Widget](/integrations/venture-form-widget) for the full integration guide.
+
 ## Revoking a key
 
 In **Settings → API Keys**, click the **Revoke** button on the row. Revocation is immediate - the next request with that key returns `401` within seconds.
