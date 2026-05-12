@@ -1,6 +1,6 @@
 ---
 title: "Quickstart"
-description: "Mint a key, send a deck, get back enriched company data — under three minutes."
+description: "Mint a key, send a deck, get back enriched company data - under three minutes."
 icon: "bolt"
 ---
 
@@ -13,7 +13,7 @@ By the end of this page, you'll have:
 
 Total time: about three minutes. You'll need a terminal with `curl`.
 
-## Step 1 — Create an API key
+## Step 1 - Create an API key
 
 In the Caplia portal, go to **Settings → API Keys → Create new key**:
 
@@ -21,13 +21,13 @@ In the Caplia portal, go to **Settings → API Keys → Create new key**:
 2. Choose scope: pick `write` if you're sending decks; `read` is enough for read-only integrations
 3. Click **Create**
 
-You'll see the plaintext key **exactly once** — it looks like:
+You'll see the plaintext key **exactly once** - it looks like:
 
 ```
 cap_inv_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS
 ```
 
-Copy it somewhere safe. If you lose it, you'll need to revoke and create a new one — Caplia never stores the plaintext.
+Copy it somewhere safe. If you lose it, you'll need to revoke and create a new one - Caplia never stores the plaintext.
 
 <Tip>
 Set it as an environment variable in your shell so the rest of this guide is copy-paste-able:
@@ -37,7 +37,7 @@ export CAPLIA_KEY=cap_inv_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS
 ```
 </Tip>
 
-## Step 2 — Confirm the key works
+## Step 2 - Confirm the key works
 
 The `/v1/health` endpoint doesn't require auth, but it's a useful first check:
 
@@ -52,7 +52,7 @@ curl https://api.venture.caplia.ai/v1/health
 }
 ```
 
-Now try an authenticated request — list companies in your pipeline:
+Now try an authenticated request - list companies in your pipeline:
 
 ```bash
 curl https://api.venture.caplia.ai/v1/companies \
@@ -72,9 +72,9 @@ curl https://api.venture.caplia.ai/v1/companies \
 ]
 ```
 
-If you see a `401`, double-check the `Authorization` header — it should be `Bearer cap_inv_live_...` with a single space between.
+If you see a `401`, double-check the `Authorization` header - it should be `Bearer cap_inv_live_...` with a single space between.
 
-## Step 3 — Submit a pitch deck
+## Step 3 - Submit a pitch deck
 
 This is the main "push deals in" flow. The deck goes through Caplia's intake pipeline, gets text-extracted, the company is created, then CRI and thesis scores compute in the background.
 
@@ -84,7 +84,7 @@ curl -X POST https://api.venture.caplia.ai/v1/decks \
   -F "file=@pitch.pdf" \
   -F "company_name=Tesla" \
   -F "company_url=https://tesla.com" \
-  -F "notes=Met them at YC demo day — interesting battery tech angle"
+  -F "notes=Met them at YC demo day - interesting battery tech angle"
 ```
 
 ```json Response (202 Accepted)
@@ -95,13 +95,13 @@ curl -X POST https://api.venture.caplia.ai/v1/decks \
 }
 ```
 
-The response comes back fast — the actual processing happens asynchronously. `company_name`, `company_url`, and `notes` are optional but help the worker create a cleaner company record.
+The response comes back fast - the actual processing happens asynchronously. `company_name`, `company_url`, and `notes` are optional but help the worker create a cleaner company record.
 
 <Note>
-The deck file must be a PDF, ≤ 50 MB. Decks submitted via the API auto-approve into your pipeline — the act of holding a scoped API key is sufficient trust.
+The deck file must be a PDF, ≤ 50 MB. Decks submitted via the API auto-approve into your pipeline - the act of holding a scoped API key is sufficient trust.
 </Note>
 
-## Step 4 — Poll the job
+## Step 4 - Poll the job
 
 The job moves through `queued → processing → completed`. Poll every 3 seconds:
 

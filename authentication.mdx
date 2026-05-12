@@ -10,7 +10,7 @@ The Caplia API uses **Personal Access Tokens (PATs)** sent as Bearer tokens in t
 Authorization: Bearer cap_inv_live_<32 alphanumeric chars>
 ```
 
-There is no other authentication method — no OAuth, no session cookies, no IP allowlists. PATs are tied to your individual user account; they inherit your permissions inside Caplia via row-level security.
+There is no other authentication method - no OAuth, no session cookies, no IP allowlists. PATs are tied to your individual user account; they inherit your permissions inside Caplia via row-level security.
 
 ## Key format
 
@@ -18,7 +18,7 @@ There is no other authentication method — no OAuth, no session cookies, no IP 
 cap_inv_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS
 └─┬─┘ ─┬─ ─┬─  └────────────┬──────────────┘
   │    │   │                 │
-  │    │   │                 └── 32-char alphanumeric (base62) — ~190 bits of entropy
+  │    │   │                 └── 32-char alphanumeric (base62) - ~190 bits of entropy
   │    │   └──────────────────── env: `live` (production); `test` reserved for future sandbox
   │    └──────────────────────── portal: `inv` (investor); `fnd` reserved for founder portal
   └───────────────────────────── vendor prefix
@@ -30,14 +30,14 @@ The prefix makes leaked keys instantly identifiable and greppable in logs. If yo
 
 1. Sign in to Caplia
 2. **Settings → API Keys → Create new key**
-3. Give it a descriptive name (you'll see this in the list later — "CRM integration", "Zapier prod", etc.)
+3. Give it a descriptive name (you'll see this in the list later - "CRM integration", "Zapier prod", etc.)
 4. Pick scope: `read` or `write` (see below)
 5. Click **Create**
 
 The plaintext is shown **exactly once**, then never again. Caplia stores only a hash. Copy it to your secret manager immediately.
 
 <Warning>
-If you lose the plaintext, the key cannot be recovered — you must revoke and create a new one. This is deliberate; it means a Caplia DB leak doesn't leak your API keys.
+If you lose the plaintext, the key cannot be recovered - you must revoke and create a new one. This is deliberate; it means a Caplia DB leak doesn't leak your API keys.
 </Warning>
 
 ## Scopes
@@ -45,11 +45,11 @@ If you lose the plaintext, the key cannot be recovered — you must revoke and c
 v1 has two scopes. A key carries one or both.
 
 <ResponseField name="read" type="scope">
-  Read access to all `GET` endpoints — companies, scores, metrics, documents, theses, views, jobs.
+  Read access to all `GET` endpoints - companies, scores, metrics, documents, theses, views, jobs.
 </ResponseField>
 
 <ResponseField name="write" type="scope">
-  Read access (everything `read` allows) **plus** `POST` endpoints — create companies, upload decks, attach documents, add notes.
+  Read access (everything `read` allows) **plus** `POST` endpoints - create companies, upload decks, attach documents, add notes.
 </ResponseField>
 
 Pick `read` for dashboard-style integrations that only consume Caplia data. Pick `write` when you also need to push deals or documents in.
@@ -129,15 +129,15 @@ If the key is valid but doesn't carry the scope this endpoint requires:
 }
 ```
 
-The `request_id` value is useful when emailing support — it lets us trace your exact request in our logs.
+The `request_id` value is useful when emailing support - it lets us trace your exact request in our logs.
 
 ## Revoking a key
 
-In **Settings → API Keys**, click the **Revoke** button on the row. Revocation is immediate — the next request with that key returns `401` within seconds.
+In **Settings → API Keys**, click the **Revoke** button on the row. Revocation is immediate - the next request with that key returns `401` within seconds.
 
 If you suspect a key has leaked:
 
-1. **Revoke first** — don't wait
+1. **Revoke first** - don't wait
 2. Then investigate where it leaked (commit history, logs, screenshots)
 3. Mint a new key, rotate any integrations that use the old one
 
@@ -161,4 +161,4 @@ We **never** log:
 - The `Authorization` header
 - Request bodies (including uploaded files)
 
-If you see a full key in a log line anywhere — Caplia's, your CRM's, your own — treat it as a leak.
+If you see a full key in a log line anywhere - Caplia's, your CRM's, your own - treat it as a leak.

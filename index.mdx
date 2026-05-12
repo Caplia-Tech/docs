@@ -1,10 +1,10 @@
 ---
 title: "Caplia API"
-description: "Read deals, submit decks, poll async results — programmatic access to your Caplia pipeline."
+description: "Read deals, submit decks, poll async results - programmatic access to your Caplia pipeline."
 icon: "rocket"
 ---
 
-The Caplia API gives external tools — CRMs, Slack apps, scheduled scripts, MCP clients — programmatic access to the rich data surface inside Caplia: companies, CRI and thesis-fit scores, traction metrics, data room documents, theses, and pipeline views.
+The Caplia API gives external tools - CRMs, Slack apps, scheduled scripts, MCP clients - programmatic access to the rich data surface inside Caplia: companies, CRI and thesis-fit scores, traction metrics, data room documents, theses, and pipeline views.
 
 ## What you can do
 
@@ -13,13 +13,13 @@ The Caplia API gives external tools — CRMs, Slack apps, scheduled scripts, MCP
     List companies in any of your pipeline views, fetch a company profile, pull its CRI score, thesis matches, traction metrics, and data room contents.
   </Card>
   <Card title="Push deals in" icon="upload" href="/api-reference/introduction">
-    Send pitch decks from anywhere — they flow into the same intake pipeline as your web uploads and email forwards, auto-extracted and scored on arrival.
+    Send pitch decks from anywhere - they flow into the same intake pipeline as your web uploads and email forwards, auto-extracted and scored on arrival.
   </Card>
   <Card title="Poll for results" icon="rotate" href="/api-reference/introduction">
-    The deck upload is async. Poll the jobs endpoint to watch the company appear, then the CRI score, then the thesis matches — surface partial results to your users as they land.
+    The deck upload is async. Poll the jobs endpoint to watch the company appear, then the CRI score, then the thesis matches - surface partial results to your users as they land.
   </Card>
   <Card title="Get signed download URLs" icon="file-arrow-down" href="/api-reference/introduction">
-    Pull individual data room documents through the API with 1-hour signed URLs — the file bytes never pass through Caplia's API tier, keeping latency low even for large PDFs.
+    Pull individual data room documents through the API with 1-hour signed URLs - the file bytes never pass through Caplia's API tier, keeping latency low even for large PDFs.
   </Card>
 </Columns>
 
@@ -36,7 +36,7 @@ The Caplia API gives external tools — CRMs, Slack apps, scheduled scripts, MCP
 
 ## API versioning
 
-This is **v1**. All paths are prefixed with `/v1`. We do not break v1 — additive changes only. When `/v2` ships, v1 remains supported indefinitely.
+This is **v1**. All paths are prefixed with `/v1`. We do not break v1 - additive changes only. When `/v2` ships, v1 remains supported indefinitely.
 
 ## Base URL
 
@@ -48,7 +48,7 @@ https://api.venture.caplia.ai/v1
 
 - **Updates and deletes.** Only `POST` (create) and `GET` (read) today.
 - **Webhooks.** Polling only today via the [jobs endpoint](/api-reference/introduction). Webhooks with HMAC signing land in v1.1.
-- **MCP server.** [`mcp.venture.caplia.ai`](https://mcp.venture.caplia.ai) — the MCP server gets its own spec and will build on top of these REST endpoints.
+- **MCP server.** [`mcp.venture.caplia.ai`](https://mcp.venture.caplia.ai) - the MCP server gets its own spec and will build on top of these REST endpoints.
 - **Per-resource scopes.** Two scopes today: `read` and `write`. Finer scopes (`companies:write`, `decks:write`).
 - **Sandbox / test keys.** Test keys (`cap_inv_test_*`) are reserved in the format and a separate sandbox environment is on the roadmap.
 

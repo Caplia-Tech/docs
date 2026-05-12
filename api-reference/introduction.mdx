@@ -28,7 +28,7 @@ Every endpoint except `GET /v1/health` and `GET /v1/openapi.json` requires the `
 
 ### Response shape
 
-**Success** — bare resource (no envelope):
+**Success** - bare resource (no envelope):
 
 ```json
 {
@@ -38,7 +38,7 @@ Every endpoint except `GET /v1/health` and `GET /v1/openapi.json` requires the `
 }
 ```
 
-**Error** — always envelope-wrapped:
+**Error** - always envelope-wrapped:
 
 ```json
 {
@@ -58,17 +58,17 @@ Always include `request_id` when contacting support.
 |---|---|
 | `200` | Read success |
 | `201` | Create success |
-| `202` | Accepted but async — see `/v1/jobs/{id}` to track |
+| `202` | Accepted but async - see `/v1/jobs/{id}` to track |
 | `400` | Bad input (validation) |
 | `401` | Missing or invalid API key |
 | `403` | Key valid, but doesn't carry the required scope |
 | `404` | Resource not found, or outside your team's visibility |
 | `409` | Conflict (e.g. duplicate submission) |
 | `429` | Rate limited (not yet enforced in v1) |
-| `500` | Unexpected server error — please report with `request_id` |
+| `500` | Unexpected server error - please report with `request_id` |
 
 <Note>
-We deliberately return `404` rather than `403` when you query a resource you can see structurally but don't own — this prevents enumeration of other teams' data.
+We deliberately return `404` rather than `403` when you query a resource you can see structurally but don't own - this prevents enumeration of other teams' data.
 </Note>
 
 ### Pagination
