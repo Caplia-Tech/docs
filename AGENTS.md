@@ -31,3 +31,15 @@
 
 {/* Define what should and shouldn't be documented */}
 {/* Example: Don't document internal admin features */}
+
+## Cursor Cloud specific instructions
+
+- Mintlify site. The `mint` CLI is a global npm tool, not a repo dependency, so it is intentionally **not** part of the Cloud update script. The default global npm prefix on the VM is not writable, so install `mint` to a user prefix:
+
+  ```
+  npm config set prefix "$HOME/.npm-global"
+  npm install -g mint
+  npm config delete prefix   # optional: removes an nvm "prefix" warning; the binary stays at ~/.npm-global/bin/mint
+  ```
+
+- Preview with `mint dev` (serves on http://localhost:3000); check links with `mint broken-links`.
