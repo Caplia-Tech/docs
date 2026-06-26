@@ -12,7 +12,7 @@ The Founder API is in **preview**. Use the sandbox host (`api-sandbox.venture.ca
 
 <Steps>
   <Step title="Get a founder key">
-    During the preview, founder keys are issued by Caplia. Email <a href="mailto:paul@caplia.ai">paul@caplia.ai</a> from your Caplia account address and tell us which company it's for. You'll get a company-scoped `cap_fnd_*` key back. See [Authentication](/founder/authentication) for the key model.
+    Mint a company-scoped key in the [Caplia founder portal](https://app.caplia.ai): account menu → **API Keys** → **Create key**, pick a `read` (or `read` + `write`) scope, and copy the plaintext - it's shown once. You must be a company admin. See [Authentication](/founder/authentication) for the key model.
 
     Store it in an environment variable - never paste it into a browser or commit it:
 

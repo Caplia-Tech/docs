@@ -37,13 +37,20 @@ Use a `test` key while you build and debug an integration so you can't accidenta
 
 ## Getting a key
 
+Mint a key yourself in the [Caplia founder portal](https://app.caplia.ai):
+
+1. Sign in to the founder portal
+2. Open the account menu → **API Keys** (`/account/api-keys`)
+3. Click **Create key**, give it a descriptive name, and pick a scope - `read`, or `read` + `write` (see below)
+4. Copy the key - the plaintext is shown **exactly once**
+
+Only a **company admin** can mint a founder key - the person who controls the company's profile and data room on Caplia. That's deliberate: the key can edit your public-facing profile and publish a pitch deck, so it carries the same authority you have in the app. The key is automatically scoped to your company; there's nothing else to configure.
+
+Caplia stores only a hash of the key. If you lose the plaintext it can't be recovered - revoke it and create a new one. Copy it to your secret manager immediately.
+
 <Note>
-**During the preview, founder keys are issued by Caplia.** Self-serve key management in the founder portal is coming with general availability. To get a key today, email <a href="mailto:paul@caplia.ai">paul@caplia.ai</a> from the address on your Caplia account, and tell us which company it's for. We'll mint a company-scoped key and send it back over a secure channel.
+The Founder API is in **preview**. The **API Keys** page and the founder endpoints land in production with our next release; during the preview, build against the `-sandbox` hosts with a `cap_fnd_test_*` key.
 </Note>
-
-A founder key can only be minted for a **company admin** - the person who controls the company's profile and data room on Caplia. That's deliberate: the key can edit your public-facing profile and publish a pitch deck, so it carries the same authority you have in the app.
-
-The plaintext is shown **exactly once**. Caplia stores only a hash - if you lose the plaintext, the key can't be recovered and must be revoked and replaced. Copy it to your secret manager immediately.
 
 <Warning>
 A `cap_fnd_*` key can edit your company profile and publish your pitch deck. Treat it like a password: never commit it to source control, never paste it into a browser, and revoke it the moment you suspect it has leaked.
@@ -129,7 +136,7 @@ The `request_id` is useful when emailing support - it lets us trace your exact r
 
 ## Revoking a key
 
-Email <a href="mailto:paul@caplia.ai">paul@caplia.ai</a> to revoke a key during the preview; self-serve revocation lands with general availability. If you suspect a key has leaked, ask us to revoke first, then investigate where it leaked, then request a replacement.
+In the founder portal, open **API Keys** and click **Revoke** on the row. Revocation is immediate - the next request with that key returns `401` within seconds. If you suspect a key has leaked, revoke first, then investigate where it leaked, then mint a replacement.
 
 ## Security best practices
 
