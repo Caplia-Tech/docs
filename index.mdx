@@ -1,69 +1,40 @@
 ---
 title: "Caplia API"
-description: "Read deals, submit decks, poll async results - programmatic access to your Caplia pipeline."
-icon: "rocket"
+description: "Programmatic access to Caplia - for investors reading deal flow, and for founders improving their own company."
+icon: "house"
 ---
 
-The Caplia API gives external tools - CRMs, Slack apps, scheduled scripts, MCP clients - programmatic access to the rich data surface inside Caplia: companies, CRI and thesis-fit scores, traction metrics, data room documents, theses, and pipeline views.
-
-## What you can do
+Caplia has two API surfaces. They share the same hosts but serve opposite sides of the table - **pick the one that's you** so you're reading the right docs.
 
 <Columns cols={2}>
-  <Card title="Read your pipeline" icon="list" href="/api-reference/introduction">
-    List companies in any of your pipeline views, fetch a company profile, pull its CRI score, thesis matches, traction metrics, and data room contents.
+  <Card title="I'm an investor" icon="magnifying-glass-chart" href="/quickstart">
+    **Venture API.** Read your deal flow, submit and score inbound pitch decks, pull CRI and thesis-fit scores, metrics, and data rooms across your whole pipeline. For VC funds, accelerators, angels, and corp-dev teams.
+
+    Keys: `cap_inv_*` · Namespace: `/v1/companies`, `/v1/search`, …
   </Card>
-  <Card title="Push deals in" icon="upload" href="/api-reference/introduction">
-    Send pitch decks from anywhere - they flow into the same intake pipeline as your web uploads and email forwards, auto-extracted and scored on arrival.
-  </Card>
-  <Card title="Poll for results" icon="rotate" href="/api-reference/introduction">
-    The deck upload is async. Poll the jobs endpoint to watch the company appear, then the CRI score, then the thesis matches - surface partial results to your users as they land.
-  </Card>
-  <Card title="Use it from AI agents" icon="plug" href="/integrations/mcp">
-    A Model Context Protocol (MCP) server at `mcp.venture.caplia.ai` lets Claude Desktop, Cursor, Windsurf, and other MCP-aware clients call Caplia tools directly.
-  </Card>
-  <Card title="Embed a deck-upload form" icon="upload" href="/integrations/venture-form-widget">
-    Drop the Venture Form Widget into your Webflow, WordPress, or HTML site to push pitch decks straight to Caplia from a public form — no API key in the browser. Built for VC inbound, accelerators, awards, and corp-dev intakes.
+  <Card title="I'm a founder" icon="rocket" href="/founder/index">
+    **Founder API.** See *your own* company's CRI score and the rubric's improvement guidance, and iterate your pitch deck privately until it clears Caplia Verified (CRI ≥ 700). For founders raising on Caplia.
+
+    Keys: `cap_fnd_*` · Namespace: `/v1/me/*`
   </Card>
 </Columns>
 
-## Start here
+## Not sure which you are?
 
-<CardGroup cols={2}>
-  <Card title="Quickstart" icon="bolt" href="/quickstart" horizontal>
-    Get your first request returning data in under three minutes.
-  </Card>
-  <Card title="Authentication" icon="key" href="/authentication" horizontal>
-    How API keys work, scopes, and the Bearer auth header.
-  </Card>
-</CardGroup>
+| If you want to… | You want the… |
+|---|---|
+| Read and triage *other companies'* deals in your pipeline | [Venture API](/quickstart) |
+| Score inbound decks at scale, or embed an upload form on your site | [Venture API](/quickstart) |
+| Improve *your own* company's score and pitch deck | [Founder API](/founder/index) |
+| Connect Claude to rewrite your deck until you're Caplia Verified | [Founder API](/founder/deck-loop) |
 
-## API versioning
+Both surfaces run on `api.venture.caplia.ai` and `mcp.venture.caplia.ai`. Your API key prefix - `cap_inv_*` or `cap_fnd_*` - decides which one you get; they're not interchangeable.
 
-This is **v1**. All paths are prefixed with `/v1`. We do not break v1 - additive changes only. When `/v2` ships, v1 remains supported indefinitely.
+## Common to both
 
-## Base URL
-
-```
-https://api.venture.caplia.ai/v1
-```
-
-## Environments
-
-|  | Production | Sandbox |
-|---|---|---|
-| REST | `https://api.venture.caplia.ai/v1/...` | `https://api-sandbox.venture.caplia.ai/v1/...` |
-| MCP | `https://mcp.venture.caplia.ai/` | `https://mcp-sandbox.venture.caplia.ai/` |
-| Key prefix | `cap_inv_live_*` | `cap_inv_test_*` |
-| Mint from | Production Caplia portal | Staging Caplia portal |
-| Data | Real pipeline | Sandbox / test data |
-
-Cross-environment leaks fail closed: a `live` key hitting a `-sandbox` URL returns `401`, and a `test` key hitting a production URL returns `401`. Same code on both — only the data and the accepting key prefix differ.
-
-## Coming soon
-
-- **Updates and deletes.** Only `POST` (create) and `GET` (read) today.
-- **Webhooks.** Polling only today via the [jobs endpoint](/api-reference/introduction). Webhooks with HMAC signing land in v1.1.
-- **More MCP write tools.** Deck submission is live via `caplia_submit_deck`; create-company, attach-document, and add-note tools land as customer demand surfaces.
+- **REST + MCP.** Everything is available as a REST API and as MCP tools for Claude, Cursor, ChatGPT, and other agents.
+- **`v1`, additive only.** All paths are prefixed with `/v1`. We don't break v1.
+- **Sandbox for safe testing.** A `-sandbox` host with `*_test_*` keys mirrors production against isolated data. Cross-environment leaks fail closed.
 
 ## Need help?
 

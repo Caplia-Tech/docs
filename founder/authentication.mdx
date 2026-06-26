@@ -1,0 +1,139 @@
+---
+title: "Authentication"
+description: "Company-scoped cap_fnd_* keys, scopes, and the Bearer header."
+icon: "key"
+---
+
+The Founder API uses **company-scoped API keys** sent as Bearer tokens in the `Authorization` header. Every request to an authenticated endpoint must include:
+
+```
+Authorization: Bearer cap_fnd_<env>_<32 alphanumeric chars>
+```
+
+The defining property of a founder key: it is **bound to exactly one company**. Every `/v1/me/*` endpoint resolves the company from the key itself - there is no company id in any request, and a founder key cannot read or change any company but its own.
+
+## Key format
+
+```
+cap_fnd_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS
+└─┬─┘ ─┬─ ─┬─  └────────────┬──────────────┘
+  │    │   │                 │
+  │    │   │                 └── 32-char alphanumeric (base62) - ~190 bits of entropy
+  │    │   └──────────────────── env: `live` (production) or `test` (sandbox / staging)
+  │    └──────────────────────── portal: `fnd` (founder)
+  └───────────────────────────── vendor prefix
+```
+
+The `fnd` portal segment is what distinguishes a founder key from an investor `cap_inv_*` key. The two are not interchangeable: a founder key works only on the `/v1/me/*` founder endpoints, and an investor key is rejected from them with `403`.
+
+### Live vs test
+
+| Prefix | Accepted by | What it sees |
+|---|---|---|
+| `cap_fnd_live_` | `api.venture.caplia.ai` and `mcp.venture.caplia.ai` | Your real company |
+| `cap_fnd_test_` | `api-sandbox.venture.caplia.ai` and `mcp-sandbox.venture.caplia.ai` | A sandbox / test company, isolated from production |
+
+Use a `test` key while you build and debug an integration so you can't accidentally publish a deck or edit your live profile. The production endpoints reject `test` keys with `401` and vice-versa, so leaking a key into the wrong environment fails closed.
+
+## Getting a key
+
+<Note>
+**During the preview, founder keys are issued by Caplia.** Self-serve key management in the founder portal is coming with general availability. To get a key today, email <a href="mailto:paul@caplia.ai">paul@caplia.ai</a> from the address on your Caplia account, and tell us which company it's for. We'll mint a company-scoped key and send it back over a secure channel.
+</Note>
+
+A founder key can only be minted for a **company admin** - the person who controls the company's profile and data room on Caplia. That's deliberate: the key can edit your public-facing profile and publish a pitch deck, so it carries the same authority you have in the app.
+
+The plaintext is shown **exactly once**. Caplia stores only a hash - if you lose the plaintext, the key can't be recovered and must be revoked and replaced. Copy it to your secret manager immediately.
+
+<Warning>
+A `cap_fnd_*` key can edit your company profile and publish your pitch deck. Treat it like a password: never commit it to source control, never paste it into a browser, and revoke it the moment you suspect it has leaked.
+</Warning>
+
+## Scopes
+
+A key carries `read`, or `read` **plus** `write`.
+
+<ResponseField name="read" type="scope">
+  Read access to your own data - `GET /v1/me/company`, `/v1/me/scores`, `/v1/me/metrics`, `/v1/me/documents`, and your deck drafts.
+</ResponseField>
+
+<ResponseField name="write" type="scope">
+  Everything `read` allows **plus** the write endpoints - update your profile, upload documents, and the deck loop (`POST /v1/me/deck/drafts`, publish).
+</ResponseField>
+
+The deck-scoring loop needs a `write` key, because submitting and publishing a deck changes what investors see. Use a `read` key for a dashboard that only displays your CRI.
+
+## Using the token
+
+Every authenticated request needs the header. Note there's no company id anywhere - the key *is* the company:
+
+```bash
+curl https://api.venture.caplia.ai/v1/me/scores \
+  -H "Authorization: Bearer cap_fnd_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS"
+```
+
+<CodeGroup>
+```javascript Node.js
+const res = await fetch('https://api.venture.caplia.ai/v1/me/scores', {
+  headers: { 'Authorization': `Bearer ${process.env.CAPLIA_FOUNDER_KEY}` },
+});
+const scores = await res.json();
+console.log('CRI:', scores.cri.score, '/', scores.cri.max);
+```
+
+```python Python
+import os, requests
+
+res = requests.get(
+    'https://api.venture.caplia.ai/v1/me/scores',
+    headers={'Authorization': f'Bearer {os.environ["CAPLIA_FOUNDER_KEY"]}'},
+)
+scores = res.json()
+print('CRI:', scores['cri']['score'], '/', scores['cri']['max'])
+```
+
+```go Go
+req, _ := http.NewRequest("GET", "https://api.venture.caplia.ai/v1/me/scores", nil)
+req.Header.Set("Authorization", "Bearer "+os.Getenv("CAPLIA_FOUNDER_KEY"))
+resp, _ := http.DefaultClient.Do(req)
+```
+</CodeGroup>
+
+## Error responses
+
+If the header is missing or malformed:
+
+```json 401 Unauthorized
+{
+  "error": {
+    "code": "unauthenticated",
+    "message": "Missing or malformed Authorization header",
+    "request_id": "req_8H3jK9pQ"
+  }
+}
+```
+
+If you present an **investor** key to a founder endpoint (or the key lacks the scope the endpoint needs):
+
+```json 403 Forbidden
+{
+  "error": {
+    "code": "forbidden",
+    "message": "This endpoint requires a founder key",
+    "request_id": "req_..."
+  }
+}
+```
+
+The `request_id` is useful when emailing support - it lets us trace your exact request.
+
+## Revoking a key
+
+Email <a href="mailto:paul@caplia.ai">paul@caplia.ai</a> to revoke a key during the preview; self-serve revocation lands with general availability. If you suspect a key has leaked, ask us to revoke first, then investigate where it leaked, then request a replacement.
+
+## Security best practices
+
+- **Never commit keys to source control.** Use environment variables or a secret manager.
+- **Never put a `cap_fnd_*` key in a browser or client-side code.** It carries write authority over your company. Server-side only.
+- **Use a `test` key while developing.** Reserve the `live` key for the integration you actually trust.
+- **Use the least-privilege scope.** A read-only dashboard doesn't need a `write` key.

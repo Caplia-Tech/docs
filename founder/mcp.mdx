@@ -1,0 +1,149 @@
+---
+title: "MCP Server"
+description: "Connect Claude, Cursor, or ChatGPT to your own company on Caplia - read your CRI, get improvement guidance, and iterate your pitch deck to Caplia Verified in natural language."
+icon: "plug"
+---
+
+**Caplia is an MCP server for founders to improve their own company.** Point Claude Desktop, Cursor, ChatGPT, or any MCP client at the Caplia MCP server with a founder key, and the agent can read your CRI score, explain the rubric's recommendations, and run the [private deck-scoring loop](/founder/deck-loop) - regenerating your pitch deck between scores until it clears Caplia Verified.
+
+It's the same MCP server and the same hosts as the [Venture API](/integrations/mcp), but your key decides what you get: a `cap_fnd_*` key sees the **founder toolset** below, scoped to your one company.
+
+## What you can do
+
+<CardGroup cols={2}>
+  <Card title="Iterate your deck to 700" icon="arrows-rotate">
+    "Score my deck privately, rebuild the weak slides in Canva to address the feedback, and resubmit until my CRI is at least 700." The agent loops `caplia_submit_deck_draft` → `caplia_get_deck_draft` → publish.
+  </Card>
+  <Card title="Understand your score" icon="gauge-high">
+    "What's my CRI and what's holding it back?" The agent calls `caplia_get_my_scores` and walks you through each domain and recommendation.
+  </Card>
+  <Card title="Keep your profile current" icon="pen-to-square">
+    "Update my stage to Series A and fix my website." The agent calls `caplia_update_my_company`.
+  </Card>
+  <Card title="Manage your data room" icon="folder-open">
+    "Upload this financial model to my data room." The agent calls `caplia_upload_document` - which also unlocks the financial-model points in your CRI.
+  </Card>
+</CardGroup>
+
+## Endpoints
+
+```
+Production:    https://mcp.venture.caplia.ai/
+Sandbox:       https://mcp-sandbox.venture.caplia.ai/
+```
+
+Transport: **Streamable HTTP** (single POST endpoint, JSON-RPC 2.0). Protocol version `2024-11-05`.
+
+<Note>
+The Founder API is in **preview** - use the sandbox host and a `cap_fnd_test_*` key today. The deck-loop tools need a `write`-scoped key.
+</Note>
+
+## Authentication
+
+Bearer-token, same model as the REST API. The `cap_fnd_*` prefix is what makes the founder toolset appear:
+
+```
+Authorization: Bearer cap_fnd_live_<32 chars>   # production
+Authorization: Bearer cap_fnd_test_<32 chars>   # sandbox
+```
+
+See [Authentication](/founder/authentication) for the company-scoped key model and how to get one.
+
+## Tools
+
+11 founder tools, scoped to your own company. They appear automatically when you connect with a `cap_fnd_*` key (an investor key sees the venture toolset instead).
+
+### Read tools (require `read` scope)
+
+| Tool | What an agent asks for it |
+|---|---|
+| `caplia_get_my_company` | "What does Caplia have on record for my company?" |
+| `caplia_get_my_scores` | "What's my CRI score and what should I fix?" |
+| `caplia_get_my_metrics` | "What traction metrics do investors see for me?" |
+| `caplia_list_my_documents` | "What's in my data room?" |
+| `caplia_get_document_url` | "Download my current pitch deck." |
+| `caplia_list_deck_drafts` | "Show me the CRI across all my deck drafts." |
+| `caplia_get_deck_draft` | "What did my latest draft score?" |
+
+### Write tools (require `write` scope)
+
+| Tool | What an agent asks for it |
+|---|---|
+| `caplia_update_my_company` | "Update my company stage and website." |
+| `caplia_upload_document` | "Add this financial model to my data room." |
+| `caplia_submit_deck_draft` | "Score this deck privately." |
+| `caplia_publish_deck_draft` | "Publish the winning draft as my live deck." |
+
+Every tool resolves your company from the key - there are no company ids to pass, and the agent can't touch any company but yours.
+
+## Configure your MCP client
+
+### Claude Desktop
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "caplia": {
+      "url": "https://mcp-sandbox.venture.caplia.ai/",
+      "headers": {
+        "Authorization": "Bearer cap_fnd_test_YOUR_KEY_HERE"
+      }
+    }
+  }
+}
+```
+
+Restart Claude Desktop. The Caplia tools appear under the plug icon at the bottom-left of any chat. Swap to `https://mcp.venture.caplia.ai/` and your `cap_fnd_live_*` key for production once the Founder API is generally available.
+
+### Cursor
+
+In Cursor settings → **Features → MCP → Add new MCP server**:
+
+- **Name**: `caplia`
+- **Type**: `sse` (streamable HTTP)
+- **URL**: `https://mcp-sandbox.venture.caplia.ai/`
+- **Header**: `Authorization: Bearer cap_fnd_test_YOUR_KEY_HERE`
+
+### Windsurf, ChatGPT, generic clients
+
+Most MCP clients accept the same three things:
+
+1. URL: `https://mcp-sandbox.venture.caplia.ai/` (or the production host)
+2. `Authorization` header: `Bearer cap_fnd_(live|test)_<key>`
+3. (Optional) Server name: `caplia`
+
+## Run the deck loop from Claude
+
+Once connected, drive the whole [deck loop](/founder/deck-loop) in natural language. Give the agent access to a deck tool (Canva, Google Slides, a local generator) and ask:
+
+> "Submit my pitch deck `seed-deck.pdf` to Caplia for private scoring. Read the recommendations, rebuild the weak slides to address them, and resubmit. Keep iterating until my CRI is at least 700, then show me the best draft before we publish it."
+
+The agent submits drafts, reads the private CRI and recommendations, regenerates the deck, and resubmits - looping until you're Verified. Drafts stay private the whole time; only `caplia_publish_deck_draft` makes a public update.
+
+## Quick test from the terminal
+
+```bash
+# Health check (no auth)
+curl https://mcp-sandbox.venture.caplia.ai/health
+
+# List the founder tools (send your founder key so the founder toolset is advertised)
+curl -X POST https://mcp-sandbox.venture.caplia.ai/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer cap_fnd_test_..." \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+
+# Read your scores
+curl -X POST https://mcp-sandbox.venture.caplia.ai/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer cap_fnd_test_..." \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"caplia_get_my_scores","arguments":{}}}'
+```
+
+## Limitations
+
+- **Preview.** Production launches with our next release; build against the sandbox today.
+- **No streaming responses.** Each tool call is a single request-response; deck scoring is polled via `caplia_get_deck_draft`.
+- **50 MB max** per deck or document, base64-encoded.
+- **JSON output only.** Each tool returns raw JSON from the REST endpoint as a text content block.

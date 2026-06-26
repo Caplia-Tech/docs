@@ -1,0 +1,175 @@
+---
+title: "The deck loop"
+description: "Iterate your pitch deck to Caplia Verified - private scoring, public publish, no score thrash."
+icon: "arrows-rotate"
+---
+
+The deck loop is the headline workflow of the Founder API: submit a pitch deck for **private** scoring, read back your CRI and the rubric's recommendations, regenerate the deck, and resubmit - over and over - until you clear **Caplia Verified** (CRI ≥ 700). Then publish the winning draft as one clean public update.
+
+The key idea is **private drafts**. Every draft is scored privately and visible only to you. Investors never see the half-finished versions or the score bouncing around as you iterate. Only when you *publish* does a single, clean CRI update land on your public profile.
+
+```
+  ┌─────────────────────────────────────────────────────────┐
+  │                                                           │
+  ▼                                                           │
+submit a draft  ──►  poll until scored  ──►  read CRI + recs  ┘
+(POST drafts)        (GET drafts/{id})       regenerate deck
+                                                   │
+                          cri_score >= 700? ───────┤
+                                   │ yes
+                                   ▼
+                          publish the winner
+                          (POST drafts/{id}/publish)  ──►  one public CRI update
+```
+
+<Note>
+The Founder API is in **preview**. The examples below use the sandbox host (`api-sandbox.venture.caplia.ai`) and a `cap_fnd_test_*` key. The deck loop needs a **`write`-scoped** key - submitting and publishing a deck changes what investors see.
+</Note>
+
+## The four endpoints
+
+| Step | Endpoint | What it does |
+|---|---|---|
+| Submit | `POST /v1/me/deck/drafts` | Upload a PDF for private scoring. Returns a `draft_id` immediately. |
+| Poll | `GET /v1/me/deck/drafts/{id}` | Check one draft's status and, once scored, its CRI + recommendations. |
+| List | `GET /v1/me/deck/drafts` | All your drafts, newest first - compare scores across iterations. |
+| Publish | `POST /v1/me/deck/drafts/{id}/publish` | Promote the winning draft to your live deck and trigger one public re-score. |
+
+## Walk through one iteration
+
+<Steps>
+  <Step title="Submit a draft for private scoring">
+    Upload the PDF as multipart form data. You get a `draft_id` back right away - scoring runs asynchronously.
+
+    ```bash
+    curl -X POST https://api-sandbox.venture.caplia.ai/v1/me/deck/drafts \
+      -H "Authorization: Bearer $CAPLIA_FOUNDER_KEY" \
+      -F "file=@seed-deck-v1.pdf"
+    ```
+
+    ```json Response
+    {
+      "draft_id": "8f2c1a90-...",
+      "job_id": "b7e4...",
+      "status": "scoring",
+      "poll_url": "/v1/me/deck/drafts/8f2c1a90-..."
+    }
+    ```
+  </Step>
+
+  <Step title="Poll until it's scored">
+    Poll the draft every ~3 seconds. `status` moves `scoring` → `scored` (or `failed`). Scoring typically takes under a minute.
+
+    ```bash
+    curl https://api-sandbox.venture.caplia.ai/v1/me/deck/drafts/8f2c1a90-... \
+      -H "Authorization: Bearer $CAPLIA_FOUNDER_KEY"
+    ```
+
+    ```json Response (scored)
+    {
+      "id": "8f2c1a90-...",
+      "status": "scored",
+      "cri_score": 624,
+      "verified": false,
+      "scored_at": "2026-06-25T18:02:11Z",
+      "domains": [
+        { "domain_name": "Market & Customers", "points_earned": 172, "points_possible": 220 },
+        { "domain_name": "Financial", "points_earned": 120, "points_possible": 200 }
+      ],
+      "recommendations": [
+        {
+          "signal_id": "som_math",
+          "priority_rank": 1,
+          "expected_points_increase": 30,
+          "summary": "Show bottoms-up SOM math: reachable sites x ACV x capture rate."
+        }
+      ]
+    }
+    ```
+
+    `cri_score` is the private CRI on the 0-1000 scale; `verified` flips to `true` once it clears 700.
+  </Step>
+
+  <Step title="Regenerate the deck and resubmit">
+    Use the `recommendations` to rewrite the deck - add the SOM math, sharpen the team slide, whatever the rubric flagged. Then submit the new PDF as another draft and poll again. Repeat until `cri_score >= 700`.
+
+    `GET /v1/me/deck/drafts` lists every draft newest-first so you can see the score climb across iterations and pick the best one.
+  </Step>
+
+  <Step title="Publish the winner">
+    Once a draft clears 700 (or you're otherwise happy with it), publish it. This promotes that PDF to your live pitch deck and enqueues **one** normal public re-score - so investors see a single clean CRI update, not the draft-by-draft thrash.
+
+    ```bash
+    curl -X POST https://api-sandbox.venture.caplia.ai/v1/me/deck/drafts/8f2c1a90-.../publish \
+      -H "Authorization: Bearer $CAPLIA_FOUNDER_KEY"
+    ```
+
+    ```json Response
+    {
+      "status": "published",
+      "document_id": "d41c...",
+      "job_id": "9a8b..."
+    }
+    ```
+  </Step>
+</Steps>
+
+## A complete loop in code
+
+This polls a draft to completion and prints the CRI and recommendations - the building block of an automated loop:
+
+```python loop.py
+import os, time, requests
+
+BASE = "https://api-sandbox.venture.caplia.ai/v1"
+H = {"Authorization": f"Bearer {os.environ['CAPLIA_FOUNDER_KEY']}"}
+
+def score_draft(pdf_path):
+    with open(pdf_path, "rb") as f:
+        sub = requests.post(f"{BASE}/me/deck/drafts", headers=H,
+                            files={"file": (pdf_path, f, "application/pdf")}).json()
+    draft_id = sub["draft_id"]
+    print("submitted draft", draft_id)
+
+    while True:
+        d = requests.get(f"{BASE}/me/deck/drafts/{draft_id}", headers=H).json()
+        if d["status"] in ("scored", "failed"):
+            break
+        time.sleep(3)
+
+    if d["status"] == "failed":
+        raise RuntimeError(d.get("error_message", "scoring failed"))
+
+    print(f"CRI {d['cri_score']}/1000   verified={d['verified']}")
+    for r in d["recommendations"]:
+        print(f"  +{r['expected_points_increase']:>3}  {r['summary']}")
+    return d
+
+result = score_draft("seed-deck-v1.pdf")
+if not result["verified"]:
+    print("Below 700 - apply the recommendations above and resubmit the revised deck.")
+```
+
+## Let an agent run the whole loop
+
+The loop is far more powerful when an AI agent closes it end to end: read the recommendations, **rewrite the deck**, resubmit, repeat. Connect Claude (or any MCP client) to the Caplia MCP server, give it access to your deck tool - Canva, Google Slides, a local PDF generator - and ask it to drive:
+
+> "Submit my pitch deck to Caplia for private scoring. Read the recommendations, rebuild the weak slides in Canva to address them, and resubmit. Keep iterating until my CRI is at least 700, then show me the best draft before we publish."
+
+The agent uses `caplia_submit_deck_draft` and `caplia_get_deck_draft` to score, your design tool to regenerate, and `caplia_publish_deck_draft` once it clears the bar. See [MCP server](/founder/mcp) for setup and the full founder toolset.
+
+## What the deck can and can't move
+
+A pitch deck drives most of the CRI, but not all of it. Two domains need more than a deck:
+
+- **Financial (model).** A chunk of the Financial domain comes from an actual financial model in your data room, not slides. Upload one with `POST /v1/me/documents` (or `caplia_upload_document`) to unlock those points - it's often the single highest-leverage move, as in the quickstart example.
+- **Platform Actions.** Some points reward activity inside Caplia itself (engaging with investors, keeping your profile complete). These aren't deck-achievable - the API surfaces them in your domain breakdown so you know they exist.
+
+So expect deck iteration alone to take you most of the way; pair it with a financial-model upload and normal platform activity to clear 700 comfortably.
+
+## Notes
+
+- **Drafts are private.** Nothing about a draft is visible to investors until you publish. Score as many as you like.
+- **Publish is one update.** Publishing triggers a single public re-score, so your public CRI moves once, cleanly.
+- **A draft must be scored before you can publish it.** Publishing a still-`scoring` draft returns `409 conflict`.
+- **50 MB max** per PDF.
