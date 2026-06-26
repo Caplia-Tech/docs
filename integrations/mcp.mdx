@@ -131,22 +131,26 @@ Max 50 MB per deck (base64-encoded). Other write endpoints (create company shell
 
 ### Claude Desktop
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows). Claude Desktop reaches remote servers through the `mcp-remote` helper, which needs [Node.js](https://nodejs.org):
 
 ```json
 {
   "mcpServers": {
     "caplia": {
-      "url": "https://mcp.venture.caplia.ai/",
-      "headers": {
-        "Authorization": "Bearer cap_inv_live_YOUR_KEY_HERE"
-      }
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.venture.caplia.ai/",
+        "--header",
+        "Authorization: Bearer cap_inv_live_YOUR_KEY_HERE"
+      ]
     }
   }
 }
 ```
 
-Restart Claude Desktop. The Caplia tools appear under the plug icon at the bottom-left of any chat.
+Quit Claude Desktop completely and reopen it (not just the window). The Caplia tools appear under the plug icon at the bottom-left of any chat.
 
 ### Cursor
 
@@ -156,6 +160,28 @@ In Cursor settings → **Features → MCP → Add new MCP server**:
 - **Type**: `sse` (streamable HTTP)
 - **URL**: `https://mcp.venture.caplia.ai/`
 - **Header**: `Authorization: Bearer cap_inv_live_YOUR_KEY_HERE`
+
+### Claude Code
+
+One command, no file editing:
+
+```bash
+claude mcp add --transport http caplia https://mcp.venture.caplia.ai/ \
+  --header "Authorization: Bearer cap_inv_live_YOUR_KEY_HERE"
+```
+
+Run `/mcp` inside Claude Code (or `claude mcp list`) to confirm. Add `--scope user` to enable it in every project.
+
+### Codex
+
+Codex connects to remote MCP servers natively, reading the key from a named environment variable:
+
+```bash
+export CAPLIA_API_KEY="cap_inv_live_YOUR_KEY_HERE"
+codex mcp add caplia --url https://mcp.venture.caplia.ai/ --bearer-token-env-var CAPLIA_API_KEY
+```
+
+Run `/mcp` in the Codex TUI (or `codex mcp list`) to confirm.
 
 ### Windsurf, Cody, ChatGPT, generic clients
 

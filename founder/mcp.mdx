@@ -76,47 +76,99 @@ See [Authentication](/founder/authentication) for the company-scoped key model a
 
 Every tool resolves your company from the key - there are no company ids to pass, and the agent can't touch any company but yours.
 
-## Configure your MCP client
+## Connect your AI assistant
 
-### Claude Desktop
+Connect once, then drive the whole [deck loop](/founder/deck-loop) in plain English. First, get three things ready:
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+<Steps>
+  <Step title="Get a founder key">
+    Mint a `cap_fnd_*` key in the founder portal (see [Authentication](/founder/authentication)). Give it the **`write`** scope so the assistant can submit and publish decks. During the preview, that's a `cap_fnd_test_*` key.
+  </Step>
+  <Step title="Note the server URL">
+    Sandbox (today): `https://mcp-sandbox.venture.caplia.ai/`. Production (at launch): `https://mcp.venture.caplia.ai/`. The examples below use the sandbox.
+  </Step>
+  <Step title="Install Node.js — only if you use Claude Desktop">
+    Claude Desktop reaches the server through a small helper (`npx mcp-remote`) that needs [Node.js](https://nodejs.org) (the LTS installer). Claude Code and Codex don't need it - skip this step for those.
+  </Step>
+</Steps>
 
-```json
-{
-  "mcpServers": {
-    "caplia": {
-      "url": "https://mcp-sandbox.venture.caplia.ai/",
-      "headers": {
-        "Authorization": "Bearer cap_fnd_test_YOUR_KEY_HERE"
+Now set up your assistant:
+
+<Tabs>
+  <Tab title="Claude Desktop">
+    The simplest option if you don't live in a terminal.
+
+    1. Open (or create) your Claude config file:
+       - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+       - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+    2. Paste this, with your key in place of `cap_fnd_test_YOUR_KEY`:
+
+    ```json
+    {
+      "mcpServers": {
+        "caplia": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "mcp-remote",
+            "https://mcp-sandbox.venture.caplia.ai/",
+            "--header",
+            "Authorization: Bearer cap_fnd_test_YOUR_KEY"
+          ]
+        }
       }
     }
-  }
-}
-```
+    ```
 
-Restart Claude Desktop. The Caplia tools appear under the plug icon at the bottom-left of any chat. Swap to `https://mcp.venture.caplia.ai/` and your `cap_fnd_live_*` key for production once the Founder API is generally available.
+    3. **Quit Claude Desktop completely and reopen it** (closing the window isn't enough).
+    4. Open a new chat and click the **tools (plug) icon** - the `caplia` tools should be listed. Ask *"What's my CRI on Caplia?"* to confirm.
 
-### Cursor
+    <Note>Requires Node.js (step 3 above). At launch, swap the URL to `https://mcp.venture.caplia.ai/` and use your `cap_fnd_live_*` key.</Note>
+  </Tab>
 
-In Cursor settings → **Features → MCP → Add new MCP server**:
+  <Tab title="Claude Code">
+    One command - no file editing:
 
-- **Name**: `caplia`
-- **Type**: `sse` (streamable HTTP)
-- **URL**: `https://mcp-sandbox.venture.caplia.ai/`
-- **Header**: `Authorization: Bearer cap_fnd_test_YOUR_KEY_HERE`
+    ```bash
+    claude mcp add --transport http caplia https://mcp-sandbox.venture.caplia.ai/ \
+      --header "Authorization: Bearer cap_fnd_test_YOUR_KEY"
+    ```
 
-### Windsurf, ChatGPT, generic clients
+    Then run `/mcp` inside Claude Code (or `claude mcp list` in your shell) to confirm `caplia` connected and shows its tools. Add `--scope user` to make it available in every project.
+  </Tab>
 
-Most MCP clients accept the same three things:
+  <Tab title="Codex">
+    Codex connects to remote MCP servers natively. It reads the key from an environment variable by **name** (never inline), so export it first:
 
-1. URL: `https://mcp-sandbox.venture.caplia.ai/` (or the production host)
-2. `Authorization` header: `Bearer cap_fnd_(live|test)_<key>`
-3. (Optional) Server name: `caplia`
+    ```bash
+    export CAPLIA_API_KEY="cap_fnd_test_YOUR_KEY"   # add to ~/.zshrc to persist it
+    ```
 
-## Run the deck loop from Claude
+    Then add the server:
 
-Once connected, drive the whole [deck loop](/founder/deck-loop) in natural language. Give the agent access to a deck tool (Canva, Google Slides, a local generator) and ask:
+    ```bash
+    codex mcp add caplia \
+      --url https://mcp-sandbox.venture.caplia.ai/ \
+      --bearer-token-env-var CAPLIA_API_KEY
+    ```
+
+    Run `/mcp` in the Codex TUI (or `codex mcp list`) to confirm. This writes a `[mcp_servers.caplia]` block to `~/.codex/config.toml`.
+  </Tab>
+
+  <Tab title="Cursor / other clients">
+    Most other MCP clients need the same three things:
+
+    1. **URL**: `https://mcp-sandbox.venture.caplia.ai/` (or the production host)
+    2. **Authorization header**: `Bearer cap_fnd_(live|test)_<key>`
+    3. (Optional) a **name**: `caplia`
+
+    In **Cursor**: Settings → **Features → MCP → Add new MCP server**, set the type to `sse` (streamable HTTP), then paste the URL and the `Authorization` header. For Windsurf, ChatGPT, and others, check your client's MCP docs for where the config lives.
+  </Tab>
+</Tabs>
+
+## Run the deck loop from your assistant
+
+Once connected - in Claude, Codex, or any MCP client - drive the whole [deck loop](/founder/deck-loop) in natural language. Give the assistant access to a deck tool (Canva, Google Slides, a local generator) and ask:
 
 > "Submit my pitch deck `seed-deck.pdf` to Caplia for private scoring. Read the recommendations, rebuild the weak slides to address them, and resubmit. Keep iterating until my CRI is at least 700, then show me the best draft before we publish it."
 
