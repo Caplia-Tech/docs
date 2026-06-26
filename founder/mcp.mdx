@@ -177,8 +177,10 @@ The agent submits drafts, reads the private CRI and recommendations, regenerates
 ## Quick test from the terminal
 
 ```bash
-# Health check (no auth)
-curl https://mcp-sandbox.venture.caplia.ai/health
+# Liveness + protocol check (no auth) — a real MCP server answers `initialize`
+curl -X POST https://mcp-sandbox.venture.caplia.ai/ \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"curl","version":"1"}}}'
 
 # List the founder tools (send your founder key so the founder toolset is advertised)
 curl -X POST https://mcp-sandbox.venture.caplia.ai/ \

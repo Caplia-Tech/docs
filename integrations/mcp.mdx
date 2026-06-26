@@ -198,14 +198,11 @@ Refer to your client's MCP documentation for the exact config-file location.
 If you want to verify the server works before wiring it into an agent:
 
 ```bash
-# Health check (no auth)
-curl https://mcp.venture.caplia.ai/health
-# → {"status":"ok","server":"caplia-api","version":"1.0.0",...}
-
-# Initialize handshake
+# Liveness + protocol check (no auth) — a real MCP server answers `initialize`
 curl -X POST https://mcp.venture.caplia.ai/ \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}'
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"curl","version":"1"}}}'
+# → {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"caplia-api","version":"1.0.0"}}}
 
 # List tools (no auth)
 curl -X POST https://mcp.venture.caplia.ai/ \
