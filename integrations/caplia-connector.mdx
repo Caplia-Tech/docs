@@ -1,0 +1,135 @@
+---
+title: "Caplia Connector"
+description: "A smart embed for your application form that recognises applicants who already have a Caplia Passport, lets them link it in one click, and drops their live company profile straight into your pipeline — fewer manual file requests, richer signal from the first screen."
+icon: "id-card"
+---
+
+**The Caplia Connector is a block you place partway through your existing application form.** When an applicant enters an email that's linked to a Caplia **Passport**, the Connector recognises it and offers **"Link your account."** They sign in to Caplia in a popup, approve sharing their profile, and carry on filling in the rest of *your* form. You get their normal submission **plus** their live, access-granted Caplia profile sitting in your pipeline — no separate "please send your deck and metrics" email.
+
+It's the sibling of the [Venture Form Widget](/integrations/venture-form-widget): that widget captures a raw PDF from anyone; the Connector captures a **linked, consented Passport** from founders who are already on Caplia.
+
+<Note>
+  **Early access.** The hosted sign-in and consent flow are live today, and Caplia sets the Connector up on your form during onboarding. The fully self-serve drop-in script is rolling out — talk to your Caplia contact to get provisioned.
+</Note>
+
+## Who it's for
+
+<CardGroup cols={2}>
+  <Card title="Venture funds" icon="building-columns">
+    Your fund's public "submit your deck" form. Founders already on Caplia link their live profile instead of re-typing metrics and re-attaching a deck.
+  </Card>
+  <Card title="Accelerators" icon="rocket">
+    Cohort application forms. Alumni and previously-screened founders arrive with their Passport attached — no duplicate data entry, richer context for selection.
+  </Card>
+  <Card title="Awards programmes" icon="trophy">
+    Entry forms where many applicants are known companies. Judges see the live profile and traction, not just what fit in the form fields.
+  </Card>
+  <Card title="Corporate development" icon="handshake">
+    Partnership intake. Startups that already maintain a Caplia profile share it directly into your strategic pipeline.
+  </Card>
+</CardGroup>
+
+## How it works
+
+<Steps>
+  <Step title="Applicant enters their email">
+    The Connector watches the email field in your form. When the email belongs to a Caplia Passport holder, a "This email is linked to a Caplia account → Link your account" block appears. For everyone else it stays hidden and the form behaves exactly as before.
+  </Step>
+  <Step title="They click "Link your account"">
+    A Caplia-branded sign-in popup opens on top of your page. Authentication happens entirely on Caplia — no credentials ever touch your site.
+  </Step>
+  <Step title="They approve what's shared">
+    After signing in, the founder sees exactly who they're sharing with ("Share your profile with **Your Fund**?") and approves. They pick which company profile to share if they have more than one.
+  </Step>
+  <Step title="The popup closes — they keep filling in your form">
+    The link is complete. The founder finishes and submits the rest of your application form as normal. A hidden `caplia_connection_id` field is written for your own records.
+  </Step>
+  <Step title="Their profile lands in your Caplia pipeline">
+    The founder's company appears in your pipeline at stage **new**, with **profile-level access** granted to your team — live company info, traction, and their current pitch deck, kept up to date by the founder.
+  </Step>
+</Steps>
+
+## What your team receives
+
+| You get | Notes |
+|---|---|
+| A new deal in your pipeline | The founder's existing company, added at stage `new` (channel `connector`) alongside every other intake method. |
+| **Profile-level** access | Live company profile, key info, and the founder's shared pitch deck — not a one-time static snapshot. |
+| A stable `connection_id` | Written into a hidden form field so your CRM record can reference the link. |
+
+<Note>
+  The Connector grants **profile** access only. Your **data room** access stays separate and is requested and NDA-gated per individual through Caplia's normal flow — linking does not expose data-room documents automatically.
+</Note>
+
+## Onboarding
+
+Before adding the Connector, get a **`form_id`** from your Caplia contact (Connor, or <a href="mailto:paul@caplia.ai">paul@caplia.ai</a>). It's an opaque string like `acme-2026` or `fund-x-inbound` that maps to your team — the team that receives the linked companies. We allowlist it server-side in the same step, along with the domain(s) your form is hosted on.
+
+## The embed
+
+Place this block inside your application form, partway through — right after your email field is a natural spot, since the Connector keys off the email the applicant enters.
+
+```html
+<!-- Caplia Connector v1 -->
+<div data-caplia-connect
+     data-form-id="REPLACE_WITH_FORM_ID"
+     data-email-field="email"
+     data-api-base="https://api.venture.caplia.ai">
+  <!-- data-email-field must match the name attribute of your form's email input -->
+  <div class="caplia-connect-slot"></div>
+</div>
+<script async src="https://api.venture.caplia.ai/widget/connect.js"></script>
+```
+
+### Configuration
+
+| Attribute | Required | Description |
+|---|---|---|
+| `data-form-id` | **Yes** | Opaque identifier issued by Caplia onboarding. Maps to the team that receives linked companies. Must match what we allowlisted server-side. |
+| `data-email-field` | **Yes** | The `name` attribute of your form's email input. The Connector watches this field to recognise Passport holders. |
+| `data-api-base` | No | API origin override. Defaults to `https://api.venture.caplia.ai` (production). Use `https://api-sandbox.venture.caplia.ai` while testing. |
+
+### Field the Connector writes
+
+| Field name | Purpose |
+|---|---|
+| `caplia_connection_id` | The ID of the completed link. Map it to a CRM property so your record can cross-reference the shared company in Caplia. |
+
+## Linking without the embed
+
+The hosted consent flow is live independently of the drop-in script. If you'd rather wire it up yourself (or while the embed is being provisioned), you can send a recognised applicant straight to the Caplia-hosted consent page:
+
+```text
+https://venture.caplia.ai/connect?form_id=YOUR_FORM_ID&email=APPLICANT_EMAIL
+```
+
+It opens the same sign-in → approve → link flow and posts the result back to the opener window (`{ type: "caplia-connect:linked", connection_id }`) when complete.
+
+## Security model
+
+<AccordionGroup>
+  <Accordion title="Where does the applicant sign in?" icon="lock">
+    Only on Caplia, inside the popup served from `venture.caplia.ai`. Their Caplia credentials never touch your site, and your site never handles their session. This is the standard "Sign in with…" popup pattern.
+  </Accordion>
+
+  <Accordion title="What exactly is shared?" icon="user-shield">
+    Profile-level access to the founder's company is granted to the team behind your `form_id`. That's the live profile and their shared pitch deck — not their data room. Data-room access remains a separate, per-individual, NDA-gated request through Caplia.
+  </Accordion>
+
+  <Accordion title="What stops another site from using my form_id?" icon="shield">
+    `form_id`s are allowlisted server-side — unknown ones are rejected. The link result is only delivered back to the origin(s) we allowlist for your form during onboarding, and the founder must actively sign in and approve. Re-linking the same company is idempotent — it never creates duplicate deals.
+  </Accordion>
+</AccordionGroup>
+
+## Status & limitations
+
+- **Profile access only.** Data-room documents are never shared automatically by the Connector.
+- **Passport holders only.** The link block only appears for applicants whose email is already a Caplia account; everyone else uses your form as normal.
+- **Recognition + drop-in script are in early access.** The hosted consent flow is live now; automatic in-form recognition and the self-serve loader are rolling out — Caplia provisions them with you during onboarding.
+
+## Need help?
+
+- **Onboarding & `form_id` provisioning**: <a href="mailto:paul@caplia.ai">paul@caplia.ai</a>
+- **The PDF-upload sibling**: [Venture Form Widget](/integrations/venture-form-widget)
+- **REST API docs**: [API Reference](/api-reference/introduction)
+- **Authentication**: [Authentication](/authentication)

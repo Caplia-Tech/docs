@@ -35,7 +35,8 @@
             "group": "Integrations",
             "pages": [
               "integrations/mcp",
-              "integrations/venture-form-widget"
+              "integrations/venture-form-widget",
+              "integrations/caplia-connector"
             ]
           },
           {
