@@ -35,7 +35,7 @@ Sandbox:       https://mcp-sandbox.venture.caplia.ai/
 Transport: **Streamable HTTP** (single POST endpoint, JSON-RPC 2.0). Protocol version `2024-11-05`.
 
 <Note>
-The Founder API is in **preview** - use the sandbox host and a `cap_fnd_test_*` key today. The deck-loop tools need a `write`-scoped key.
+The Founder API is **live in production**. Use the sandbox host with a `cap_fnd_test_*` key to test; the deck-loop tools need a `write`-scoped key.
 </Note>
 
 ## Authentication
@@ -82,7 +82,7 @@ Connect once, then drive the whole [deck loop](/founder/deck-loop) in plain Engl
 
 <Steps>
   <Step title="Get a founder key">
-    Mint a `cap_fnd_*` key in the founder portal (see [Authentication](/founder/authentication)). Give it the **`write`** scope so the assistant can submit and publish decks. During the preview, that's a `cap_fnd_test_*` key.
+    Mint a `cap_fnd_*` key in the founder portal (see [Authentication](/founder/authentication)). Give it the **`write`** scope so the assistant can submit and publish decks. Use a `cap_fnd_test_*` key to test against sandbox, or `cap_fnd_live_*` for your real company.
   </Step>
   <Step title="Note the server URL">
     Sandbox (today): `https://mcp-sandbox.venture.caplia.ai/`. Production (at launch): `https://mcp.venture.caplia.ai/`. The examples below use the sandbox.
@@ -197,7 +197,7 @@ curl -X POST https://mcp-sandbox.venture.caplia.ai/ \
 
 ## Limitations
 
-- **Preview.** Production launches with our next release; build against the sandbox today.
+- **Sandbox for testing.** Rehearse against the `-sandbox` host with a `cap_fnd_test_*` key before going live.
 - **No streaming responses.** Each tool call is a single request-response; deck scoring is polled via `caplia_get_deck_draft`.
 - **50 MB max** per deck or document, base64-encoded.
 - **JSON output only.** Each tool returns raw JSON from the REST endpoint as a text content block.
