@@ -1,0 +1,115 @@
+---
+title: "Quickstart"
+description: "Read your CRI score and the rubric's improvement recommendations in three minutes."
+icon: "bolt"
+---
+
+This walks you from a founder API key to your live CRI score and a ranked list of exactly what to improve. The headline workflow - iterating your deck to Caplia Verified - builds on this and has its own guide: [The deck loop](/founder/deck-loop).
+
+<Note>
+The Founder API is **live in production**. The examples below use the sandbox host (`api-sandbox.venture.caplia.ai`) with a `cap_fnd_test_*` key so you can build safely; swap to `api.venture.caplia.ai` and your `cap_fnd_live_*` key for your real company.
+</Note>
+
+<Steps>
+  <Step title="Get a founder key">
+    Mint a company-scoped key in the [Caplia founder portal](https://app.caplia.ai): account menu → **API Keys** → **Create key**, pick a `read` (or `read` + `write`) scope, and copy the plaintext - it's shown once. You must be a company admin. See [Authentication](/founder/authentication) for the key model.
+
+    Store it in an environment variable - never paste it into a browser or commit it:
+
+    ```bash
+    export CAPLIA_FOUNDER_KEY="cap_fnd_test_..."
+    ```
+  </Step>
+
+  <Step title="Confirm what Caplia has on record">
+    Your key *is* your company - no id needed. Check the profile Caplia currently shows investors:
+
+    ```bash
+    curl https://api-sandbox.venture.caplia.ai/v1/me/company \
+      -H "Authorization: Bearer $CAPLIA_FOUNDER_KEY"
+    ```
+
+    ```json Response
+    {
+      "id": "e3507d3e-...",
+      "name": "Metronome",
+      "website": "https://process-metronome.com",
+      "industry": "Operations software",
+      "stage": "Seed",
+      "problem_statement": "High-value, human-driven processes decay the moment they're implemented.",
+      "created_at": "2026-05-12T09:14:00Z"
+    }
+    ```
+  </Step>
+
+  <Step title="Read your CRI score and recommendations">
+    This is the founder's primary signal - your score, how far you are from Caplia Verified, and the rubric's concrete fixes:
+
+    ```bash
+    curl https://api-sandbox.venture.caplia.ai/v1/me/scores \
+      -H "Authorization: Bearer $CAPLIA_FOUNDER_KEY"
+    ```
+
+    ```json Response
+    {
+      "cri": {
+        "score": 624,
+        "max": 1000,
+        "verified": false,
+        "points_to_verified": 76,
+        "scored_at": "2026-06-25T18:02:11Z",
+        "domains": [
+          { "domain_name": "Team", "points_earned": 168, "points_possible": 200 },
+          { "domain_name": "Market & Customers", "points_earned": 172, "points_possible": 220 },
+          { "domain_name": "Product & Competition", "points_earned": 96, "points_possible": 130 },
+          { "domain_name": "Financial", "points_earned": 120, "points_possible": 200 },
+          { "domain_name": "Foundational", "points_earned": 68, "points_possible": 100 },
+          { "domain_name": "Platform Actions", "points_earned": 0, "points_possible": 150 }
+        ],
+        "recommendations": [
+          {
+            "signal_id": "financial_model",
+            "priority_rank": 1,
+            "expected_points_increase": 75,
+            "summary": "Upload a financial model (monthly P&L, CAC/LTV build, runway) to the data room."
+          },
+          {
+            "signal_id": "som_math",
+            "priority_rank": 2,
+            "expected_points_increase": 30,
+            "summary": "Show bottoms-up SOM math: reachable sites x ACV x capture rate."
+          }
+        ]
+      },
+      "thesis_matches": [
+        { "thesis_id": "...", "thesis_name": "Future of Work Seed", "score": 81 }
+      ]
+    }
+    ```
+
+    The CRI is on a **0-1000 scale**. A company is **Caplia Verified** at `score >= 700`; `points_to_verified` tells you the exact gap. Each recommendation carries an `expected_points_increase` so you can attack the highest-leverage fixes first.
+  </Step>
+
+  <Step title="Iterate your deck to 700">
+    The recommendations tell you *what* to fix. To actually move the score, submit a revised deck for **private** scoring, read the new CRI, and repeat - without investors seeing the drafts. That loop is the whole point of the Founder API:
+
+    <Card title="The deck loop →" icon="arrows-rotate" href="/founder/deck-loop">
+      Submit a draft, poll for a private CRI, regenerate, resubmit - then publish one clean update once you clear 700.
+    </Card>
+  </Step>
+</Steps>
+
+## Do it from Claude instead
+
+Every step above is also an MCP tool, so you can run the whole thing in natural language from Claude Desktop, Cursor, or ChatGPT - "what's my CRI and what should I fix?" See [MCP server](/founder/mcp).
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="The deck loop" icon="arrows-rotate" href="/founder/deck-loop" horizontal>
+    The full iterate-to-Verified workflow.
+  </Card>
+  <Card title="API reference" icon="code" href="/founder/api-reference/introduction" horizontal>
+    Every `/v1/me/*` endpoint, with schemas.
+  </Card>
+</CardGroup>

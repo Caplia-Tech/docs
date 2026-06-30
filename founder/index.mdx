@@ -1,0 +1,86 @@
+---
+title: "Founder API"
+description: "See your CRI score, read the rubric's improvement guidance, and iterate your pitch deck to Caplia Verified - programmatically, for your own company."
+icon: "rocket"
+---
+
+The Founder API gives **founders** programmatic access to their *own* company on Caplia: your CRI score and its per-domain breakdown, the rubric's concrete improvement recommendations, your traction metrics, your data room, and a private deck-scoring loop that lets an AI agent rewrite your pitch deck until it clears **Caplia Verified** (CRI ≥ 700) - all without an investor ever seeing the score thrash along the way.
+
+<Note>
+**Live.** The Founder API is available in **production** (`api.venture.caplia.ai`, `mcp.venture.caplia.ai`), with a **sandbox** (`api-sandbox.venture.caplia.ai`, `mcp-sandbox.venture.caplia.ai`) for safe testing. Mint a company-scoped key in the founder portal - see [Authentication](/founder/authentication).
+</Note>
+
+<Info>
+**Founder, not investor?** This is the right place. If you're a VC, accelerator, angel, or corp-dev team reading *other people's* deal flow, you want the [Venture API](/quickstart) instead. The two are separate surfaces with separate keys.
+</Info>
+
+## What you can do
+
+<Columns cols={2}>
+  <Card title="See your CRI and what to fix" icon="gauge-high" href="/founder/quickstart">
+    Pull your live CRI score (0-1000), its six domain breakdowns, and the rubric's ranked, concrete recommendations - the same signals investors see, plus exactly how far you are from Caplia Verified.
+  </Card>
+  <Card title="Iterate your deck to 700" icon="arrows-rotate" href="/founder/deck-loop">
+    Submit a deck draft, get a **private** CRI score back, regenerate, resubmit - loop until you clear 700, then publish one clean public update. Investors never see the drafts.
+  </Card>
+  <Card title="Keep your profile current" icon="pen-to-square" href="/founder/api-reference/introduction">
+    Update your company name, website, industry, stage, and problem statement, and upload documents to your data room - so the record investors read stays accurate.
+  </Card>
+  <Card title="Drive it from Claude" icon="plug" href="/founder/mcp">
+    Connect Claude (or any MCP client) to the Caplia MCP server and run the whole loop in natural language - pair it with Canva or your deck tool and let the agent rebuild the deck between scores.
+  </Card>
+</Columns>
+
+## Start here
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="bolt" href="/founder/quickstart" horizontal>
+    Read your CRI and recommendations in under three minutes.
+  </Card>
+  <Card title="The deck loop" icon="arrows-rotate" href="/founder/deck-loop" horizontal>
+    The headline workflow: iterate your pitch deck to Caplia Verified.
+  </Card>
+  <Card title="Authentication" icon="key" href="/founder/authentication" horizontal>
+    How company-scoped `cap_fnd_*` keys work and how to get one.
+  </Card>
+  <Card title="MCP server" icon="plug" href="/founder/mcp" horizontal>
+    Connect Claude Desktop, Cursor, or ChatGPT to run the loop for you.
+  </Card>
+</CardGroup>
+
+## How the Founder API is different
+
+The Founder API and the [Venture API](/quickstart) run on the **same hosts** (`api.venture.caplia.ai`, `mcp.venture.caplia.ai`) but behave differently depending on which kind of key you present:
+
+|  | Founder API | Venture API |
+|---|---|---|
+| Who it's for | A founder, on their own company | Investors reading their deal flow |
+| Key prefix | `cap_fnd_live_*` / `cap_fnd_test_*` | `cap_inv_live_*` / `cap_inv_test_*` |
+| Scope | **One company** - the company the key was minted for | The caller's whole pipeline |
+| How a company is identified | Resolved from the key - no company id in any request | By id, in the path |
+| Namespace | `/v1/me/*` | `/v1/companies/*`, `/v1/search`, etc. |
+| Headline feature | Private deck-scoring loop → Caplia Verified | Submit and score inbound decks at scale |
+
+A founder key is **locked to your company**. Every `/v1/me/*` endpoint resolves the company from the key itself, so there's no company id to pass and no way to read or change anyone else's data.
+
+## Base URL
+
+```
+https://api.venture.caplia.ai/v1
+```
+
+## Environments
+
+|  | Production | Sandbox |
+|---|---|---|
+| REST | `https://api.venture.caplia.ai/v1/...` | `https://api-sandbox.venture.caplia.ai/v1/...` |
+| MCP | `https://mcp.venture.caplia.ai/` | `https://mcp-sandbox.venture.caplia.ai/` |
+| Key prefix | `cap_fnd_live_*` | `cap_fnd_test_*` |
+| Data | Your real company | Sandbox / test company |
+
+Cross-environment leaks fail closed: a `live` key hitting a `-sandbox` URL returns `401`, and a `test` key hitting a production URL returns `401`.
+
+## Need help?
+
+- **Founder API access and issues**: email <a href="mailto:paul@caplia.ai">paul@caplia.ai</a>
+- **Status**: check [status.caplia.ai](https://status.caplia.ai)

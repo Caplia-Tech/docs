@@ -131,22 +131,26 @@ Max 50 MB per deck (base64-encoded). Other write endpoints (create company shell
 
 ### Claude Desktop
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows). Claude Desktop reaches remote servers through the `mcp-remote` helper, which needs [Node.js](https://nodejs.org):
 
 ```json
 {
   "mcpServers": {
     "caplia": {
-      "url": "https://mcp.venture.caplia.ai/",
-      "headers": {
-        "Authorization": "Bearer cap_inv_live_YOUR_KEY_HERE"
-      }
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.venture.caplia.ai/",
+        "--header",
+        "Authorization: Bearer cap_inv_live_YOUR_KEY_HERE"
+      ]
     }
   }
 }
 ```
 
-Restart Claude Desktop. The Caplia tools appear under the plug icon at the bottom-left of any chat.
+Quit Claude Desktop completely and reopen it (not just the window). The Caplia tools appear under the plug icon at the bottom-left of any chat.
 
 ### Cursor
 
@@ -156,6 +160,28 @@ In Cursor settings → **Features → MCP → Add new MCP server**:
 - **Type**: `sse` (streamable HTTP)
 - **URL**: `https://mcp.venture.caplia.ai/`
 - **Header**: `Authorization: Bearer cap_inv_live_YOUR_KEY_HERE`
+
+### Claude Code
+
+One command, no file editing:
+
+```bash
+claude mcp add --transport http caplia https://mcp.venture.caplia.ai/ \
+  --header "Authorization: Bearer cap_inv_live_YOUR_KEY_HERE"
+```
+
+Run `/mcp` inside Claude Code (or `claude mcp list`) to confirm. Add `--scope user` to enable it in every project.
+
+### Codex
+
+Codex connects to remote MCP servers natively, reading the key from a named environment variable:
+
+```bash
+export CAPLIA_API_KEY="cap_inv_live_YOUR_KEY_HERE"
+codex mcp add caplia --url https://mcp.venture.caplia.ai/ --bearer-token-env-var CAPLIA_API_KEY
+```
+
+Run `/mcp` in the Codex TUI (or `codex mcp list`) to confirm.
 
 ### Windsurf, Cody, ChatGPT, generic clients
 
@@ -172,14 +198,11 @@ Refer to your client's MCP documentation for the exact config-file location.
 If you want to verify the server works before wiring it into an agent:
 
 ```bash
-# Health check (no auth)
-curl https://mcp.venture.caplia.ai/health
-# → {"status":"ok","server":"caplia-api","version":"1.0.0",...}
-
-# Initialize handshake
+# Liveness + protocol check (no auth) — a real MCP server answers `initialize`
 curl -X POST https://mcp.venture.caplia.ai/ \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}'
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"curl","version":"1"}}}'
+# → {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"caplia-api","version":"1.0.0"}}}
 
 # List tools (no auth)
 curl -X POST https://mcp.venture.caplia.ai/ \
@@ -209,4 +232,4 @@ curl -X POST https://mcp.venture.caplia.ai/ \
 
 ## Source
 
-Implementation: [`supabase/functions/mcp-v1/`](https://github.com/Caplia-Tech/caplia-investor/tree/main/supabase/functions/mcp-v1). Tool definitions are inline in `index.ts`. Open a PR there to propose new tools or refine existing ones.
+Implementation: [`supabase/functions/mcp-v1/`](https://github.com/Caplia-Tech/caplia-api/tree/main/supabase/functions/mcp-v1). Tool definitions are inline in `index.ts`. Open a PR there to propose new tools or refine existing ones.

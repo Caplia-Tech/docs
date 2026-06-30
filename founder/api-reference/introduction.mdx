@@ -1,0 +1,93 @@
+---
+title: "API Reference"
+description: "Every /v1/me/* founder endpoint, with try-it-yourself examples."
+icon: "terminal"
+---
+
+This section is the full reference for the founder endpoints - the `/v1/me/*` namespace, where every endpoint resolves your company from the API key. Each endpoint page has its path, method, required scope, parameters, example requests and responses, and a live "Try it" playground.
+
+<Note>
+The Founder API is **live in production**. A sandbox (`api-sandbox.venture.caplia.ai`) mirrors it with isolated test data.
+</Note>
+
+## Conventions
+
+### Base URL
+
+```
+https://api.venture.caplia.ai
+```
+
+All paths shown in this reference are appended to that base. Use `https://api-sandbox.venture.caplia.ai` with a `cap_fnd_test_*` key to test against sandbox data.
+
+### Authentication
+
+Every `/v1/me/*` endpoint requires a company-scoped founder key: `Authorization: Bearer cap_fnd_live_...`. The company is resolved from the key, so **no endpoint takes a company id**. See [Authentication](/founder/authentication).
+
+### Response shape
+
+**Success** - bare resource (no envelope):
+
+```json
+{
+  "cri": { "score": 624, "max": 1000, "verified": false },
+  "thesis_matches": [ /* ... */ ]
+}
+```
+
+**Error** - always envelope-wrapped:
+
+```json
+{
+  "error": {
+    "code": "forbidden",
+    "message": "This endpoint requires a founder key",
+    "request_id": "req_8H3jK9pQ"
+  }
+}
+```
+
+Always include `request_id` when contacting support.
+
+### Status codes
+
+| Code | Meaning |
+|---|---|
+| `200` | Read success |
+| `201` | Create success (e.g. document uploaded) |
+| `202` | Accepted but async - a deck draft is scoring |
+| `400` | Bad input (validation) |
+| `401` | Missing or invalid API key, or wrong environment |
+| `403` | Not a founder key, or missing the required scope |
+| `404` | Resource not found on your company |
+| `409` | Conflict (e.g. publishing a draft that hasn't scored yet) |
+| `500` | Unexpected server error - please report with `request_id` |
+
+### OpenAPI spec
+
+The machine-readable spec for the whole API lives at:
+
+```
+https://api.venture.caplia.ai/v1/openapi.json
+```
+
+It's regenerated from the live API on every deploy and includes both the founder (`/v1/me/*`) and venture endpoints, so it always matches what the server actually does.
+
+## Endpoints by category
+
+<CardGroup cols={2}>
+  <Card title="Company" icon="building" href="/founder/api-reference/introduction">
+    Get and update your own company profile.
+  </Card>
+  <Card title="Scores & metrics" icon="gauge-high" href="/founder/api-reference/introduction">
+    Your CRI score, domain breakdown, recommendations, thesis matches, and traction metrics.
+  </Card>
+  <Card title="Data room" icon="folder-open" href="/founder/api-reference/introduction">
+    List your documents, get signed download URLs, and upload new files.
+  </Card>
+  <Card title="Deck loop" icon="arrows-rotate" href="/founder/deck-loop">
+    Submit deck drafts for private scoring, poll, list, and publish the winner.
+  </Card>
+</CardGroup>
+
+Use the sidebar to jump to a specific endpoint.

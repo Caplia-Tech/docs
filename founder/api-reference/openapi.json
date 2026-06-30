@@ -1,13 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
+    "title": "Caplia Founder API",
     "version": "1.0.0",
-    "title": "Caplia Venture API",
-    "description": "Public REST API for the Caplia Investor Portal. Auth: `Authorization: Bearer cap_inv_live_<32 chars>`.",
-    "contact": {
-      "name": "Caplia",
-      "url": "https://docs.investor.caplia.ai"
-    }
+    "description": "Read and manage your own company, and run the private deck-scoring loop. Authenticated with company-scoped cap_fnd_* keys."
   },
   "servers": [
     {
@@ -24,103 +20,59 @@
     "parameters": {}
   },
   "paths": {
-    "/v1/health": {
+    "/v1/me/company": {
       "get": {
         "responses": {
           "200": {
-            "description": "Liveness check",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
+                    "id": {
                       "type": "string",
-                      "enum": [
-                        "ok"
-                      ]
+                      "format": "uuid"
                     },
-                    "version": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "website": {
                       "type": "string",
-                      "enum": [
-                        "v1"
-                      ]
+                      "nullable": true
+                    },
+                    "industry": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "stage": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "problem_statement": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "nullable": true
                     }
                   },
                   "required": [
-                    "status",
-                    "version"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/uploads/sign": {
-      "post": {
-        "tags": [
-          "Uploads"
-        ],
-        "summary": "Issue a short-lived upload token for a public form",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "form_id": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 128
-                  },
-                  "application_id": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 128
-                  }
-                },
-                "required": [
-                  "form_id"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Short-lived single-use upload token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string"
-                    },
-                    "expires_at": {
-                      "type": "string"
-                    },
-                    "max_bytes": {
-                      "type": "number"
-                    },
-                    "accepted_mime": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "token",
-                    "expires_at",
-                    "max_bytes",
-                    "accepted_mime"
+                    "id",
+                    "name",
+                    "website",
+                    "industry",
+                    "stage",
+                    "problem_statement",
+                    "created_at"
                   ]
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request",
+          "403": {
+            "description": "Key lacks required scope",
             "content": {
               "application/json": {
                 "schema": {
@@ -182,450 +134,6 @@
                   },
                   "required": [
                     "error"
-                  ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/uploads/decks": {
-      "post": {
-        "tags": [
-          "Uploads"
-        ],
-        "summary": "Submit a deck using a short-lived upload token",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "nullable": true
-                  },
-                  "company_name": {
-                    "type": "string"
-                  },
-                  "company_url": {
-                    "type": "string",
-                    "format": "uri"
-                  },
-                  "notes": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "202": {
-            "description": "Accepted; deck queued for processing",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "job_id": {
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "company_id": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "uuid"
-                    },
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "queued"
-                      ]
-                    },
-                    "poll_url": {
-                      "type": "string",
-                      "format": "uri"
-                    }
-                  },
-                  "required": [
-                    "job_id",
-                    "company_id",
-                    "status",
-                    "poll_url"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid API key",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/search": {
-      "get": {
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 100
-            },
-            "required": true,
-            "name": "q",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 25,
-              "default": 10
-            },
-            "required": false,
-            "name": "limit",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Companies whose name matches the query that the caller can read (RLS-scoped)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "website": {
-                        "type": "string",
-                        "nullable": true
-                      },
-                      "industry": {
-                        "type": "string",
-                        "nullable": true
-                      },
-                      "stage": {
-                        "type": "string",
-                        "nullable": true
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "name",
-                      "website",
-                      "industry",
-                      "stage"
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/companies": {
-      "get": {
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "name": "cursor",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 50
-            },
-            "required": false,
-            "name": "limit",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "name": "stage",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Paginated list of companies in the caller's pipeline",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "website": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "industry": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "stage": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "problem_statement": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "created_at": {
-                            "type": "string",
-                            "nullable": true
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "name",
-                          "website",
-                          "industry",
-                          "stage",
-                          "problem_statement",
-                          "created_at"
-                        ]
-                      }
-                    },
-                    "next_cursor": {
-                      "type": "string",
-                      "nullable": true
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "next_cursor"
                   ]
                 }
               }
@@ -667,7 +175,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "requestBody": {
           "content": {
             "application/json": {
@@ -690,18 +198,20 @@
                   "stage": {
                     "type": "string",
                     "maxLength": 50
+                  },
+                  "problem_statement": {
+                    "type": "string",
+                    "maxLength": 10000
                   }
                 },
-                "required": [
-                  "name"
-                ]
+                "additionalProperties": false
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Created",
+          "200": {
+            "description": "Updated",
             "content": {
               "application/json": {
                 "schema": {
@@ -781,67 +291,36 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/v1/companies/{id}": {
-      "get": {
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
+          },
+          "403": {
+            "description": "Key lacks required scope",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "website": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "industry": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "stage": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "problem_statement": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "created_at": {
-                      "type": "string",
-                      "nullable": true
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "request_id"
+                      ]
                     }
                   },
                   "required": [
-                    "id",
-                    "name",
-                    "website",
-                    "industry",
-                    "stage",
-                    "problem_statement",
-                    "created_at"
+                    "error"
                   ]
                 }
               }
@@ -918,19 +397,8 @@
         }
       }
     },
-    "/v1/companies/{id}/scores": {
+    "/v1/me/scores": {
       "get": {
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -946,6 +414,16 @@
                           "type": "number",
                           "nullable": true
                         },
+                        "max": {
+                          "type": "number"
+                        },
+                        "verified": {
+                          "type": "boolean"
+                        },
+                        "points_to_verified": {
+                          "type": "number",
+                          "nullable": true
+                        },
                         "scored_at": {
                           "type": "string",
                           "nullable": true
@@ -955,12 +433,22 @@
                           "items": {
                             "nullable": true
                           }
+                        },
+                        "recommendations": {
+                          "type": "array",
+                          "items": {
+                            "nullable": true
+                          }
                         }
                       },
                       "required": [
                         "score",
+                        "max",
+                        "verified",
+                        "points_to_verified",
                         "scored_at",
-                        "domains"
+                        "domains",
+                        "recommendations"
                       ]
                     },
                     "thesis_matches": {
@@ -994,6 +482,40 @@
                   "required": [
                     "cri",
                     "thesis_matches"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Key lacks required scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "error"
                   ]
                 }
               }
@@ -1036,19 +558,8 @@
         }
       }
     },
-    "/v1/companies/{id}/metrics": {
+    "/v1/me/metrics": {
       "get": {
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1095,6 +606,40 @@
               }
             }
           },
+          "403": {
+            "description": "Key lacks required scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not found or out of scope",
             "content": {
@@ -1132,22 +677,11 @@
         }
       }
     },
-    "/v1/companies/{id}/documents": {
+    "/v1/me/documents": {
       "get": {
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Data room files visible to the caller",
+            "description": "Data room files for the founder's company",
             "content": {
               "application/json": {
                 "schema": {
@@ -1192,8 +726,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not found or out of scope",
+          "403": {
+            "description": "Key lacks required scope",
             "content": {
               "application/json": {
                 "schema": {
@@ -1263,17 +797,6 @@
         }
       },
       "post": {
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -1372,8 +895,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not found or out of scope",
+          "403": {
+            "description": "Key lacks required scope",
             "content": {
               "application/json": {
                 "schema": {
@@ -1443,131 +966,7 @@
         }
       }
     },
-    "/v1/companies/{id}/folders": {
-      "get": {
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      "key": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "type_id": {
-                        "type": "string",
-                        "nullable": true
-                      },
-                      "order": {
-                        "type": "number"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "key",
-                      "name",
-                      "type_id",
-                      "order"
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found or out of scope",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/documents/{id}": {
+    "/v1/me/documents/{id}/url": {
       "get": {
         "parameters": [
           {
@@ -1612,8 +1011,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not found or out of scope",
+          "403": {
+            "description": "Key lacks required scope",
             "content": {
               "application/json": {
                 "schema": {
@@ -1641,273 +1040,6 @@
                   },
                   "required": [
                     "error"
-                  ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/theses": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "Active investment theses for caller's team",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "description": {
-                        "type": "string",
-                        "nullable": true
-                      },
-                      "is_active": {
-                        "type": "boolean"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "name",
-                      "description",
-                      "is_active"
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/views": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "key": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "scope": {
-                        "type": "string"
-                      },
-                      "stage_filter": {
-                        "type": "array",
-                        "nullable": true,
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "key",
-                      "name",
-                      "scope",
-                      "stage_filter"
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "object",
-                      "properties": {
-                        "code": {
-                          "type": "string"
-                        },
-                        "message": {
-                          "type": "string"
-                        },
-                        "request_id": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "code",
-                        "message",
-                        "request_id"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/views/{key}/companies": {
-      "get": {
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "name": "key",
-            "in": "path"
-          },
-          {
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "name": "cursor",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 50
-            },
-            "required": false,
-            "name": "limit",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "name": {
-                            "type": "string"
-                          },
-                          "stage": {
-                            "type": "string",
-                            "nullable": true
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "name",
-                          "stage"
-                        ]
-                      }
-                    },
-                    "next_cursor": {
-                      "type": "string",
-                      "nullable": true
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "next_cursor"
                   ]
                 }
               }
@@ -1984,7 +1116,7 @@
         }
       }
     },
-    "/v1/decks": {
+    "/v1/me/deck/drafts": {
       "post": {
         "requestBody": {
           "content": {
@@ -1994,16 +1126,6 @@
                 "properties": {
                   "file": {
                     "nullable": true
-                  },
-                  "company_name": {
-                    "type": "string"
-                  },
-                  "company_url": {
-                    "type": "string",
-                    "format": "uri"
-                  },
-                  "notes": {
-                    "type": "string"
                   }
                 }
               }
@@ -2012,35 +1134,33 @@
         },
         "responses": {
           "202": {
-            "description": "Accepted; deck queued for processing",
+            "description": "Accepted; draft queued for private scoring",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "job_id": {
+                    "draft_id": {
                       "type": "string",
                       "format": "uuid"
                     },
-                    "company_id": {
+                    "job_id": {
                       "type": "string",
-                      "nullable": true,
                       "format": "uuid"
                     },
                     "status": {
                       "type": "string",
                       "enum": [
-                        "queued"
+                        "scoring"
                       ]
                     },
                     "poll_url": {
-                      "type": "string",
-                      "format": "uri"
+                      "type": "string"
                     }
                   },
                   "required": [
+                    "draft_id",
                     "job_id",
-                    "company_id",
                     "status",
                     "poll_url"
                   ]
@@ -2082,6 +1202,153 @@
               }
             }
           },
+          "403": {
+            "description": "Key lacks required scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "This company's deck drafts, newest first",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "cri_score": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "file_name": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "status",
+                      "cri_score",
+                      "created_at",
+                      "file_name"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Key lacks required scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -2119,7 +1386,7 @@
         }
       }
     },
-    "/v1/jobs/{id}": {
+    "/v1/me/deck/drafts/{id}": {
       "get": {
         "parameters": [
           {
@@ -2140,58 +1407,89 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "job_id": {
-                      "type": "string"
-                    },
-                    "company_id": {
+                    "id": {
                       "type": "string",
-                      "nullable": true
+                      "format": "uuid"
                     },
                     "status": {
-                      "type": "string",
-                      "enum": [
-                        "queued",
-                        "processing",
-                        "completed",
-                        "failed"
-                      ]
-                    },
-                    "created_at": {
                       "type": "string"
                     },
-                    "completed_at": {
-                      "type": "string",
+                    "cri_score": {
+                      "type": "number",
                       "nullable": true
                     },
-                    "results": {
-                      "type": "object",
-                      "properties": {
-                        "company": {
-                          "nullable": true
-                        },
-                        "cri": {
-                          "nullable": true
-                        },
-                        "thesis_matches": {
-                          "nullable": true
-                        }
-                      }
+                    "verified": {
+                      "type": "boolean"
                     },
-                    "errors": {
+                    "domains": {
                       "type": "array",
                       "items": {
                         "nullable": true
                       }
+                    },
+                    "recommendations": {
+                      "type": "array",
+                      "items": {
+                        "nullable": true
+                      }
+                    },
+                    "scored_at": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "file_name": {
+                      "type": "string",
+                      "nullable": true
                     }
                   },
                   "required": [
-                    "job_id",
-                    "company_id",
+                    "id",
                     "status",
+                    "cri_score",
+                    "verified",
+                    "domains",
+                    "recommendations",
+                    "scored_at",
                     "created_at",
-                    "completed_at",
-                    "results",
-                    "errors"
+                    "file_name"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Key lacks required scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "error"
                   ]
                 }
               }
@@ -2268,7 +1566,7 @@
         }
       }
     },
-    "/v1/companies/{id}/notes": {
+    "/v1/me/deck/drafts/{id}/publish": {
       "post": {
         "parameters": [
           {
@@ -2281,54 +1579,40 @@
             "in": "path"
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 10000
-                  }
-                },
-                "required": [
-                  "body"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
-            "description": "Created",
+          "200": {
+            "description": "Draft promoted to live deck and re-scored publicly",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string"
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "published"
+                      ]
                     },
-                    "body": {
-                      "type": "string"
+                    "document_id": {
+                      "type": "string",
+                      "format": "uuid"
                     },
-                    "created_at": {
-                      "type": "string"
+                    "job_id": {
+                      "type": "string",
+                      "format": "uuid"
                     }
                   },
                   "required": [
-                    "id",
-                    "body",
-                    "created_at"
+                    "status",
+                    "document_id",
+                    "job_id"
                   ]
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request",
+          "403": {
+            "description": "Key lacks required scope",
             "content": {
               "application/json": {
                 "schema": {
@@ -2363,6 +1647,40 @@
           },
           "404": {
             "description": "Not found or out of scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "request_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "request_id"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {

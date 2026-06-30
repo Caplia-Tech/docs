@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Caplia API",
-  "description": "Read deals, submit decks, poll async results. Public REST API for the Caplia venture platform.",
+  "description": "Programmatic access to Caplia - the Venture API for investors reading deal flow, and the Founder API for founders improving their own company.",
   "colors": {
     "primary": "#344365",
     "light": "#02A0FD",
@@ -16,12 +16,17 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
+        "tab": "Venture API",
         "groups": [
           {
-            "group": "Getting Started",
+            "group": "Start here",
             "pages": [
-              "index",
+              "index"
+            ]
+          },
+          {
+            "group": "Getting started",
+            "pages": [
               "quickstart",
               "authentication"
             ]
@@ -32,14 +37,9 @@
               "integrations/mcp",
               "integrations/venture-form-widget"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
+          },
           {
-            "group": "Overview",
+            "group": "API reference",
             "pages": [
               "api-reference/introduction"
             ]
@@ -47,6 +47,41 @@
           {
             "group": "Endpoints",
             "openapi": "/api-reference/openapi.json"
+          }
+        ]
+      },
+      {
+        "tab": "Founder API",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": [
+              "founder/index",
+              "founder/quickstart",
+              "founder/authentication"
+            ]
+          },
+          {
+            "group": "Improve your deck",
+            "pages": [
+              "founder/deck-loop"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "founder/mcp"
+            ]
+          },
+          {
+            "group": "API reference",
+            "pages": [
+              "founder/api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "openapi": "/founder/api-reference/openapi.json"
           }
         ]
       }
