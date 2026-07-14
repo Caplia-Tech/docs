@@ -101,7 +101,7 @@ Mint a key in **Settings → API Keys** inside Caplia. See [Authentication](/aut
 
 ## Tools
 
-12 tools that map 1:1 to REST endpoints. All tools inherit row-level security — you only see data your account already has access to in the web app.
+13 tools that map 1:1 to REST endpoints. All tools inherit row-level security — you only see data your account already has access to in the web app.
 
 ### Read tools (require `read` scope)
 
@@ -115,6 +115,7 @@ Mint a key in **Settings → API Keys** inside Caplia. See [Authentication](/aut
 | `caplia_list_company_documents` | "What's in company X's data room?" |
 | `caplia_get_document_url` | "Download the pitch deck for company X" |
 | `caplia_list_theses` | "What investment theses does my team have?" |
+| `caplia_list_properties` | "What custom properties (e.g. award categories) can I tag a submission with?" |
 | `caplia_list_views` | "What pipeline views are configured?" |
 | `caplia_get_view_companies` | "Show me everything in the Monday screening view" |
 | `caplia_get_job` | "What's the status of the deck I just submitted?" |
@@ -123,7 +124,7 @@ Mint a key in **Settings → API Keys** inside Caplia. See [Authentication](/aut
 
 | Tool | What an agent asks for it |
 |---|---|
-| `caplia_submit_deck` | "Submit this PDF as a new deal" |
+| `caplia_submit_deck` | "Submit this PDF as a new deal, tagged Climate Tech, with the founder's contact details" |
 
 Max 50 MB per deck (base64-encoded). Other write endpoints (create company shell, attach documents, add notes) exist on the REST API and will be wrapped as MCP tools as customer demand surfaces.
 

@@ -84,7 +84,10 @@ curl -X POST https://api.venture.caplia.ai/v1/decks \
   -F "file=@pitch.pdf" \
   -F "company_name=Tesla" \
   -F "company_url=https://tesla.com" \
-  -F "notes=Met them at YC demo day - interesting battery tech angle"
+  -F "notes=Met them at YC demo day - interesting battery tech angle" \
+  -F "founder_name=Elon Musk" \
+  -F "founder_email=elon@tesla.com" \
+  -F 'properties={"Award Category":"Climate Tech"}'
 ```
 
 ```json Response (202 Accepted)
@@ -95,7 +98,30 @@ curl -X POST https://api.venture.caplia.ai/v1/decks \
 }
 ```
 
-The response comes back fast - the actual processing happens asynchronously. `company_name`, `company_url`, and `notes` are optional but help the worker create a cleaner company record.
+The response comes back fast - the actual processing happens asynchronously. All fields besides `file` are optional but help the worker create a cleaner company record:
+
+- `founder_name` / `founder_email` become the company's **contact card**.
+- `properties` tags the deal with your team's **custom properties** (a JSON object of property → option, e.g. an awards programme's category). Property names and option labels are configured per team inside Caplia — discover the current values with `GET /v1/properties`, and prefer submitting the returned **ids** so internal renames never break your integration. Unknown or archived entries are skipped (with a server-side warning) rather than failing the submission.
+
+```bash
+curl https://api.venture.caplia.ai/v1/properties \
+  -H "Authorization: Bearer $CAPLIA_KEY"
+```
+
+```json
+{
+  "properties": [
+    {
+      "id": "a99031b5-…",
+      "name": "Award Category",
+      "options": [
+        { "id": "5e2c…", "label": "Climate Tech" },
+        { "id": "9b41…", "label": "Deep Tech" }
+      ]
+    }
+  ]
+}
+```
 
 <Note>
 The deck file must be a PDF, ≤ 50 MB. Decks submitted via the API auto-approve into your pipeline - the act of holding a scoped API key is sufficient trust.
