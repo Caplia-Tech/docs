@@ -188,9 +188,21 @@ curl -X POST https://api.venture.caplia.ai/v1/uploads/sign \
   "token": "cap_upload_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "expires_at": "2026-05-12T15:35:00.000Z",
   "max_bytes": 52428800,
-  "accepted_mime": "application/pdf"
+  "accepted_mime": "application/pdf",
+  "properties": [
+    {
+      "id": "a99031b5-…",
+      "name": "Award Category",
+      "options": [
+        { "id": "5e2c…", "label": "Climate Tech" },
+        { "id": "9b41…", "label": "Deep Tech" }
+      ]
+    }
+  ]
 }
 ```
+
+The `properties` array is the form team's **live custom-property config** — render it as dropdowns (an awards programme's category picker, a fund's source tag) and the form stays current when the team renames or adds options inside Caplia. Pass selections on the upload call below.
 
 ### `POST /v1/uploads/decks`
 
@@ -200,7 +212,10 @@ Accepts the PDF using the upload token.
 curl -X POST https://api.venture.caplia.ai/v1/uploads/decks \
   -H "Authorization: Bearer cap_upload_eyJ..." \
   -F "file=@deck.pdf" \
-  -F "company_name=Acme Inc"
+  -F "company_name=Acme Inc" \
+  -F "founder_name=Ada Lovelace" \
+  -F "founder_email=ada@acme.com" \
+  -F 'properties={"a99031b5-…":"5e2c…"}'
 ```
 
 ```json
