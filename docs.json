@@ -1,8 +1,8 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Caplia API",
-  "description": "Programmatic access to Caplia - the Venture API for investors reading deal flow, and the Founder API for founders improving their own company.",
+  "name": "Caplia Docs",
+  "description": "Documentation for Caplia — the Founder and Venture portals, video guides, and the developer APIs.",
   "colors": {
     "primary": "#344365",
     "light": "#02A0FD",
@@ -15,6 +15,86 @@
   },
   "navigation": {
     "tabs": [
+      {
+        "tab": "Founder Portal",
+        "groups": [
+          {
+            "group": "Start here",
+            "pages": [
+              "founder-portal/index",
+              "founder-portal/getting-started"
+            ]
+          },
+          {
+            "group": "Your company",
+            "pages": [
+              "founder-portal/passport",
+              "founder-portal/data-room",
+              "founder-portal/sharing-access"
+            ]
+          },
+          {
+            "group": "Programmes & AI",
+            "pages": [
+              "founder-portal/link-your-passport",
+              "founder-portal/iris"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Venture Portal",
+        "groups": [
+          {
+            "group": "Start here",
+            "pages": [
+              "venture-portal/index",
+              "venture-portal/getting-started"
+            ]
+          },
+          {
+            "group": "Deal flow",
+            "pages": [
+              "venture-portal/deal-flow",
+              "venture-portal/adding-companies",
+              "venture-portal/properties-bulk-actions"
+            ]
+          },
+          {
+            "group": "Intelligence",
+            "pages": [
+              "venture-portal/thesis",
+              "venture-portal/readiness",
+              "venture-portal/dashboards"
+            ]
+          },
+          {
+            "group": "Showcase & collaboration",
+            "pages": [
+              "venture-portal/directories",
+              "venture-portal/chat"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/index",
+              "guides/welcome-tour"
+            ]
+          },
+          {
+            "group": "For the Caplia team",
+            "pages": [
+              "guides/how-to-add-a-guide"
+            ]
+          }
+        ]
+      },
       {
         "tab": "Venture API",
         "groups": [

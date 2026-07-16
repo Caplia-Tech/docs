@@ -1,0 +1,53 @@
+---
+title: "Adding a new guide"
+description: "How to publish a video guide on this site (internal)"
+icon: "clapperboard"
+---
+
+<Warning>
+  Internal how-to for the Caplia team — remove this page from `docs.json` before making the Guides tab customer-only, or leave it as the team recipe.
+</Warning>
+
+Each guide is one MDX file in the `guides/` folder with a video at the top. Five minutes, no code knowledge needed.
+
+<Steps>
+  <Step title="Record the video">
+    Loom, YouTube (unlisted), or Mux all work — anything that gives you an embed URL. Keep guides under ~5 minutes; one task per guide.
+  </Step>
+  <Step title="Copy an existing guide">
+    Duplicate `guides/welcome-tour.mdx`, rename the file to your topic in kebab-case (e.g. `guides/creating-a-cohort-channel.mdx`), and update the frontmatter `title`, `description`, and `icon`.
+  </Step>
+  <Step title="Paste your video embed">
+    Replace the placeholder with your embed:
+
+    ```jsx Loom
+    <iframe
+      src="https://www.loom.com/embed/YOUR_VIDEO_ID"
+      frameborder="0"
+      allowfullscreen
+      style={{ width: '100%', aspectRatio: '16 / 9', borderRadius: '12px' }}
+    ></iframe>
+    ```
+
+    ```jsx YouTube
+    <iframe
+      src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+      frameborder="0"
+      allowfullscreen
+      style={{ width: '100%', aspectRatio: '16 / 9', borderRadius: '12px' }}
+    ></iframe>
+    ```
+
+    Optionally add 3-5 written steps below the video so the guide works without sound.
+  </Step>
+  <Step title="Register the page">
+    Add the page path to the **Guides** tab in `docs.json` (`"guides/creating-a-cohort-channel"`), and add a `<Card>` for it on `guides/index.mdx` so it shows in the hub.
+  </Step>
+  <Step title="Preview and publish">
+    `mint dev` to preview locally, then open a PR to `main` — merging publishes the site.
+  </Step>
+</Steps>
+
+<Tip>
+  Ask Claude to do steps 2–5 for you: "add a guide called *Creating a cohort channel* with this Loom link" is enough.
+</Tip>
