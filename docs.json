@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Caplia Docs",
-  "description": "Documentation for Caplia — the Founder and Venture portals, video guides, and the developer APIs.",
+  "description": "Documentation for Caplia \u2014 the Founder and Venture portals, video guides, and the developer APIs.",
   "colors": {
     "primary": "#344365",
     "light": "#02A0FD",
@@ -96,6 +96,41 @@
         ]
       },
       {
+        "tab": "Founder API",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": [
+              "founder/index",
+              "founder/quickstart",
+              "founder/authentication"
+            ]
+          },
+          {
+            "group": "Improve your deck",
+            "pages": [
+              "founder/deck-loop"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "founder/mcp"
+            ]
+          },
+          {
+            "group": "API reference",
+            "pages": [
+              "founder/api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "openapi": "/founder/api-reference/openapi.json"
+          }
+        ]
+      },
+      {
         "tab": "Venture API",
         "groups": [
           {
@@ -130,41 +165,6 @@
             "openapi": "/api-reference/openapi.json"
           }
         ]
-      },
-      {
-        "tab": "Founder API",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "founder/index",
-              "founder/quickstart",
-              "founder/authentication"
-            ]
-          },
-          {
-            "group": "Improve your deck",
-            "pages": [
-              "founder/deck-loop"
-            ]
-          },
-          {
-            "group": "Integrations",
-            "pages": [
-              "founder/mcp"
-            ]
-          },
-          {
-            "group": "API reference",
-            "pages": [
-              "founder/api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoints",
-            "openapi": "/founder/api-reference/openapi.json"
-          }
-        ]
       }
     ]
   },
@@ -182,7 +182,13 @@
     }
   },
   "contextual": {
-    "options": ["copy", "view", "chatgpt", "claude", "mcp"]
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "mcp"
+    ]
   },
   "footer": {
     "socials": {
