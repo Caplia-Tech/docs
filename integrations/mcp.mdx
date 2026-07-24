@@ -130,6 +130,10 @@ Max 50 MB per deck (base64-encoded). Other write endpoints (create company shell
 
 ## Configure your MCP client
 
+<Warning>
+**Using Claude in the browser or on mobile?** Caplia isn't in Anthropic's connector directory yet, and the **Settings → Connectors → Add custom connector** flow on claude.ai currently only completes for OAuth-based servers. Caplia authenticates with a static API key, so adding `https://mcp.venture.caplia.ai/` there fails — typically with *"Couldn't register with sign-in service"*. Connect through [Claude Desktop](#claude-desktop) or [Claude Code](#claude-code) below instead; both send your API key with every request.
+</Warning>
+
 ### Claude Desktop
 
 Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows). Claude Desktop reaches remote servers through the `mcp-remote` helper, which needs [Node.js](https://nodejs.org):
@@ -223,6 +227,16 @@ curl -X POST https://mcp.venture.caplia.ai/ \
     }
   }')"
 ```
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| *"Couldn't register with sign-in service"* when adding a custom connector on claude.ai | claude.ai custom connectors require OAuth; Caplia uses API keys | Use the [Claude Desktop](#claude-desktop) or [Claude Code](#claude-code) setup above |
+| Tools are listed, but every call returns `Missing Authorization header` | Your client connected without sending the key — `initialize` and `tools/list` don't require auth, so setup can look successful even with a missing or mistyped header | Re-check the `Authorization` header (or `--header` line) in your config, then restart the client |
+| `401` / invalid key, even though the key looks right | Key and host environments don't match | `cap_inv_test_*` keys only work on `mcp-sandbox.venture.caplia.ai`; `cap_inv_live_*` keys only on `mcp.venture.caplia.ai` |
+| No Caplia tools in Claude Desktop after editing the config | App not fully quit, a JSON syntax error, or Node.js missing (`mcp-remote` needs it) | Validate the JSON, install [Node.js](https://nodejs.org), then quit Claude Desktop completely and reopen it |
+| Tool calls fail with a permissions error on writes | Key has `read` scope only | Mint a `write`-scoped key in **Settings → API Keys** |
 
 ## Limitations
 
