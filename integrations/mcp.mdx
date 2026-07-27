@@ -130,9 +130,15 @@ Max 50 MB per deck (base64-encoded). Other write endpoints (create company shell
 
 ## Configure your MCP client
 
-<Warning>
-**Using Claude in the browser or on mobile?** Caplia isn't in Anthropic's connector directory yet, and the **Settings → Connectors → Add custom connector** flow on claude.ai currently only completes for OAuth-based servers. Caplia authenticates with a static API key, so adding `https://mcp.venture.caplia.ai/` there fails — typically with *"Couldn't register with sign-in service"*. Connect through [Claude Desktop](#claude-desktop) or [Claude Code](#claude-code) below instead; both send your API key with every request.
-</Warning>
+### Claude on the web or mobile (claude.ai)
+
+Add Caplia as a custom connector — no config files needed:
+
+1. Go to **Settings → Connectors → Add custom connector**.
+2. Enter `https://mcp.venture.caplia.ai/` and click **Add**. Leave the advanced OAuth fields empty — the connector registers itself.
+3. Click **Connect**. A Caplia authorization page opens: paste an API key from **Settings → API Keys** in the investor portal and click **Authorize**.
+
+The connector holds exactly that key's access (`read` or `write` scope, your workspace's data). To revoke the connector, revoke the key. Live keys (`cap_inv_live_*`) belong on `https://mcp.venture.caplia.ai/`; use `https://mcp-sandbox.venture.caplia.ai/` with a test key to rehearse against sandbox.
 
 ### Claude Desktop
 
@@ -203,15 +209,22 @@ Refer to your client's MCP documentation for the exact config-file location.
 If you want to verify the server works before wiring it into an agent:
 
 ```bash
-# Liveness + protocol check (no auth) — a real MCP server answers `initialize`
+# Liveness check (no auth)
+curl https://mcp.venture.caplia.ai/health
+
+# Protocol check — a real MCP server answers `initialize` (auth required;
+# without it you get a 401 with a WWW-Authenticate challenge, which is how
+# OAuth-capable clients discover the sign-in flow)
 curl -X POST https://mcp.venture.caplia.ai/ \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer cap_inv_live_..." \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"curl","version":"1"}}}'
 # → {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"caplia-api","version":"1.0.0"}}}
 
-# List tools (no auth)
+# List tools
 curl -X POST https://mcp.venture.caplia.ai/ \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer cap_inv_live_..." \
   -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
 
 # Submit a pitch deck (requires write scope)
@@ -232,8 +245,8 @@ curl -X POST https://mcp.venture.caplia.ai/ \
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| *"Couldn't register with sign-in service"* when adding a custom connector on claude.ai | claude.ai custom connectors require OAuth; Caplia uses API keys | Use the [Claude Desktop](#claude-desktop) or [Claude Code](#claude-code) setup above |
-| Tools are listed, but every call returns `Missing Authorization header` | Your client connected without sending the key — `initialize` and `tools/list` don't require auth, so setup can look successful even with a missing or mistyped header | Re-check the `Authorization` header (or `--header` line) in your config, then restart the client |
+| The claude.ai authorization page rejects your API key | The key is revoked, or key and host environments don't match | Mint a fresh key in **Settings → API Keys**; use live keys on `mcp.venture.caplia.ai`, test keys on `mcp-sandbox.venture.caplia.ai` |
+| Client reports `401` / "authentication required" on every request | Your client connected without valid credentials — a missing or mistyped `Authorization` header, or an expired OAuth session | Re-check the `--header` line in your config and restart the client; on claude.ai, disconnect and reconnect the connector to re-authorize |
 | `401` / invalid key, even though the key looks right | Key and host environments don't match | `cap_inv_test_*` keys only work on `mcp-sandbox.venture.caplia.ai`; `cap_inv_live_*` keys only on `mcp.venture.caplia.ai` |
 | No Caplia tools in Claude Desktop after editing the config | App not fully quit, a JSON syntax error, or Node.js missing (`mcp-remote` needs it) | Validate the JSON, install [Node.js](https://nodejs.org), then quit Claude Desktop completely and reopen it |
 | Tool calls fail with a permissions error on writes | Key has `read` scope only | Mint a `write`-scoped key in **Settings → API Keys** |
