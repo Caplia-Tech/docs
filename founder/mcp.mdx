@@ -225,5 +225,5 @@ curl -X POST https://mcp-sandbox.venture.caplia.ai/ \
 
 - **Sandbox for testing.** Rehearse against the `-sandbox` host with a `cap_fnd_test_*` key before going live.
 - **No streaming responses.** Each tool call is a single request-response; deck scoring is polled via `caplia_get_deck_draft`.
-- **50 MB max** per deck or document, base64-encoded.
+- **50 MB max** per deck or document — provide files as an https `file_url` the server downloads directly (preferred; required on claude.ai, where inlined base64 can't carry real-size files), or as `file_b64` from clients that encode host-side.
 - **JSON output only.** Each tool returns raw JSON from the REST endpoint as a text content block.
