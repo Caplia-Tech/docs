@@ -113,7 +113,10 @@ You can pipe this into Postman, Insomnia, or any OpenAPI-aware tool. It's regene
     List folders, documents; get signed download URLs; upload new documents.
   </Card>
   <Card title="Deck intake" icon="upload" href="/api-reference/introduction">
-    Submit pitch decks; poll job status; receive enriched results.
+    Submit pitch decks; target one or more pipelines; poll job status; receive enriched results.
+  </Card>
+  <Card title="Pipelines" icon="diagram-project" href="/api-reference/introduction">
+    Discover the pipelines your key can submit into, including the default landing pipeline.
   </Card>
   <Card title="Theses & views" icon="list-check" href="/api-reference/introduction">
     Your team's investment theses and pipeline view configurations.
@@ -124,3 +127,13 @@ You can pipe this into Postman, Insomnia, or any OpenAPI-aware tool. It's regene
 </CardGroup>
 
 Use the sidebar to jump to a specific endpoint.
+
+## Submitting into a specific pipeline
+
+Teams can run several pipelines at once — for example one per award in an awards programme, where an entrant may enter two or three awards. Submissions target pipelines with the `pipeline_ids` field:
+
+1. **Discover** the pipelines your key can submit into with `GET /v1/pipelines`. The response lists each pipeline's `id`, `name`, and whether it is the default landing pipeline (where submissions go when you omit `pipeline_ids`).
+2. **Submit** with `pipeline_ids` on `POST /v1/decks` (as a JSON array or comma-separated multipart field) or `POST /v1/companies` (as a JSON array). One deal is created per pipeline, so a company entering two awards appears on both.
+3. Ids outside your key's scope are rejected with a `400` before anything is created.
+
+Custom application questions work the same way: discover them with `GET /v1/properties` and answer them via the `properties` field on either endpoint.
