@@ -140,14 +140,14 @@ Custom application questions work the same way: discover them with `GET /v1/prop
 
 ## Store your own reference, query it back
 
-Store your system's reference (an application ID, a CRM id) as a text property on submission, and you can always find the company again — even if you never captured the `company_id` from the intake job:
+Store your system's reference (an application ID, a CRM id) as a **reference property** on submission, and you can always find the company again — even if you never captured the `company_id` from the intake job. Reference properties are made for identifiers: they never display as application answers, and they can carry a `validation_pattern` (a full-match regex returned by `GET /v1/properties`) — validate your value against it before sending, because non-matching values are not stored:
 
 ```bash
 curl "https://api.venture.caplia.ai/v1/companies?property=Application%20ID&value=APP-123" \
   -H "Authorization: Bearer $CAPLIA_API_KEY"
 ```
 
-`GET /v1/companies/{id}` echoes every submitted property back, so both sides of the reconciliation are covered. Text values match exactly (case-sensitive); select values accept an option label or id.
+`GET /v1/companies/{id}` echoes every submitted property back, so both sides of the reconciliation are covered. Reference and text values match exactly (case-sensitive); select values accept an option label or id.
 
 ## Worked example: submit an application
 
