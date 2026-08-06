@@ -94,11 +94,17 @@ Connect once, then drive the whole [deck loop](/founder/deck-loop) in plain Engl
 
 Now set up your assistant:
 
-<Warning>
-**Using Claude in the browser or on mobile?** Caplia isn't in Anthropic's connector directory yet, and the **Settings → Connectors → Add custom connector** flow on claude.ai currently only completes for OAuth-based servers. Caplia authenticates with a static API key, so adding the Caplia URL there fails — typically with *"Couldn't register with sign-in service"*. Use the **Claude Desktop** or **Claude Code** tab below instead; both send your API key with every request.
-</Warning>
-
 <Tabs>
+  <Tab title="Claude (web & mobile)">
+    Add Caplia as a custom connector on claude.ai — no config files or Node.js needed:
+
+    1. Go to **Settings → Connectors → Add custom connector**.
+    2. Enter `https://mcp-sandbox.venture.caplia.ai/` (or `https://mcp.venture.caplia.ai/` with a `cap_fnd_live_*` key) and click **Add**. Leave the advanced OAuth fields empty — the connector registers itself.
+    3. Click **Connect**. A Caplia authorization page opens: paste your `cap_fnd_*` key and click **Authorize**.
+
+    The connector holds exactly that key's access — revoke the key in the founder portal to disconnect it. Remember the hosts are strict: test keys on the sandbox host, live keys on the production host.
+  </Tab>
+
   <Tab title="Claude Desktop">
     The simplest option if you don't live in a terminal.
 
@@ -181,9 +187,14 @@ The agent submits drafts, reads the private CRI and recommendations, regenerates
 ## Quick test from the terminal
 
 ```bash
-# Liveness + protocol check (no auth) — a real MCP server answers `initialize`
+# Liveness check (no auth)
+curl https://mcp-sandbox.venture.caplia.ai/health
+
+# Protocol check — a real MCP server answers `initialize` (auth required;
+# unauthenticated requests get a 401 WWW-Authenticate challenge)
 curl -X POST https://mcp-sandbox.venture.caplia.ai/ \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer cap_fnd_test_..." \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"curl","version":"1"}}}'
 
 # List the founder tools (send your founder key so the founder toolset is advertised)
@@ -203,8 +214,8 @@ curl -X POST https://mcp-sandbox.venture.caplia.ai/ \
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| *"Couldn't register with sign-in service"* when adding a custom connector on claude.ai | claude.ai custom connectors require OAuth; Caplia uses API keys | Use the **Claude Desktop** or **Claude Code** setup above |
-| Tools are listed, but every call returns `Missing Authorization header` | Your client connected without sending the key — `initialize` and `tools/list` don't require auth, so setup can look successful even with a missing or mistyped header | Re-check the `Authorization` header (or `--header` line) in your config, then restart the client |
+| The claude.ai authorization page rejects your key | The key is revoked, or key and host environments don't match | Mint a fresh `cap_fnd_*` key; test keys go with the sandbox host, live keys with the production host |
+| Client reports `401` / "authentication required" on every request | Your client connected without valid credentials — a missing or mistyped `Authorization` header, or an expired OAuth session | Re-check the `--header` line in your config and restart the client; on claude.ai, disconnect and reconnect the connector to re-authorize |
 | `401` / invalid key, even though the key looks right | Key and host environments don't match | `cap_fnd_test_*` keys only work on `mcp-sandbox.venture.caplia.ai`; `cap_fnd_live_*` keys only on `mcp.venture.caplia.ai` |
 | Investor tools appear instead of the founder tools | The key isn't a `cap_fnd_*` key | Mint a founder key in the founder portal (see [Authentication](/founder/authentication)) |
 | No Caplia tools in Claude Desktop after editing the config | App not fully quit, a JSON syntax error, or Node.js missing (`mcp-remote` needs it) | Validate the JSON, install [Node.js](https://nodejs.org), then quit Claude Desktop completely and reopen it |
@@ -214,5 +225,5 @@ curl -X POST https://mcp-sandbox.venture.caplia.ai/ \
 
 - **Sandbox for testing.** Rehearse against the `-sandbox` host with a `cap_fnd_test_*` key before going live.
 - **No streaming responses.** Each tool call is a single request-response; deck scoring is polled via `caplia_get_deck_draft`.
-- **50 MB max** per deck or document, base64-encoded.
+- **50 MB max** per deck or document — provide files as an https `file_url` the server downloads directly (preferred; required on claude.ai, where inlined base64 can't carry real-size files), or as `file_b64` from clients that encode host-side.
 - **JSON output only.** Each tool returns raw JSON from the REST endpoint as a text content block.
