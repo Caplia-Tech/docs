@@ -137,3 +137,50 @@ Teams can run several pipelines at once — for example one per award in an awar
 3. Ids outside your key's scope are rejected with a `400` before anything is created.
 
 Custom application questions work the same way: discover them with `GET /v1/properties` and answer them via the `properties` field on either endpoint.
+
+## Worked example: submit an application
+
+A full application — deck, applicant contact, award targeting, and question answers — is one discovery pass and one `POST`.
+
+<Steps>
+  <Step title="Discover the questions">
+    ```bash
+    curl https://api.venture.caplia.ai/v1/properties \
+      -H "Authorization: Bearer $CAPLIA_API_KEY"
+    ```
+
+    ```json
+    {
+      "properties": [
+        { "id": "bcb3…c2a7", "name": "What is your unfair advantage?", "type": "text", "options": [] },
+        { "id": "9f21…88d1", "name": "Award category", "type": "select",
+          "options": [ { "id": "51ac…", "label": "Climate Tech" }, { "id": "0d9e…", "label": "Female Founder" } ] }
+      ]
+    }
+    ```
+
+    `text` questions take a freeform string. `select` takes ONE option label or id; `multi_select` takes an array of them. Option ids are rename-proof, so prefer them over labels. Build your form from this response — it is the source of truth for what the team is asking.
+  </Step>
+  <Step title="Discover the pipelines">
+    ```bash
+    curl https://api.venture.caplia.ai/v1/pipelines \
+      -H "Authorization: Bearer $CAPLIA_API_KEY"
+    ```
+
+    Returns each pipeline's `id`, `name`, and `is_default` (where submissions land when you omit `pipeline_ids`).
+  </Step>
+  <Step title="Submit the application">
+    ```bash
+    curl -X POST https://api.venture.caplia.ai/v1/decks \
+      -H "Authorization: Bearer $CAPLIA_API_KEY" \
+      -F "file=@pitch-deck.pdf" \
+      -F "company_name=Acme Robotics" \
+      -F "founder_name=Elena Kowalski" \
+      -F "founder_email=elena@acmerobotics.com" \
+      -F 'pipeline_ids=["<deep-tech-pipeline-id>","<day-zero-pipeline-id>"]' \
+      -F 'properties={"bcb3…c2a7":"We own the whole inference stack.","9f21…88d1":"Climate Tech"}'
+    ```
+
+    You get a `202` with a `job_id` and a `poll_url` — poll `GET /v1/jobs/{job_id}` until `status` is `completed`. One deal is created per pipeline; `founder_name` and `founder_email` become the company's primary contact (deck analysis fills in role and LinkedIn where the deck reveals them, but never overwrites what you submitted); the `properties` answers appear on the deal and in the team's pipeline columns.
+  </Step>
+</Steps>
