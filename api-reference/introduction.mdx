@@ -138,6 +138,17 @@ Teams can run several pipelines at once — for example one per award in an awar
 
 Custom application questions work the same way: discover them with `GET /v1/properties` and answer them via the `properties` field on either endpoint.
 
+## Store your own reference, query it back
+
+Store your system's reference (an application ID, a CRM id) as a text property on submission, and you can always find the company again — even if you never captured the `company_id` from the intake job:
+
+```bash
+curl "https://api.venture.caplia.ai/v1/companies?property=Application%20ID&value=APP-123" \
+  -H "Authorization: Bearer $CAPLIA_API_KEY"
+```
+
+`GET /v1/companies/{id}` echoes every submitted property back, so both sides of the reconciliation are covered. Text values match exactly (case-sensitive); select values accept an option label or id.
+
 ## Worked example: submit an application
 
 A full application — deck, applicant contact, award targeting, and question answers — is one discovery pass and one `POST`.
