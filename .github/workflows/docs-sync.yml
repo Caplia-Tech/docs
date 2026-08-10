@@ -112,7 +112,9 @@ jobs:
         if: steps.edits.outputs.changed != '' && steps.validate.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.DOCS_SYNC_PAT }}
-        run: gh pr merge --merge
+        # --auto waits for main's required checks (Validate Docs) instead of
+        # failing on an immediate merge
+        run: gh pr merge --auto --merge
 
       - name: Notify Slack
         if: steps.edits.outputs.changed != ''
