@@ -30,7 +30,16 @@
             "pages": [
               "founder-portal/passport",
               "founder-portal/data-room",
+              "founder-portal/cap-table",
               "founder-portal/sharing-access"
+            ]
+          },
+          {
+            "group": "Fundraising",
+            "pages": [
+              "founder-portal/pipeline",
+              "founder-portal/readiness-index",
+              "founder-portal/psychometrics"
             ]
           },
           {
@@ -38,6 +47,20 @@
             "pages": [
               "founder-portal/link-your-passport",
               "founder-portal/iris"
+            ]
+          },
+          {
+            "group": "Account",
+            "pages": [
+              "founder-portal/account-settings",
+              "founder-portal/team",
+              "founder-portal/billing"
+            ]
+          },
+          {
+            "group": "Help",
+            "pages": [
+              "founder-portal/troubleshooting"
             ]
           }
         ]

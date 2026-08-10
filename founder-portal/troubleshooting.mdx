@@ -1,0 +1,68 @@
+---
+title: "Troubleshooting"
+description: "Quick fixes for the most common issues in the founder portal"
+icon: "wrench"
+---
+
+Most problems in the portal have a simple explanation. Find your issue below; if it's not here, message us through the app and we'll dig in.
+
+<AccordionGroup>
+  <Accordion title="I can't sign in">
+    You enter your email and password but see "Invalid email or password". This usually means a typo in one or the other, or you originally signed up with Google, LinkedIn or Microsoft rather than a password.
+
+    Try the matching **Continue with Google**, **Continue with LinkedIn** or **Continue with Microsoft** button first. If you do use a password, click **Forgot password?** on the sign-in page: you'll see "Password reset email sent", and the email contains a link to set a new one.
+  </Accordion>
+
+  <Accordion title="It says my account isn't verified">
+    You see "Please verify your email address to continue." or "Account exists but is not verified. Please check your email." Your account exists, but you haven't clicked the verification link we emailed when you signed up.
+
+    Check your inbox (and spam folder) for the verification email and click the link. The sign-in page also offers a **Resend email** button if the original has expired or gone missing.
+  </Accordion>
+
+  <Accordion title="My two-factor code is rejected">
+    The **Two-Factor Authentication** window says "Invalid code. Please try again." Codes are six digits and expire quickly, so a code typed too slowly, or read from the wrong account in your authenticator app, won't work.
+
+    Wait for a fresh code and enter it promptly, then press **Verify**. If your code arrives by text message, use **Resend code** to get a new one. Also check your phone's clock is set to automatic: a drifted clock makes authenticator codes fail.
+  </Accordion>
+
+  <Accordion title="A feature asks me to upgrade">
+    You open a feature and see an upgrade prompt instead of the feature itself. Access in the portal depends on your plan, so features outside your current plan are locked rather than hidden.
+
+    To unlock it, upgrade your plan: click your avatar in the top-right corner, then **Billing**. If you've just upgraded and something still looks locked, refresh the page so the portal picks up your new plan.
+  </Accordion>
+
+  <Accordion title="My document won't upload">
+    An upload fails straight away with an error message. The usual causes:
+
+    - **Unsupported file type.** The data room accepts PDF, Word, Excel, CSV, PowerPoint, plain text and common image formats. Anything else is rejected.
+    - **Too large.** Documents can be up to 50MB, and images up to 10MB.
+    - **Pitch deck isn't a PDF.** You'll see "Pitch decks must be PDF format". Export your deck as a PDF and upload that.
+    - **Plan limits.** "Storage limit reached" or "Document limit reached" means your current plan's data room allowance is full. Delete documents you no longer need, or upgrade via your avatar then **Billing**.
+
+    If the upload starts but never finishes, check your connection and try again: nothing is saved until the upload completes, so retrying is safe.
+  </Accordion>
+
+  <Accordion title="I uploaded a file and an older one disappeared">
+    You upload a document and an existing one seems to vanish. If the new file has the same name as one already in your data room, the portal treats it as a new version and replaces the old one rather than showing duplicates.
+
+    Nothing is lost: the previous version is kept in that document's version history in **Data Room**, and you can restore it from there. The same applies when you replace your pitch deck, financial model or cap table.
+  </Accordion>
+
+  <Accordion title="My score hasn't updated after uploading a new deck">
+    You've uploaded a new pitch deck but your Caplia Readiness Index (CRI) still shows the old number. Scoring isn't instant: your deck joins a queue and is analysed step by step, which usually takes a few minutes.
+
+    While it's running, the portal shows a scoring-in-progress state with an estimated wait, and the page updates itself automatically when the new result lands, so there's no need to refresh. Check progress in Score Hub, reached via **Founder Tools** in the sidebar. If the run fails, you'll see that too; upload the deck again to start a fresh run, and contact us if it fails repeatedly. Remember the CRI is shown on a 0 to 1000 scale.
+  </Accordion>
+
+  <Accordion title="I opened a link and landed on the sign-in page">
+    You clicked a link to a page in the portal but got the sign-in screen instead. Every page in the portal requires you to be signed in, so an expired session sends you to sign in first.
+
+    Just sign in as normal: the portal remembers where you were heading and takes you straight there afterwards, including when you sign in with Google, LinkedIn or Microsoft.
+  </Accordion>
+
+  <Accordion title="How is the Raised figure on my funding round calculated?">
+    The Raised amount on an active funding round isn't typed in by hand. It's calculated from your **Deal Pipeline**: the portal adds up the ticket sizes of investors you've moved to the Hot, Term Sheet or Closed Won stages.
+
+    If the figure looks wrong, check two things in **Deal Pipeline**: that each committed investor has a ticket size recorded, and that they're in one of those three stages. Investors in earlier stages don't count towards the total. See [Cap table](/founder-portal/cap-table) for how rounds and ownership fit together.
+  </Accordion>
+</AccordionGroup>
