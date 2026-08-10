@@ -1,0 +1,56 @@
+---
+title: "Cap table"
+description: "Track shareholders, share classes and funding rounds in one place"
+icon: "table-cells"
+---
+
+The cap table records who owns your company and how each funding round changed that. Open **Cap Table** in the left sidebar (or go straight to `/dashboard/cap-table`). At the top you'll see three totals: **Total Shares**, **Shareholders** and **Share Classes**, followed by three sections: **Current Ownership**, **Share Classes** and **Funding Rounds**.
+
+## Building your cap table
+
+<Steps>
+  <Step title="Check your share classes">
+    Caplia starts you off with a default **Ordinary Shares** class. If you have more than one class, click **Add Share Class** and set the **Class Name**, type (**Ordinary** or **Preference**), **Votes Per Share** and **Liquidation Preference**. A class that's already assigned to shareholders can't be deleted until you reassign them.
+  </Step>
+  <Step title="Add your shareholders">
+    In **Current Ownership**, click **Add Shareholder**. Enter their name, choose a type (**Founder**, **Investor**, **Employee** or **Advisor**), the number of shares owned and, optionally, a share class. You can also attach supporting documents, such as a subscription agreement, from your data room.
+  </Step>
+  <Step title="Record your funding rounds">
+    In **Funding Rounds**, click **Add Round** to log each raise, past or in progress.
+  </Step>
+</Steps>
+
+## Recording a funding round
+
+Each round has a **Round Type** (from **Bootstrap** and **Friends and Family** through **Seed**, **Series A** and beyond, or **Custom** for your own name), an optional **Mechanism** (for example **Priced equity round** or **SAFE / ASA (UK)**), a **Target Amount**, **Valuation**, currency (GBP, USD or EUR), a **Round Start Date** and a **Status**: **Active**, **Closed** or **Planned**.
+
+<Note>
+Only one round can be **Active** at a time. If you add or edit a round and set it to **Active**, any other active round is automatically marked **Closed**.
+</Note>
+
+## How the Raised figure works
+
+The **Raised** column behaves differently depending on the round's status:
+
+| Round status | Where the Raised figure comes from |
+| --- | --- |
+| **Active** | Calculated automatically from your **Deal Pipeline**: the sum of ticket sizes for investors at the **Hot**, **Term Sheet** or **Closed Won** stage. Any manually entered amount is hidden while the round is active, and the **Raised Amount** field is locked when editing. |
+| **Closed** or **Planned** | The amount you type into **Raised Amount** yourself. |
+
+In practice:
+
+- **While you're raising**, keep the round **Active** and keep investor stages and ticket sizes up to date in **Deal Pipeline**. The Raised figure then updates itself, and you'll see a small chart icon next to it confirming it's auto-calculated.
+- **Once the round is done**, set the status to **Closed** and enter the final total in **Raised Amount**. That figure is then shown exactly as you entered it.
+
+## Exporting and sharing
+
+Two buttons at the top of the page get your cap table in front of investors:
+
+- **Export** downloads the full cap table (ownership, share classes and rounds) as an Excel file.
+- **Copy to Data Room** generates the same Excel file and places it in the Equity & Cap Table folder of your [data room](/founder-portal/data-room), marked as shared and downloadable. Running it again replaces the previous copy, so investors always see the latest version.
+
+<Tip>
+Deleting a shareholder or round gives you a few seconds to undo, but it's still worth exporting a copy before any major clean-up.
+</Tip>
+
+Not seeing the add and edit buttons? Your team account has view-only access to the cap table, so ask a colleague with management access to make changes.
