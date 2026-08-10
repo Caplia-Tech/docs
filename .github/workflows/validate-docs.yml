@@ -3,19 +3,26 @@ name: Validate Docs
 # Runs the grounding + style validator and link check on every PR that touches
 # portal documentation, human-authored or automated. Same gates as docs-sync.
 
+# Runs on every PR (required check on main): the grounding step no-ops when no
+# portal pages changed, so non-portal PRs pass quickly instead of hanging on a
+# check that never reports.
 on:
   pull_request:
-    paths:
-      - 'founder-portal/**'
-      - 'venture-portal/**'
-      - 'docs-map.json'
-      - 'scripts/**'
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history: the diff-vs-base step needs git merge-base, which
+          # fails on the default shallow (depth 1) checkout
+          fetch-depth: 0
+
+      # Link check runs BEFORE the app checkouts land: mint scans the whole
+      # working directory and chokes on non-docs markdown in the app repos
+      - name: Broken links
+        run: npx --yes mint broken-links
 
       - name: Checkout founder app (grounding source)
         uses: actions/checkout@v4
@@ -45,6 +52,3 @@ jobs:
           VENTURE=$(git diff --name-only "$BASE" HEAD -- 'venture-portal/*.mdx' | tr '\n' ' ')
           if [ -n "$FOUNDER" ]; then node scripts/check-grounding.mjs app-founder $FOUNDER; fi
           if [ -n "$VENTURE" ]; then node scripts/check-grounding.mjs app-venture $VENTURE; fi
-
-      - name: Broken links
-        run: npx --yes mint broken-links

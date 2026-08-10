@@ -79,6 +79,9 @@ jobs:
         continue-on-error: true
         run: |
           node scripts/check-grounding.mjs app-repo ${{ steps.edits.outputs.changed }}
+          # mint scans the whole working directory - remove the nested app
+          # checkout (grounding is done with it) so it only sees docs content
+          rm -rf app-repo
           npx --yes mint broken-links
           # Diff-size guard: an auto edit rewriting >40% of any page needs eyes
           for f in ${{ steps.edits.outputs.changed }}; do
@@ -112,7 +115,9 @@ jobs:
         if: steps.edits.outputs.changed != '' && steps.validate.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.DOCS_SYNC_PAT }}
-        run: gh pr merge --merge
+        # --auto waits for main's required checks (Validate Docs) instead of
+        # failing on an immediate merge
+        run: gh pr merge --auto --merge
 
       - name: Notify Slack
         if: steps.edits.outputs.changed != ''
