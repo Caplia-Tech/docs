@@ -22,10 +22,13 @@
 {/* Add any project-specific style rules below */}
 
 - Use active voice and second person ("you")
-- Keep sentences concise — one idea per sentence
+- Keep sentences concise: one idea per sentence
 - Use sentence case for headings
 - Bold for UI elements: Click **Settings**
 - Code formatting for file names, commands, paths, and code references
+- **Never use em-dashes (—) anywhere**: use commas, colons, or separate sentences instead
+- British English throughout
+- Every UI element name (button, tab, field, page) must exist verbatim in the app it documents; if you can't verify a label, describe the action generically rather than inventing one
 
 ## Content boundaries
 
