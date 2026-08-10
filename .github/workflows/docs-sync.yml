@@ -1,0 +1,132 @@
+name: Docs Sync (drift from app prod pushes)
+
+# Triggered by repository_dispatch from the app repos' notify-docs workflows
+# whenever a prod push touches src/. Maps changed files to docs pages via
+# docs-map.json, has Claude apply minimal edits, validates them, and opens a
+# PR. The PR auto-merges only when every validator passes AND the diff is
+# small; otherwise it stays open for human review with a Slack ping.
+
+on:
+  repository_dispatch:
+    types: [app-prod-push]
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "App key from docs-map.json (founder | venture)"
+        required: true
+        type: choice
+        options: [founder, venture]
+      before:
+        description: "Base commit SHA in the app repo"
+        required: true
+      after:
+        description: "Head commit SHA in the app repo"
+        required: true
+
+concurrency:
+  group: docs-sync-${{ github.event.client_payload.app || inputs.app }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      APP: ${{ github.event.client_payload.app || inputs.app }}
+      BEFORE_SHA: ${{ github.event.client_payload.before || inputs.before }}
+      AFTER_SHA: ${{ github.event.client_payload.after || inputs.after }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve app repo from docs-map.json
+        id: map
+        run: echo "repo=$(node -p "JSON.parse(require('fs').readFileSync('docs-map.json','utf8'))['$APP'].repo")" >> $GITHUB_OUTPUT
+
+      - name: Checkout app repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.map.outputs.repo }}
+          ref: ${{ env.AFTER_SHA }}
+          token: ${{ secrets.DOCS_SYNC_PAT }}
+          path: app-repo
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Review and edit affected pages
+        env:
+          APP_DIR: app-repo
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/docs-sync.mjs
+
+      - name: Detect edits
+        id: edits
+        run: |
+          # app-repo/ is a nested checkout, not part of the docs tree
+          CHANGED=$(git status --porcelain -- '*.mdx' | awk '{print $2}')
+          if [ -z "$CHANGED" ]; then
+            echo "changed=" >> $GITHUB_OUTPUT
+            echo "No docs edits needed"
+          else
+            echo "changed=$(echo $CHANGED | tr '\n' ' ')" >> $GITHUB_OUTPUT
+            echo "Edited pages: $CHANGED"
+          fi
+
+      - name: Validate (grounding, style, links)
+        id: validate
+        if: steps.edits.outputs.changed != ''
+        continue-on-error: true
+        run: |
+          node scripts/check-grounding.mjs app-repo ${{ steps.edits.outputs.changed }}
+          npx --yes mint broken-links
+          # Diff-size guard: an auto edit rewriting >40% of any page needs eyes
+          for f in ${{ steps.edits.outputs.changed }}; do
+            TOTAL=$(wc -l < "$f")
+            EDITED=$(git diff --numstat -- "$f" | awk '{print $1 + $2}')
+            if [ "$EDITED" -gt $((TOTAL * 4 / 10)) ]; then
+              echo "Large rewrite of $f ($EDITED changed lines vs $TOTAL total) - holding for review"
+              exit 1
+            fi
+          done
+
+      - name: Open PR
+        id: pr
+        if: steps.edits.outputs.changed != ''
+        env:
+          GH_TOKEN: ${{ secrets.DOCS_SYNC_PAT }}
+        run: |
+          BRANCH="docs-sync/${APP}-${AFTER_SHA:0:7}"
+          git config user.name "caplia-docs-sync"
+          git config user.email "docs-sync@caplia.ai"
+          git checkout -b "$BRANCH"
+          git add ./*.mdx ./*/*.mdx
+          git commit -m "docs-sync: ${APP} prod push ${AFTER_SHA:0:7}"
+          git push -u origin "$BRANCH"
+          gh pr create \
+            --title "Docs sync: ${APP} prod push ${AFTER_SHA:0:7}" \
+            --body "Automated docs update for [\`${AFTER_SHA:0:7}\`](https://github.com/${{ steps.map.outputs.repo }}/commit/${AFTER_SHA}) in ${{ steps.map.outputs.repo }}. Validators: ${{ steps.validate.outcome }}."
+          echo "url=$(gh pr view --json url -q .url)" >> $GITHUB_OUTPUT
+
+      - name: Auto-merge (validators green)
+        if: steps.edits.outputs.changed != '' && steps.validate.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.DOCS_SYNC_PAT }}
+        run: gh pr merge --merge
+
+      - name: Notify Slack
+        if: steps.edits.outputs.changed != ''
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_PRODUCT_RELEASES_CHANNEL_ID }}
+        run: |
+          [ -z "$SLACK_BOT_TOKEN" ] && exit 0
+          if [ "${{ steps.validate.outcome }}" = "success" ]; then
+            TEXT="📖 Docs auto-updated for ${APP} prod push \`${AFTER_SHA:0:7}\`: ${{ steps.pr.outputs.url }} (validators passed, merged)"
+          else
+            TEXT="📖⚠️ Docs update for ${APP} prod push \`${AFTER_SHA:0:7}\` needs review: ${{ steps.pr.outputs.url }} (a validator failed or the edit was large)"
+          fi
+          curl -s -X POST https://slack.com/api/chat.postMessage \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg c "$SLACK_CHANNEL_ID" --arg t "$TEXT" '{channel:$c,text:$t,unfurl_links:false}')"
