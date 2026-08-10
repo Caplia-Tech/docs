@@ -19,6 +19,11 @@ jobs:
           # fails on the default shallow (depth 1) checkout
           fetch-depth: 0
 
+      # Link check runs BEFORE the app checkouts land: mint scans the whole
+      # working directory and chokes on non-docs markdown in the app repos
+      - name: Broken links
+        run: npx --yes mint broken-links
+
       - name: Checkout founder app (grounding source)
         uses: actions/checkout@v4
         with:
@@ -47,6 +52,3 @@ jobs:
           VENTURE=$(git diff --name-only "$BASE" HEAD -- 'venture-portal/*.mdx' | tr '\n' ' ')
           if [ -n "$FOUNDER" ]; then node scripts/check-grounding.mjs app-founder $FOUNDER; fi
           if [ -n "$VENTURE" ]; then node scripts/check-grounding.mjs app-venture $VENTURE; fi
-
-      - name: Broken links
-        run: npx --yes mint broken-links
