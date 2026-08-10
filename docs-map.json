@@ -1,0 +1,197 @@
+{
+  "_comment": "Maps app source files to the docs pages that describe them. Used by .github/workflows/docs-sync.yml: when a prod push touches mapped files, the mapped page is reviewed by the sync script. Patterns ending in / match any file under that directory; other patterns are exact repo-relative paths.",
+  "founder": {
+    "repo": "Caplia-Tech/caplia_founder",
+    "appName": "Founder Portal (app.caplia.ai)",
+    "pages": {
+      "founder-portal/getting-started": [
+        "src/pages/OnboardingV2.tsx",
+        "src/components/onboarding/",
+        "src/pages/CompleteProfile.tsx",
+        "src/pages/Login.tsx"
+      ],
+      "founder-portal/passport": [
+        "src/pages/dashboard/InvestorPreview.tsx",
+        "src/components/investor-preview/",
+        "src/hooks/useShareLinks.ts"
+      ],
+      "founder-portal/data-room": [
+        "src/pages/dashboard/DataRoom.tsx",
+        "src/components/data-room/",
+        "src/hooks/useDataRoomConfig.ts",
+        "src/config/documentTypes.ts",
+        "src/config/storageConfig.ts"
+      ],
+      "founder-portal/cap-table": [
+        "src/pages/dashboard/CapTable.tsx",
+        "src/hooks/useCapTable.ts",
+        "src/components/cap-table/",
+        "src/config/fundraisingRoundTypes.ts"
+      ],
+      "founder-portal/pipeline": [
+        "src/pages/dashboard/Pipeline.tsx",
+        "src/hooks/useInvestorPipeline.ts",
+        "src/hooks/useInvestorInteractions.ts",
+        "src/hooks/useReminders.ts",
+        "src/hooks/usePipelineActivities.ts",
+        "src/components/pipeline/"
+      ],
+      "founder-portal/readiness-index": [
+        "src/pages/dashboard/ScoreHub.tsx",
+        "src/hooks/useRubricScoring.ts",
+        "src/config/rubricSignals.ts"
+      ],
+      "founder-portal/psychometrics": [
+        "src/pages/dashboard/Psychometrics.tsx",
+        "src/hooks/usePsychometricTests.ts",
+        "src/components/psychometrics/"
+      ],
+      "founder-portal/billing": [
+        "src/pages/Billing.tsx",
+        "src/config/subscriptionFeatures.ts",
+        "src/hooks/useSubscription.ts",
+        "src/hooks/useFeatureAccess.ts",
+        "src/components/billing/",
+        "src/components/FeatureGate.tsx"
+      ],
+      "founder-portal/team": [
+        "src/pages/account/Team.tsx",
+        "src/pages/AcceptTeamInvite.tsx"
+      ],
+      "founder-portal/sharing-access": [
+        "src/pages/account/Sharing.tsx",
+        "src/components/sharing/",
+        "src/hooks/useAccessRequests.ts",
+        "src/hooks/useNDASettings.ts"
+      ],
+      "founder-portal/account-settings": [
+        "src/pages/account/Profile.tsx",
+        "src/pages/account/Security.tsx",
+        "src/pages/account/Notifications.tsx"
+      ],
+      "founder-portal/link-your-passport": [
+        "src/pages/ConnectProgramme.tsx"
+      ],
+      "founder-portal/iris": [
+        "src/pages/dashboard/CapliaAura.tsx",
+        "src/components/CapliAura.tsx",
+        "src/components/caplia-aura/",
+        "src/hooks/useChatHistory.ts",
+        "src/hooks/useCapliAuraState.ts"
+      ],
+      "founder-portal/troubleshooting": [
+        "src/pages/Login.tsx",
+        "src/components/ProtectedRoute.tsx",
+        "src/hooks/useFeatureAccess.ts",
+        "src/components/data-room/useDataRoomState.ts",
+        "src/components/data-room/useDataRoomActions.ts",
+        "src/hooks/useRubricScoring.ts"
+      ]
+    }
+  },
+  "venture": {
+    "repo": "Caplia-Tech/caplia-investor",
+    "appName": "Venture Portal (investor.caplia.ai)",
+    "_note": "CompanyDetail.tsx backs several features, so readiness may get occasional false-positive reviews (the sync then returns NO_CHANGE). Legacy wrappers DealFlow/MyPipeline/Screening kept alongside the live list UI in components/pipeline/.",
+    "pages": {
+      "venture-portal/getting-started": [
+        "src/pages/Auth.tsx",
+        "src/pages/AuthVerifyEmail.tsx",
+        "src/pages/ResetPassword.tsx",
+        "src/pages/Team.tsx",
+        "src/pages/AcceptTeamInvite.tsx",
+        "src/components/TeamSwitcher.tsx",
+        "src/hooks/useAuth.tsx",
+        "src/hooks/useCurrentTeam.ts",
+        "src/hooks/useInvestorTeam.ts",
+        "src/hooks/useEnterTeam.ts",
+        "src/hooks/useExternalOffice.ts",
+        "src/hooks/useOrgFamilyMembers.ts"
+      ],
+      "venture-portal/deal-flow": [
+        "src/pages/DealFlow.tsx",
+        "src/pages/MyPipeline.tsx",
+        "src/pages/Screening.tsx",
+        "src/components/pipeline/",
+        "src/components/deals/",
+        "src/hooks/useDealList.ts",
+        "src/hooks/useDeals.ts",
+        "src/hooks/useDealCrm.ts",
+        "src/hooks/usePipelineStages.ts",
+        "src/hooks/usePipelineStagesFor.ts",
+        "src/hooks/usePipelineView.ts",
+        "src/hooks/usePipelineViews.ts",
+        "src/hooks/useSavedViews.ts",
+        "src/hooks/useLayoutPreference.ts"
+      ],
+      "venture-portal/adding-companies": [
+        "src/pages/AddCompany.tsx",
+        "src/pages/SubmitCompany.tsx",
+        "src/pages/FounderAccess.tsx",
+        "src/components/bulk/",
+        "src/components/team/",
+        "src/components/founder-access/",
+        "src/hooks/useBulkBatch.ts",
+        "src/hooks/useProgrammeCodes.ts",
+        "src/hooks/useSendProgrammeCodeBatch.ts",
+        "src/hooks/useMyFounderInviteStatuses.ts"
+      ],
+      "venture-portal/properties-bulk-actions": [
+        "src/pages/Settings.tsx",
+        "src/components/settings/",
+        "src/components/companyDetail/CompanyProperties.tsx",
+        "src/components/pipeline/BulkAssignActionBar.tsx",
+        "src/components/pipeline/BulkActionsAdminControl.tsx",
+        "src/components/pipeline/PropertyFilterChips.tsx",
+        "src/hooks/useCustomFields.ts",
+        "src/hooks/useCustomFieldMutations.ts",
+        "src/hooks/useBulkActionSettings.ts"
+      ],
+      "venture-portal/thesis": [
+        "src/pages/Theses.tsx",
+        "src/components/theses/",
+        "src/components/deals/ThesisFitTab.tsx",
+        "src/hooks/useTheses.ts",
+        "src/hooks/useThesisFit.ts",
+        "src/hooks/useThesisAccess.ts",
+        "src/hooks/useOfficeThesisMode.ts"
+      ],
+      "venture-portal/readiness": [
+        "src/pages/CompanyDetail.tsx",
+        "src/components/deals/CriDetailsSheet.tsx",
+        "src/components/deals/CriPill.tsx",
+        "src/components/deals/CriSegmentBar.tsx",
+        "src/components/deals/DeckHealthNotice.tsx",
+        "src/hooks/useCriLive.ts",
+        "src/hooks/useDeckHealth.ts",
+        "src/hooks/useBatchDeckHealth.ts"
+      ],
+      "venture-portal/dashboards": [
+        "src/pages/Index.tsx",
+        "src/components/dashboard/",
+        "src/hooks/useDashboardView.ts",
+        "src/hooks/useDashboardViews.ts",
+        "src/hooks/useDashboardWidgets.ts",
+        "src/hooks/useSavedDashboardViews.ts",
+        "src/hooks/useEnsureDefaultDashboard.ts"
+      ],
+      "venture-portal/directories": [
+        "src/pages/DirectoryLanding.tsx",
+        "src/pages/DirectoryCompanySummary.tsx",
+        "src/pages/AcceleratorDirectoryAdmin.tsx",
+        "src/components/directory/",
+        "src/hooks/useAcceleratorDirectory.ts",
+        "src/hooks/useDirectoryAdmin.ts",
+        "src/hooks/useCompanyDirectoryMemberships.ts"
+      ],
+      "venture-portal/chat": [
+        "src/pages/Chat.tsx",
+        "src/components/chat/",
+        "src/hooks/chat/",
+        "src/components/MessagesOverlay.tsx",
+        "src/components/MessagesButton.tsx",
+        "src/components/mentions/"
+      ]
+    }
+  }
+}

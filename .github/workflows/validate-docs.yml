@@ -1,0 +1,50 @@
+name: Validate Docs
+
+# Runs the grounding + style validator and link check on every PR that touches
+# portal documentation, human-authored or automated. Same gates as docs-sync.
+
+on:
+  pull_request:
+    paths:
+      - 'founder-portal/**'
+      - 'venture-portal/**'
+      - 'docs-map.json'
+      - 'scripts/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout founder app (grounding source)
+        uses: actions/checkout@v4
+        with:
+          repository: Caplia-Tech/caplia_founder
+          ref: prod
+          token: ${{ secrets.DOCS_SYNC_PAT }}
+          path: app-founder
+
+      - name: Checkout investor app (grounding source)
+        uses: actions/checkout@v4
+        with:
+          repository: Caplia-Tech/caplia-investor
+          ref: prod
+          token: ${{ secrets.DOCS_SYNC_PAT }}
+          path: app-venture
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Grounding and style checks on changed pages
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=50
+          BASE=$(git merge-base origin/${{ github.base_ref }} HEAD)
+          FOUNDER=$(git diff --name-only "$BASE" HEAD -- 'founder-portal/*.mdx' | tr '\n' ' ')
+          VENTURE=$(git diff --name-only "$BASE" HEAD -- 'venture-portal/*.mdx' | tr '\n' ' ')
+          if [ -n "$FOUNDER" ]; then node scripts/check-grounding.mjs app-founder $FOUNDER; fi
+          if [ -n "$VENTURE" ]; then node scripts/check-grounding.mjs app-venture $VENTURE; fi
+
+      - name: Broken links
+        run: npx --yes mint broken-links
