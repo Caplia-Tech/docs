@@ -3,13 +3,11 @@ name: Validate Docs
 # Runs the grounding + style validator and link check on every PR that touches
 # portal documentation, human-authored or automated. Same gates as docs-sync.
 
+# Runs on every PR (required check on main): the grounding step no-ops when no
+# portal pages changed, so non-portal PRs pass quickly instead of hanging on a
+# check that never reports.
 on:
   pull_request:
-    paths:
-      - 'founder-portal/**'
-      - 'venture-portal/**'
-      - 'docs-map.json'
-      - 'scripts/**'
 
 jobs:
   validate:
