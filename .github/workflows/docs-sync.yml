@@ -35,7 +35,13 @@ jobs:
       BEFORE_SHA: ${{ github.event.client_payload.before || inputs.before }}
       AFTER_SHA: ${{ github.event.client_payload.after || inputs.after }}
     steps:
+      # Checkout with the PAT so the Open PR step's git push authenticates as
+      # it too. The default GITHUB_TOKEN is org-wide read-only, and a push made
+      # with it would not trigger the Validate Docs required check anyway,
+      # leaving the auto-merge waiting forever.
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.DOCS_SYNC_PAT }}
 
       - name: Resolve app repo from docs-map.json
         id: map
