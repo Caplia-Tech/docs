@@ -3,8 +3,8 @@ name: Docs Sync (drift from app prod pushes)
 # Triggered by repository_dispatch from the app repos' notify-docs workflows
 # whenever a prod push touches src/. Maps changed files to docs pages via
 # docs-map.json, has Claude apply minimal edits, validates them, and opens a
-# PR. The PR auto-merges only when every validator passes AND the diff is
-# small; otherwise it stays open for human review with a Slack ping.
+# PR. Every PR waits for human review (Slack ping to #product-releases) -
+# never auto-merged, because merging publishes to the public site and Iris.
 
 on:
   repository_dispatch:
@@ -117,13 +117,10 @@ jobs:
             --body "Automated docs update for [\`${AFTER_SHA:0:7}\`](https://github.com/${{ steps.map.outputs.repo }}/commit/${AFTER_SHA}) in ${{ steps.map.outputs.repo }}. Validators: ${{ steps.validate.outcome }}."
           echo "url=$(gh pr view --json url -q .url)" >> $GITHUB_OUTPUT
 
-      - name: Auto-merge (validators green)
-        if: steps.edits.outputs.changed != '' && steps.validate.outcome == 'success'
-        env:
-          GH_TOKEN: ${{ secrets.DOCS_SYNC_PAT }}
-        # --auto waits for main's required checks (Validate Docs) instead of
-        # failing on an immediate merge
-        run: gh pr merge --auto --merge
+      # No auto-merge, deliberately (Aug 2026): this is a PUBLIC repo and a
+      # merge publishes to the live site, llms.txt and Iris within minutes.
+      # The validators check grounding and style, not sensitivity, so every
+      # sync PR waits for a human. The Slack ping below is the review prompt.
 
       - name: Notify Slack
         if: steps.edits.outputs.changed != ''
@@ -133,9 +130,9 @@ jobs:
         run: |
           [ -z "$SLACK_BOT_TOKEN" ] && exit 0
           if [ "${{ steps.validate.outcome }}" = "success" ]; then
-            TEXT="📖 Docs auto-updated for ${APP} prod push \`${AFTER_SHA:0:7}\`: ${{ steps.pr.outputs.url }} (validators passed, merged)"
+            TEXT="📖 Docs update for ${APP} prod push \`${AFTER_SHA:0:7}\` awaiting review: ${{ steps.pr.outputs.url }} (validators passed)"
           else
-            TEXT="📖⚠️ Docs update for ${APP} prod push \`${AFTER_SHA:0:7}\` needs review: ${{ steps.pr.outputs.url }} (a validator failed or the edit was large)"
+            TEXT="📖⚠️ Docs update for ${APP} prod push \`${AFTER_SHA:0:7}\` awaiting review: ${{ steps.pr.outputs.url }} (a validator failed or the edit was large)"
           fi
           curl -s -X POST https://slack.com/api/chat.postMessage \
             -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
