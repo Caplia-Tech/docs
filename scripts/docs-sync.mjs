@@ -18,7 +18,7 @@ const APP = process.env.APP;
 const APP_DIR = process.env.APP_DIR;
 const BEFORE = process.env.BEFORE_SHA;
 const AFTER = process.env.AFTER_SHA;
-const MODEL = process.env.MODEL || "claude-fable-5";
+const MODEL = process.env.MODEL || "claude-opus-5";
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const MAX_SOURCE_BYTES = 300_000; // per-page context budget for source files
 
