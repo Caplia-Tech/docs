@@ -48,6 +48,16 @@ const STOPWORDS = new Set(
   "the a an and or but for nor with from into onto your you our their this that these those what when where which how why who whom can will shall may might must been being are is was were be do does did has have had not no yes it its if then than as at by of on in to up out over under more most less least very just also only own same so too s t".split(" ")
 );
 
+// Iris's retrieval gate ORs every query word against these arrays, so a bare
+// generic word as a keyword makes ordinary fundraising-advice questions match
+// product articles. Singles on this list are dropped (multi-word phrases that
+// contain them are kept: "cap table", "readiness index", "pitch deck").
+const GENERIC_SINGLES = new Set(
+  ("more other another email emails find found name names back big small first next last each every open close view click see set get use new full page pages help support click button menu tab section list card row item items " +
+    "market growth company companies founder founders investor investors fundraising fundraise funding round rounds seed stage deal deals note notes team question questions answer answers status active check checks change changes " +
+    "index progress profile document documents file files folder upload download share sharing link links access video date year month time create delete edit update add remove save cancel confirm won closed draft drafts partner partners").split(" ")
+);
+
 function words(text) {
   return text
     .toLowerCase()
@@ -90,19 +100,31 @@ function deriveKeywords(slug, title, description, md) {
   // Multi-word phrases: title, headings, bold labels, slug
   const addPhrase = (p) => {
     const clean = p.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
-    if (clean && clean.length <= 40) phrases.add(clean);
+    if (!clean || clean.length > 40) return;
+    // Single-word "phrases" (one-word UI labels, headings) get the same
+    // precision filter as derived singles.
+    if (!clean.includes(" ") && (GENERIC_SINGLES.has(clean) || STOPWORDS.has(clean))) return;
+    phrases.add(clean);
   };
   addPhrase(slug.replace(/-/g, " "));
   if (title) addPhrase(title);
   for (const m of md.matchAll(/^#{2,3}\s+(.+)$/gm)) addPhrase(m[1]);
   for (const m of md.matchAll(/\*\*([^*\n]{3,40})\*\*/g)) addPhrase(m[1]);
-  // Single words from title + description + headings
-  const singles = new Set([
-    ...words(title),
-    ...words(description),
-    ...[...md.matchAll(/^#{2,3}\s+(.+)$/gm)].flatMap((m) => words(m[1])),
-  ]);
-  return [...phrases, ...singles].slice(0, 60);
+  // Single words from title + description + headings, minus generic ones that
+  // would make unrelated queries match (precision over recall for singles;
+  // recall comes from the phrases).
+  const singles = new Set(
+    [
+      ...words(title),
+      ...words(description),
+      ...[...md.matchAll(/^#{2,3}\s+(.+)$/gm)].flatMap((m) => words(m[1])),
+    ]
+      // Users type singular ("subscription") where headings are plural, so
+      // index the naive stem alongside each plural.
+      .flatMap((w) => (w.length > 4 && w.endsWith("s") && !w.endsWith("ss") ? [w, w.slice(0, -1)] : [w]))
+      .filter((w) => !GENERIC_SINGLES.has(w))
+  );
+  return [...phrases, ...singles].slice(0, 80);
 }
 
 const dir = "founder-portal";
