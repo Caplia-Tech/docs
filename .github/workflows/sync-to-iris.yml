@@ -1,0 +1,45 @@
+name: Sync docs to Iris
+
+# Pushes the founder-portal pages into the shared product_support_articles
+# table that Iris reads (instant-mode cache + fallback for MCP search).
+# Deterministic, no AI. Staging syncs on every main push; prod only via
+# manual dispatch until the Phase 2 prod release flips it on.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "founder-portal/**"
+      - "scripts/sync-to-iris.mjs"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Which database to sync"
+        required: true
+        type: choice
+        default: staging
+        options: [staging, prod, both]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Sync to staging
+        if: github.event_name == 'push' || inputs.target == 'staging' || inputs.target == 'both'
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL_DEV }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_DEV }}
+        run: node scripts/sync-to-iris.mjs
+
+      - name: Sync to prod
+        if: github.event_name == 'workflow_dispatch' && (inputs.target == 'prod' || inputs.target == 'both')
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL_PROD }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_PROD }}
+        run: node scripts/sync-to-iris.mjs
