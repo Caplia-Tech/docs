@@ -46,8 +46,10 @@ codebases automatically:
 - On prod pushes touching `src/`, the app repos (caplia_founder,
   caplia-investor) fire a `repository_dispatch` here (their
   `notify-docs.yml`). `.github/workflows/docs-sync.yml` then has Claude apply
-  minimal edits to affected pages, validates them, and opens a PR that
-  auto-merges only when every check passes and the diff is small.
+  minimal edits to affected pages, validates them, and opens a PR. Sync PRs
+  are never auto-merged: this repo is public and a merge publishes to the
+  live site, `llms.txt` and Iris, so every PR waits for human review (Slack
+  ping in #product-releases).
 - `scripts/check-grounding.mjs` enforces the grounding rule: every **bold**
   label must exist verbatim in the app's `src/` tree. It also bans em-dashes.
   It runs on every PR touching portal pages (`validate-docs.yml`), so
