@@ -1,37 +1,168 @@
 ---
 title: "Sharing & access"
-description: "Share links, access invitations, and NDA-gated access"
+description: "Share links, investor access levels, NDA gating, and how to check your Passport is live"
 icon: "share-nodes"
 ---
 
-You control exactly who sees your Passport and data room, and at what level.
+You control exactly who sees your Caplia Passport and your data room, and at what level. Everything on this page happens in one place: the sharing hub at `/account/sharing`.
 
-## Ways to share
+## Where sharing lives
 
-<CardGroup cols={3}>
-  <Card title="Share links" icon="link">
-    A URL you can send anywhere. Optional email requirement, password, and expiry. Deactivate any time.
-  </Card>
-  <Card title="Access invitations" icon="envelope">
-    Invite a specific investor by email at a chosen access level. They land straight on your Passport.
-  </Card>
-  <Card title="Access requests" icon="hand">
-    Investors who find you can request access; you approve at profile-only or full-data-room level.
-  </Card>
-</CardGroup>
+Sharing is *not* in the left sidebar. Three ways to reach it:
 
-## NDA-gated access
+- Click **Share** in the top bar (any dashboard page).
+- Click your name in the top-right corner, then **Sharing**.
+- On mobile, open the More menu and tap **Sharing**.
 
-If you enable NDAs, investors must sign (via Zoho Sign) before full data-room access unlocks. Signed NDAs are stored against the investor's access record. Only company admins can change NDA settings: other team members see a permission error if they try.
-
-## Managing access
-
-Click your name in the top-right corner and choose **Sharing** to see every active grant, pending invitation, and share link:
-
-- **Change access**: move an investor between profile-only and full data room.
-- **Revoke**: removes access immediately.
-- **Activity**: per-investor view and download history.
+The hub has four tabs: **Share Links**, **Access Control**, **Requests** and **NDA**. On a phone the same four appear as chips reading **Links**, **Access**, **Requests** and **NDA**. It opens on **Requests** when you have pending investor requests, otherwise on **Share Links**. Email and notification links can deep-link straight to a tab, for example `/account/sharing?tab=access-control`.
 
 <Note>
-  Revoking access doesn't delete anything an investor already downloaded: treat downloads as final.
+  Sharing your Passport is a paid feature (Caplia Passport Sharing, on the Raise plan). Without it, the hub shows an upgrade card with a **View Pricing Plans** button instead of the tabs. See [billing](/founder-portal/billing).
 </Note>
+
+## The three ways access happens
+
+| Mechanism | How an investor gets in | What they see |
+| --- | --- | --- |
+| Share link | You send a URL, they pass whatever gate you set | Caplia Passport only |
+| Access grant | You approve or upgrade them in **Access Control** | Passport, or Passport plus data room |
+| Access request | They find you and ask; you approve at a level | Whatever level you approve |
+
+A share link never grants data room access on its own. Data room access is always something you grant per investor.
+
+## Share links
+
+A share link is a URL you can send anywhere. To create one, go to the **Share Links** tab and click **Create Link** (on mobile, **Create Share Link**). You can also click **Share Passport** on the [Caplia Passport](/founder-portal/passport) page, which opens the same dialogue.
+
+<Steps>
+  <Step title="Name the link">
+    **Link Name (optional)** is a private label, for example "Demo Day - January 2026". It is only for you.
+  </Step>
+  <Step title="Set the gate">
+    **Require Password**, **Require Email** and **Require Name** are all *on* by default. With **Require Password** on you must type a password before the create button will work.
+  </Step>
+  <Step title="Set an expiry">
+    **Set Expiry** is on by default and pre-filled with a date one month ahead. Turn it off for a link that never expires.
+  </Step>
+  <Step title="Create and paste">
+    Click **Create Link**. The URL is copied to your clipboard automatically and you see a confirmation screen. Paste it into your email or message.
+  </Step>
+</Steps>
+
+Links point at Caplia's Venture Portal, in the form `https://venture.caplia.ai/share/<token>`. There is no custom-domain or own-branding option for share links in the Founder Portal.
+
+<Note>
+  Creating a share link also marks your current pitch deck as visible to investors, if it was not already. Everything else in your [data room](/founder-portal/data-room) keeps whatever visibility you set on it.
+</Note>
+
+### Managing links you have already made
+
+Links are grouped into **Active Links** and **Inactive Links**, with columns for expiry, views and last activity. Click a row for **Share Link Details**. The menu on each row gives you:
+
+- **Copy Link**, plus **Show Password** and **Copy Password** for password-protected links.
+- **View Activity**: the names and emails of everyone who opened the link, with timestamps.
+- **Deactivate** or **Activate**.
+- **Delete Link**. Deleting is permanent after roughly seven seconds, during which the toast offers an undo.
+
+<Warning>
+  Deactivating or deleting a link stops *new* visitors. Investors who already opened it keep their Passport access, because opening the link created an access record for them. To remove them, revoke that record in **Access Control**.
+</Warning>
+
+## Access control
+
+The **Access Control** tab lists the investors who currently have access, plus anyone holding a pending invitation. Records are grouped into **Active Access**, **Pending Invitations** and **Revoked Access** (collapsed), and you can search by email or name. Each row shows how the investor got in (via link, via request, or invited), their NDA status, when they were last active, and their view count.
+
+You cannot start an investor invitation from this screen. Investors arrive by opening a share link or by requesting access, and you set their level here afterwards.
+
+The access badge on each row is a dropdown. The badge itself reads either Passport or Full Access, and its menu offers two options:
+
+- **Passport Only**: pitch deck, company overview, team information and key metrics.
+- **Full Access**: everything above plus the documents in your data room that you have switched on for investors.
+
+### Upgrading someone to the data room
+
+Click the access badge and choose **Full Access**. The same choice is called **Full Data Room** if you go via **Change Access** in the row menu. Either route opens the **Upgrade to Full Data Room Access** dialogue, which has one decision in it: **Require NDA before granting access**.
+
+- NDA off: click **Grant Full Access** and the upgrade is immediate.
+- NDA on: choose **Use company default NDA** or **Upload custom NDA for this investor**, then click **Send NDA & Upgrade**. Caplia sends the NDA through Zoho Sign.
+
+With an NDA in play, access is *not* granted the moment they sign. Their row shows an amber banner reading "NDA signed - awaiting your approval for full dataroom access" and you finish the upgrade with **Grant Access**. You can open or download the signed copy later with **View Signed NDA**.
+
+### Revoking and other row actions
+
+- **Revoke Access** removes an active investor's access immediately. On a pending record the same item reads **Cancel Invitation**.
+- **Copy Invite Link** copies a pending investor's invitation URL. **Resend Invitation** does the same thing: it copies that same URL rather than sending an email. Both actions only put a link on your clipboard, so you send it yourself.
+- **Send NDA** appears when an NDA is required for that investor but none has gone out yet, for example when an earlier send failed. It sends the NDA through Zoho Sign and the row's NDA status becomes pending. Once an NDA is out for signature the item disappears from the menu.
+- **View Activity** opens that investor's full log: profile views, document views and downloads, with dates.
+
+<Note>
+  Revoking deletes the access record, so the investor disappears from the list altogether rather than moving into **Revoked Access**. An empty list after a revoke means it worked. Revoking also does not delete anything an investor already downloaded. Treat downloads as final.
+</Note>
+
+## Requests
+
+Investors who find you on Caplia can request access. Pending requests raise a count badge on the **Requests** tab, and you get a notification. Each request shows the investor's name, email, organisation and message.
+
+- **Approve** opens a choice of **Profile Access** or **Full Data Room**. Choosing the data room opens the same NDA dialogue as an upgrade.
+- If they already have Passport access, the button reads **Grant Data Room** instead.
+- **Reject** declines the request and sends the investor a polite rejection email automatically.
+
+## NDA defaults
+
+The **NDA** tab holds one reusable NDA template for your company.
+
+1. Upload a PDF. It must be a PDF and under 10MB.
+2. The field placement editor opens. Drag investor fields (signature, date, name, company, job title, address) onto the pages.
+3. You must place at least an investor signature field, otherwise the template counts as unconfigured. Click **Save Fields**.
+
+Afterwards you can use **Preview** to page through the document, **Replace** to swap the PDF, and the field button to adjust the layout. That button reads **Place Fields** until you have saved an investor signature field, and **Edit Fields** after that. Replacing clears every field you had placed, so you have to place them again.
+
+Only company admins can upload or change the NDA template. Other team members see a "Company Admins only can update NDA" error. See [team](/founder-portal/team) for roles.
+
+## Connected programmes
+
+If you have joined an accelerator or programme through Caplia, a **Connected programmes** card appears above the investor list in **Access Control**. It shows which organisations can see your company profile in their deal pipeline. This is org-level, profile-only visibility, it is separate from individual investor access, and it cannot be changed from this screen. See [link your passport](/founder-portal/link-your-passport).
+
+## Is my Passport live?
+
+Two different checks, and they answer different questions:
+
+- **Open Preview** on the [Caplia Passport](/founder-portal/passport) page opens your Passport in the Venture Portal in a new tab. This shows you what investors see, but it uses a temporary preview token, so it does not prove your share link works.
+- To test the link itself, copy it from **Share Links** and open it in a private or incognito window. You will hit the same gate an investor hits, including the password, so you see exactly what they see.
+
+<Tip>
+  Always test in a private window. That way you go through the same email, name and password requirements you set on the link, with no existing browser session in play.
+</Tip>
+
+You will also get notifications reading "Your share link was opened" and "Your Passport was viewed", which open **Passport Analytics** in the sidebar for the fuller view of who is engaging.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="My share link is not working">
+    Open the **Share Links** tab and look at the row. A deactivated link sits under **Inactive Links**: switch its toggle back on and it works again. An expired link is different. It stays under **Active Links** with an **Expired** badge, and toggling it off and on will not revive it, because a link's expiry date cannot be changed once the link is created. Create a fresh link instead and send the new URL. Copying stays disabled until the link is usable again. If the row looks fine, check the password you are sending: use **Copy Password** on the row menu rather than retyping it.
+  </Accordion>
+  <Accordion title="An investor signed the NDA but still cannot see the data room">
+    This is expected. After signing, their row shows "NDA signed - awaiting your approval for full dataroom access". Open **Access Control** and click **Grant Access** to complete the upgrade.
+  </Accordion>
+  <Accordion title="I deactivated a link but the investor still has access">
+    Deactivating only blocks new visitors. Anyone who already opened the link holds an access record. Find them in **Active Access** and use **Revoke Access**.
+  </Accordion>
+  <Accordion title="I cannot upload my NDA">
+    Three causes, in order of likelihood: the file is not a PDF, the file is over 10MB, or you are not a company admin. Only company admins can change the NDA template.
+  </Accordion>
+  <Accordion title="The company default NDA says Not configured">
+    Uploading the PDF is only half the setup. Open the **NDA** tab, place at least an investor signature field on the document and click **Save Fields**. Until you do, you can still pick **Use company default NDA** when granting access, but it carries a **Not configured** badge, the dialogue shows a "Company NDA not configured" warning, and **Send NDA & Upgrade** stays greyed out. Uploading a custom NDA for that one investor is the other way through.
+  </Accordion>
+  <Accordion title="An investor cannot see a document I uploaded">
+    Full data room access shows only the documents you have switched on for investors. In the [data room](/founder-portal/data-room), each document row carries an investor-visibility switch in its own column on the right, and your current pitch deck shows a locked switch captioned **Always visible**. That column is hidden on phone-sized screens, so set visibility from a desktop browser. The wording **Visible to investors** or **File not shared** only appears beside a document that has an investor note, so read the switch rather than hunting for a label. Check that the investor is on Full Access, not Passport, as well.
+  </Accordion>
+  <Accordion title="The sharing page shows an upgrade card instead of tabs">
+    Your plan does not include Caplia Passport Sharing. Click **View Pricing Plans** to see the options, or read [billing](/founder-portal/billing). Passports that were already shared stay hosted and viewable.
+  </Accordion>
+  <Accordion title="I revoked the wrong investor">
+    There is no undo on a revoke. Send them a new share link, or approve their next access request, and set the level again.
+  </Accordion>
+</AccordionGroup>
+
+More common problems across the whole portal live in [troubleshooting](/founder-portal/troubleshooting).

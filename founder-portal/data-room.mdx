@@ -1,34 +1,152 @@
 ---
 title: "Data room"
-description: "Organise documents into an investor-ready data room"
+description: "Upload, version and share the documents investors ask for in diligence"
 icon: "folder-open"
 ---
 
-The data room holds everything an investor needs for diligence: deck, financial model, cap table exports, and legal documents, organised into folders with per-investor access control.
+Your data room is where every investor-facing document lives: the pitch deck, the financial model, the cap table export, and the supporting legal, product and team files. Documents you mark as visible appear to investors you have granted access to. Everything else stays private to your company.
 
-## Setting it up
+Open it from **Data Room** in the left sidebar, at `/dashboard/data-room`. On a phone the sidebar collapses, so reach it from the **More** menu instead.
+
+## The two halves of the page
+
+The folder rail on the left has one special entry above the folder list, and everything else is an ordinary folder.
+
+| Area | What it holds | Why it matters |
+| --- | --- | --- |
+| **Key Docs** | Exactly three slots: **Pitch Deck**, **Financial Model**, **Cap Table** | Primary inputs to your [Caplia Readiness Index](/founder-portal/readiness-index), and the files investors open first |
+| Folders | Everything else, grouped by diligence category | Investors browse these folder by folder |
+
+The rail badge reads `2/3` or `3/3` to show how many of the three key slots are filled. The three folders those key documents live in (**Fundraising Pack**, **Financials**, **Equity & Cap Table**) are locked: you cannot rename or delete them, and key documents cannot be moved out of them.
+
+## Replacing a key document
+
+This is the one canonical path. Use it every time, for all three key documents.
 
 <Steps>
-  <Step title="Upload documents">
-    Drag files into **Data Room** and organise them into folders (e.g. Corporate, Financials, Product, Legal).
+  <Step title="Open Key Docs">
+    Click **Key Docs** at the top of the folder rail, or go straight to `/dashboard/data-room?folder=key-docs`.
   </Step>
-  <Step title="Mark what's shared">
-    Each document can be shared or private, and downloads can be allowed or blocked per document.
+  <Step title="Click Replace, or Upload for a first upload">
+    Click **Replace** on the row for the document you are changing, then pick the file from your computer. If the slot is still empty the button reads **Upload** instead, so use that for your first upload. An empty **Cap Table** row also offers **Builder**, which takes you to the [Cap Table](/founder-portal/cap-table) page to build one there instead of uploading a file.
   </Step>
-  <Step title="Add guidance notes">
-    Add a note to a folder or document to give investors narrative context ("Model assumes UK-only launch in year 1").
+  <Step title="Confirm it took">
+    The row shows the new file name, size and date, and a `v2`, `v3` badge. The old file moves into version history and is no longer shown to investors.
   </Step>
 </Steps>
 
-## Access levels
+<Warning>
+  Everything you upload into the **Fundraising Pack** folder must be a PDF, not only the pitch deck itself. Any other file type is rejected with **Pitch decks must be PDF format**, even when you are filing it as an ordinary supporting document. Convert it to PDF, or put it in a different folder. The other two slots are not policed the same way: the file picker offers `.xlsx` and `.xls` for **Financial Model**, and `.xlsx`, `.xls`, `.csv` or `.pdf` for **Cap Table**.
+</Warning>
 
-Investors get one of two levels, granted by you (see [Sharing & access](/founder-portal/sharing-access)):
+Three other routes reach the same result, which is why advice about this can sound contradictory. They all work, but the Key Docs route is the one to remember.
 
-| Level | What they see |
+- In the **Upload Document** dialog, leaving **Document Type** on the key document replaces it exactly as **Replace** does. See [uploading and organising everything else](#uploading-and-organising-everything-else) below.
+- Dragging a file into the **Fundraising Pack**, **Financials** or **Equity & Cap Table** folder pops a question asking whether this is your key document. Answer yes and it replaces the current version. Answer **No, regular document** and it is filed as an ordinary supporting file, which does *not* update the key slot. In **Fundraising Pack** even that supporting file has to be a PDF.
+- On any ordinary document already sitting in one of those three folders, the row menu offers **Set as Pitch Deck**, **Set as Financial Model** or **Set as Cap Table**, which promotes it into the slot.
+
+<Note>
+  Uploading a file whose name exactly matches a document you already have supersedes that document instead of creating a duplicate. The older copy drops out of the list and the row that remains gains a `v2`, `v3` badge.
+</Note>
+
+### Version history
+
+Key document rows carry a clock button showing how many older versions exist. Expand it to see **Version history**, then use **View** to check an old file or **Restore** to make it current again.
+
+Only the three key documents keep a version history. Ordinary supporting documents do not. If you upload a file with exactly the same name as one you already have, the older copy is superseded, disappears from the list, and cannot be viewed or restored anywhere in the app. Give the new file a different name first if you need to keep both.
+
+## Uploading and organising everything else
+
+Click **Upload** in the toolbar to open **Upload Document**, choose the file, then pick the destination in **Document Category (Optional)**. You can also drop a file straight onto the file list, or onto the dashed strip at the bottom of a folder.
+
+If you pick **Fundraising Pack**, **Financials** or **Equity & Cap Table**, a **Document Type** field appears, already set to the key document for that folder. Uploading then replaces your current pitch deck, financial model or cap table and re-runs your score. Set **Document Type** to **Regular Document** whenever you are adding a supporting file rather than replacing the key document.
+
+Accepted formats and limits come from the app, not from your plan:
+
+| Rule | Value |
 | --- | --- |
-| **Profile Access** | Passport, deck, key metrics |
-| **Full Data Room Access** | Everything marked shared, plus download where allowed |
+| Maximum size, documents and spreadsheets | 50 MB |
+| Maximum size, images | 10 MB |
+| Formats in the file picker | PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WEBP |
+| Extra format in the **Cap Table** slot | CSV |
+| Empty (0 byte) files | Rejected |
 
-Every document view and download is logged. Check **Investor Engagement** to see who's actually reading.
+Once files are in:
+
+- **New folder** at the bottom of the rail creates one. **From presets** lists the standard diligence folders you have not added yet, each with a one-line description tailored to your funding stage and country; **Custom name** creates your own.
+- Drag a document onto a folder in the rail to move it, or use **Move to** in the row menu.
+- Drag folders up and down the rail to reorder them. Folder order is saved to your company, so investors see the same folder order you do.
+- Inside a folder, **Reorder** turns on drag handles and **Done** turns them off; your order is then available as **Custom order** in the sort menu. Document order is saved in your browser only: it does not follow you to another device, it is not shared with your team, and investors never see it.
+- Sort by **Last updated**, **Name** or **Size**, and filter the current folder with **Search files…**.
+- Double-click a folder name to rename it. **Rename** in a document's row menu renames the file, keeping the extension.
+
+## What investors actually see
+
+Every document has a switch in the **Visible** column of the file list. On means investors with access can see it, off means it is yours alone. Your current pitch deck is the one exception: it is pinned on and reads **Always visible**. The financial model and the cap table can be switched off like any other file, but only from their row in **Fundraising Pack**, **Financials** or **Equity & Cap Table**, because the **Key Docs** view has no visibility switch.
+
+To check the result, open **Caplia Passport** in the sidebar and click its **Data Room** tab. That view shows only documents currently marked visible, in your folder order, with key documents first and then the most recently uploaded files. It is exactly what an investor sees.
+
+Access itself is granted per investor, in two levels (see [sharing and access](/founder-portal/sharing-access)):
+
+| Level | What they get |
+| --- | --- |
+| **Profile Access** | Your Caplia Passport and its published detail |
+| **Full Data Room Access** | The passport plus every document you have marked visible |
+
+Add context with **Add note** on a document row. The note is capped at 280 characters and is shown to investors next to the file. To see which investors currently hold access, and at what level, open the **Access Control** tab of the sharing settings at `/account/sharing`.
+
+Viewing a file opens it inside Caplia: PDFs, images and plain text or CSV render in place, anything else offers a download instead. **Download** works on a single row, or tick several rows and use the bulk bar.
+
+## What the data room does not do
+
+<Warning>
+  Uploading a cap table file here does *not* populate the [Cap Table](/founder-portal/cap-table) page. The two are separate. Shareholders, share classes and rounds are entered by hand on the Cap Table page, and its **Copy to Data Room** button pushes an Excel export into the **Equity & Cap Table** folder. There is no import in the other direction.
+</Warning>
+
+New documents are indexed so [Iris](/founder-portal/iris) can answer questions about them. While that runs, the row shows **Indexing for Iris…**, which clears on its own. If it ends up as **Not searchable**, the file is still stored, shareable and downloadable, it just will not turn up in Iris search.
+
+## Deleting
+
+**Delete** in a row menu removes one document; ticking several rows gives you a bulk **Delete**. Deleted documents disappear from your data room and from investor views immediately. There is no undo in the app, so re-upload if you delete something by mistake.
+
+A folder can only be deleted when it is empty. The small delete control appears on hover, and only on an empty, unlocked folder. If it refuses, you will see **Folder still has files. Please delete all files first.**
+
+## Storage and document limits
+
+Data room storage and the number of documents you can hold are set by your plan. Two things can stop an upload:
+
+- **Data Room Storage Unavailable** with an **Upgrade to Raise** button means your plan has no data room storage at all. The **Upload** button stays disabled until you upgrade.
+- **Document limit reached** means you are at your plan's document count. The message states your current limit. Superseded older versions do not count towards it.
+
+See [billing and subscriptions](/founder-portal/billing) to check or change your plan.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="My file will not upload">
+    Check the size first: 50 MB for documents and spreadsheets, 10 MB for images. A 77 MB deck will fail no matter what the plan is. Then check the format against the list above; the file extension has to match the type the file actually is, so renaming an unsupported file will not get it through. If the **Upload** button itself is greyed out, it is a plan limit rather than the file.
+  </Accordion>
+  <Accordion title="I get a pitch deck error on a file that is not my deck">
+    You are uploading into **Fundraising Pack**, where every file has to be a PDF. The check runs before anything else, so a `.docx` one-pager or a `.pptx` is rejected with **Pitch decks must be PDF format** even when you set **Document Type** to **Regular Document** or answered **No, regular document**. Convert the file to PDF, or file it in another folder.
+  </Accordion>
+  <Accordion title="I replaced my deck but investors still see the old one">
+    Confirm the new file is in the **Key Docs** slot and not sitting loose in **Fundraising Pack**. If you dragged it in and answered **No, regular document**, it was filed as a supporting file. Open the row menu on the new file and choose **Set as Pitch Deck**. Then check the **Data Room** tab of **Caplia Passport** to see what investors get.
+  </Accordion>
+  <Accordion title="My readiness score changed after I uploaded a document">
+    Uploads to the key document slots re-run your score. If you upload an appendix or a partial file into the **Pitch Deck** slot, that file becomes the deck the scorer reads. Restore the previous version from **Version history** and file the appendix as an ordinary document instead. See [readiness index](/founder-portal/readiness-index).
+  </Accordion>
+  <Accordion title="I uploaded my cap table but the Cap Table page is empty">
+    Expected. Data room files are never parsed into the structured Cap Table page. Enter shareholders and rounds on the [Cap Table](/founder-portal/cap-table) page, then use **Copy to Data Room** to publish an export back here.
+  </Accordion>
+  <Accordion title="The same file appears twice">
+    Both rows are live documents. The list never shows superseded versions, so this is a real duplicate rather than a file sitting next to its own older version. It happens when the two file names differ even slightly, because a re-upload only supersedes the old file when the name matches exactly. Delete whichever one you do not want, and reuse the exact same name next time if you meant to replace it.
+  </Accordion>
+  <Accordion title="I cannot delete a folder">
+    Only empty folders can be deleted, and the three key document folders (**Fundraising Pack**, **Financials**, **Equity & Cap Table**) cannot be deleted at all. Move or delete the contents first, then hover the folder in the rail to reveal the delete control.
+  </Accordion>
+  <Accordion title="Dragging a document onto a folder does nothing">
+    Drag-to-folder is desktop only, and it is switched off for key documents, which stay in their own folders by design. Use **Move to** in the row menu instead. If you meant to reorder within a folder, click **Reorder** first.
+  </Accordion>
+</AccordionGroup>
 
 {/* VIDEO: Connor: 2-minute data room tour */}

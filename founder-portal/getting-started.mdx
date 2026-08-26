@@ -1,36 +1,144 @@
 ---
 title: "Getting started"
-description: "From sign-up to a scored Passport"
+description: "Sign up, run the setup wizard, and get from an empty account to a scored Passport"
 icon: "play"
 ---
 
-<Steps>
-  <Step title="Create your account">
-    Sign up at [app.caplia.ai](https://app.caplia.ai) with email, Google, LinkedIn, or Microsoft. If an accelerator gave you a **programme code** or invite link, use that instead: it connects you to their programme automatically (see [Link your Passport](/founder-portal/link-your-passport)).
-  </Step>
-  <Step title="Onboard with Iris">
-    Iris walks you through the essentials conversationally: your one-line description, where you're based, and your fundraising timeframe. You can correct anything she gets wrong: just tell her.
+Setting up Caplia takes a few minutes. You create an account, run a short setup wizard that reads either your pitch deck or your website, and land on your dashboard with a populated [Caplia Passport](/founder-portal/passport). Take the pitch deck route and your first [Caplia Readiness Index (CRI)](/founder-portal/readiness-index) run is queued as soon as you finish. The website route fills in your profile but does not produce a score until you upload a deck.
 
-    <Note>
-      Your company description is capped at **300 characters**: it's the first thing investors read on your Passport, so keep it sharp.
-    </Note>
+## Creating your account
+
+Go to [app.caplia.ai](https://app.caplia.ai). Sign-up and sign-in share one screen: enter your email, click **Continue with Email**, and Caplia works out whether you already have an account. Existing accounts are asked for their password; new ones set a password there and then.
+
+You can also use **Continue with Google**, **Continue with LinkedIn** or **Continue with Microsoft** instead of a password.
+
+A new password must be at least 8 characters and contain an uppercase letter, a lowercase letter and a number. Common passwords such as `password123` are rejected outright.
+
+If you sign up with email and password, Caplia sends a verification link and shows the **Verify your email** screen. The link expires after one hour. If it does not arrive, check your spam folder and use **Resend verification email**.
+
+<Note>
+  Joining through an accelerator or programme code, or through an investor's invite link, is a different route in. See [Link your Passport](/founder-portal/link-your-passport). Founders who arrive on an investor invite have the invite redeemed automatically when they finish setup, and the confirmation message names a longer trial than a standard signup gets.
+</Note>
+
+## The setup wizard
+
+The wizard lives at `/onboarding` and opens automatically after sign-up. Until you finish it, every dashboard route sends you back to it, so you cannot half-skip it by typing a URL. If you close the tab midway, log back in and the wizard is waiting for you: a deck analysis that was already running reattaches itself, and otherwise you start again from the choice screen.
+
+<Steps>
+  <Step title="Confirm your name">
+    Shown only when Caplia does not already have your name. Neither the email and password form nor the social buttons ask for it, so most founders see this step. Anyone who set their name on the profile-completion screen, which is the magic-link and invite route, skips it. Type your name into **Full name** and click **Continue**. The button stays greyed out until the field has something in it.
   </Step>
-  <Step title="Upload your pitch deck">
-    Drop in a PDF or PowerPoint. Caplia extracts your company details, populates your Passport, and kicks off scoring automatically.
+  <Step title="Choose how to fill in your profile">
+    Two routes, and a third option to do neither:
+
+    - *I have a pitch deck*, the recommended route, which extracts the most.
+    - *I have a website*, which reads your public site instead.
+    - **Skip for now**, which completes setup with an empty profile and drops you on the dashboard to fill things in by hand.
   </Step>
-  <Step title="Review your Passport & Score">
-    Within a few minutes you'll have a **Caplia Score** and a populated Passport. Head to **Investor Preview** to see exactly what investors will see, and fill any gaps the score highlights.
+  <Step title="Upload a deck, or enter a URL">
+    On the deck route, drag a file onto the upload area or click **Choose File**. Decks must be **PDF format only, up to 50MB**, and the PDF must contain real text rather than page images.
+
+    On the website route, type your address into **Website URL** and click **Analyze Website**. You do not need to type `https://`, Caplia adds it.
+
+    Changed your mind at this point? **Back** returns to the choice screen and **Skip to dashboard** ends setup without extracting anything.
+  </Step>
+  <Step title="Wait for the analysis">
+    A dialog lists the fields being read and ticks them off. Caplia quotes 30 to 60 seconds for a deck and 15 to 30 seconds for a website. The dialog will not close on a click outside or the Escape key, because that would cancel the job. If you genuinely want to stop, the deck dialog has a **Cancel Analysis** button and the website one a **Cancel** button.
+  </Step>
+  <Step title="Finish">
+    You land on a confirmation screen headed *You're all set up*. Click **Go to Dashboard** to complete setup. **Set up billing** sits below it, but it does not finish setup, and the billing page is behind the same guard as the dashboard, so it bounces you back to the wizard. Finish setup first, then open the [billing page](/founder-portal/billing) from your avatar menu.
   </Step>
 </Steps>
 
+<Tip>
+  Deck analysis survives a refresh: the job runs server side and the wizard picks it back up when you return to `/onboarding`. Website analysis runs in the foreground, so keep that tab open until it finishes.
+</Tip>
+
+### Deck or website: what each one fills in
+
+Both routes produce a working profile, but they do not extract the same amount.
+
+| Extracted | Pitch deck | Website |
+| --- | --- | --- |
+| Company name, industry, stage, region | Yes | Yes |
+| Description, problem, solution, unfair advantage, go-to-market | Yes | Yes |
+| Business model, revenue status, competitors, traction | Yes | Yes |
+| Founders, advisors and key hires | Yes | Yes |
+| Target raise and valuation | Yes | No |
+| TAM, SAM and SOM figures | Yes | No |
+| Roadmap | Yes | No |
+
+Nothing extracted is final. Every field is editable afterwards on your [Caplia Passport](/founder-portal/passport), and AI extraction gets details wrong often enough that it is worth a read-through.
+
+## What happens when you finish
+
+Clicking **Go to Dashboard** or **Skip for now** triggers several things at once:
+
+- Setup is marked complete, so the wizard stops appearing.
+- Your free trial starts. The confirmation toast names the length, and the [billing page](/founder-portal/billing) shows the days remaining once you are inside.
+- A deck uploaded during setup is filed in your [data room](/founder-portal/data-room) under **Fundraising Pack** as the current **Pitch Deck**, and that upload queues your first CRI scoring run. Website-route founders get no score until they upload a deck.
+- Investor matching runs in the background. Matches surface on the **Investor Database** page under **Founder Tools**. They are not added to your **Deal Pipeline** for you: you decide which matched investors to track there.
+
 ## Where things live
 
-| Area | What it's for |
-| --- | --- |
-| **Dashboard** | Your score, tasks, and activity at a glance |
-| **Score Hub** | The full rubric breakdown behind your Caplia Score |
-| **Data Room** | Documents investors can request or view |
-| **Investor Preview** | Your Passport exactly as investors see it |
-| **Pipeline** | Track the investors you're talking to |
+| Sidebar item | Route | What it is for |
+| --- | --- | --- |
+| **Dashboard** | `/dashboard` | Score, key actions and activity at a glance |
+| **Caplia Passport** | `/dashboard/investor-preview` | Your investor-facing profile, and where you edit company details |
+| **Passport Analytics** | `/dashboard/passport-analytics` | Who has viewed your Passport and what they looked at |
+| **Deal Pipeline** | `/dashboard/pipeline` | Investors you are talking to, by stage |
+| **Data Room** | `/dashboard/data-room` | Documents, including your pitch deck |
+| **Cap Table** | `/dashboard/cap-table` | Shareholders, share classes and funding rounds |
+| **Founder Tools** | `/dashboard/founder-tools` | **CRI**, **Investor Database**, **Psychometrics**, **Investor Update**, **WhatsApp Iris** |
+
+Sharing sits in the top bar: click **Share** to reach `/account/sharing` and create a link. Your avatar menu holds **Billing**, **Profile**, **Security & Data**, **Notifications**, **Team**, **WhatsApp**, **API Keys**, **Sharing**, **Help & Support** and **Sign Out**.
+
+## A sensible first hour
+
+<Steps>
+  <Step title="Read what the AI extracted">
+    Open **Caplia Passport** and correct anything wrong. Empty fields are tinted amber. Your **Company Description** is capped at 300 characters and is the first thing an investor reads.
+  </Step>
+  <Step title="Upload the rest of your documents">
+    Your [data room](/founder-portal/data-room) is where the financial model and cap table document go. Uploading those two also earns CRI points.
+  </Step>
+  <Step title="Build your cap table and round">
+    The [cap table](/founder-portal/cap-table) is entered by hand. Uploading a cap table file to the data room does not populate the Cap Table page.
+  </Step>
+  <Step title="Share it">
+    Create a share link from **Share** in the top bar. See [sharing and access](/founder-portal/sharing-access).
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="No extractable text found">
+    Your PDF is made of page images rather than text, which is common when a deck has been scanned or exported as pictures. Re-export it from PowerPoint, Google Slides, Keynote or Canva using their PDF export, which keeps the text layer, then upload again. You can also skip ahead and fill your profile in by hand.
+  </Accordion>
+  <Accordion title="The analysis is taking a long time">
+    Deck analysis normally finishes inside a minute. The wizard gives up after five minutes and shows an *Analysis timed out* message so you can retry. Retrying is safe: a new upload supersedes the previous one rather than adding a duplicate deck.
+  </Accordion>
+  <Accordion title="I closed the tab during deck analysis">
+    Nothing is lost. The job runs server side and the wizard reattaches to it when you return to `/onboarding`. You may briefly see the progress dialog again before it jumps to the confirmation screen.
+  </Accordion>
+  <Accordion title="The wizard reappeared after I finished it">
+    Setup completes per company, not per login, so this normally means the write did not land or you are looking at an old tab. If you finished in a second tab, for example after clicking the verification email, the stale tab detects the completed state and forwards itself to the dashboard. Reload the page if it does not.
+  </Accordion>
+  <Accordion title="The Continue button is greyed out on the name screen">
+    **Continue** only enables once **Full name** contains text. A single space does not count.
+  </Accordion>
+  <Accordion title="The website analysis found almost nothing">
+    Sparse, heavily image-based or bot-blocking sites return little. Point Caplia at the page that best explains your problem, solution and team, or switch to the deck route, which extracts more in any case.
+  </Accordion>
+  <Accordion title="I skipped setup and my profile is empty">
+    That is a supported exit, not a mistake. Fill in company details on **Caplia Passport**, then upload your deck to the **Fundraising Pack** folder of your data room to start scoring.
+  </Accordion>
+  <Accordion title="I want a second company profile">
+    Use the company switcher in the top bar and choose **Create New Version**. Naming it runs the setup wizard again for that profile. Each profile keeps its own Passport, data room, score and pipeline.
+  </Accordion>
+</AccordionGroup>
+
+Anything the wizard cannot solve, ask [Iris](/founder-portal/iris) from the top bar, or open **Help & Support** from your avatar menu. More fixes are collected in [troubleshooting](/founder-portal/troubleshooting).
 
 {/* VIDEO: Connor: end-to-end onboarding walkthrough goes well here */}

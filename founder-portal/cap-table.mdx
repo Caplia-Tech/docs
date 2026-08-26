@@ -1,56 +1,148 @@
 ---
 title: "Cap table"
-description: "Track shareholders, share classes and funding rounds in one place"
+description: "Record shareholders, share classes and funding rounds, and understand where the Raised figure comes from"
 icon: "table-cells"
 ---
 
-The cap table records who owns your company and how each funding round changed that. Open **Cap Table** in the left sidebar (or go straight to `/dashboard/cap-table`). At the top you'll see three totals: **Total Shares**, **Shareholders** and **Share Classes**, followed by three sections: **Current Ownership**, **Share Classes** and **Funding Rounds**.
+The cap table records who owns your company and how each funding round changed that. Everything on the page is entered by hand: Caplia does not read your ownership figures out of any file you upload.
+
+Open **Cap Table** in the left sidebar, or go straight to `/dashboard/cap-table`. On a phone the sidebar collapses, so reach it from the **More** menu. The **Fundraising Status** card on your [dashboard](/founder-portal/getting-started) also links here, and its **Create Round** button opens the new-round dialog directly.
+
+At the top of the page are three totals, **Total Shares**, **Shareholders** and **Share Classes**, followed by three sections: **Current Ownership**, **Share Classes** and **Funding Rounds**.
+
+## What this page does not do
+
+Read this first if something is not appearing where you expect it.
+
+- Uploading a cap table spreadsheet to your [data room](/founder-portal/data-room), including using **Set as Cap Table** on a file there, does *not* populate this page. There is no cap table import or file parser. The data room copy is a document for investors to read; this page is a structured record you type in.
+- Adding a shareholder does *not* create an investor in your [Deal Pipeline](/founder-portal/pipeline), and adding a pipeline investor does not create a shareholder. The two are separate records and Caplia never matches them by name.
+- Adding a shareholder does *not* change the **Raised** figure on any round. See [how the Raised figure works](#how-the-raised-figure-works).
 
 ## Building your cap table
 
 <Steps>
   <Step title="Check your share classes">
-    Caplia starts you off with a default **Ordinary Shares** class. If you have more than one class, click **Add Share Class** and set the **Class Name**, type (**Ordinary** or **Preference**), **Votes Per Share** and **Liquidation Preference**. A class that's already assigned to shareholders can't be deleted until you reassign them.
+    Caplia creates a default **Ordinary Shares** class the first time you open the page. If you have more than one class, click **Add Share Class** and set the **Class Name**, a **Type** of **Ordinary** or **Preference**, **Votes Per Share** (0, 1, 10, or a custom value between 2 and 50) and a **Liquidation Preference** such as `1x non-participating`.
   </Step>
   <Step title="Add your shareholders">
-    In **Current Ownership**, click **Add Shareholder**. Enter their name, choose a type (**Founder**, **Investor**, **Employee** or **Advisor**), the number of shares owned and, optionally, a share class. You can also attach supporting documents, such as a subscription agreement, from your data room.
+    In **Current Ownership**, click **Add Shareholder**. Enter a **Name**, pick a **Type** of **Founder**, **Investor**, **Employee** or **Advisor**, and enter **Shares Owned** as a share count, not a percentage. **Email** and **Share Class** are optional. Ownership percentages are worked out for you as each holder's shares divided by the total across all shareholders.
+  </Step>
+  <Step title="Link supporting paperwork (optional)">
+    Under **Supporting Documents (optional)**, use **Link documents...** to attach a subscription agreement or similar. Only PDFs already in your data room appear, and your pitch deck, financial model and cap table documents are excluded. Files whose name resembles the shareholder's are sorted to the top and marked **Suggested**. Linked files get a file icon beside the shareholder's name that opens a preview in the app.
   </Step>
   <Step title="Record your funding rounds">
-    In **Funding Rounds**, click **Add Round** to log each raise, past or in progress.
+    In **Funding Rounds**, click **Add Round** to log each raise, past, live or planned.
   </Step>
 </Steps>
 
+On desktop you can click the **Ownership %** column header to sort holders by stake: first click sorts high to low, second low to high, third returns to the default order.
+
 ## Recording a funding round
 
-Each round has a **Round Type** (from **Bootstrap** and **Friends and Family** through **Seed**, **Series A** and beyond, or **Custom** for your own name), an optional **Mechanism** (for example **Priced equity round** or **SAFE / ASA (UK)**), a **Target Amount**, **Valuation**, currency (GBP, USD or EUR), a **Round Start Date** and a **Status**: **Active**, **Closed** or **Planned**.
+Click **Add Round** and fill in the dialog. **Round Type** runs from **Bootstrap** and **Friends and Family** through **Angel**, **Pre-seed**, **Seed**, **Series A** to **Series C+**, plus **Bridge**, **Growth**, **Secondary** and **Custom** for your own name. **Mechanism** is optional and covers instruments such as **Priced equity round**, **CLN (Convertible Loan Note)**, **SAFE / ASA (UK)** and **Grants / awards**.
+
+The rest of the dialog is **Currency** (GBP, USD or EUR, used to display every amount on the round), **Status** of **Active**, **Closed** or **Planned**, **Target Amount**, **Raised Amount**, **Valuation** and a **Round Start Date**.
 
 <Note>
-Only one round can be **Active** at a time. If you add or edit a round and set it to **Active**, any other active round is automatically marked **Closed**.
+Only one round can be **Active** at a time. If you add or edit a round and set it to **Active**, every other active round is automatically switched to **Closed**.
 </Note>
 
 ## How the Raised figure works
 
-The **Raised** column behaves differently depending on the round's status:
+This is the single most common surprise on this page. The **Raised** column behaves differently depending on the round's status.
 
-| Round status | Where the Raised figure comes from |
+| Round status | Where Raised comes from |
 | --- | --- |
-| **Active** | Calculated automatically from your **Deal Pipeline**: the sum of ticket sizes for investors at the **Hot**, **Term Sheet** or **Closed Won** stage. Any manually entered amount is hidden while the round is active, and the **Raised Amount** field is locked when editing. |
-| **Closed** or **Planned** | The amount you type into **Raised Amount** yourself. |
+| **Active** | Calculated from your **Deal Pipeline**: the total of the ticket sizes of every investor currently at the **Hot**, **Term Sheet** or **Closed Won** stage. Anything typed into **Raised Amount** is ignored while the round is active, and the field is locked when you edit the round. A small chart icon sits next to the figure to show it is auto-calculated |
+| **Closed** or **Planned** | Exactly the amount you type into **Raised Amount** |
 
-In practice:
+The **Add Round** dialog does show a **Raised Amount** box even when **Status** is set to **Active**, and whatever you type into it is saved, but it is never displayed while the round is live. To make £180,000 appear on a live round:
 
-- *While you're raising*, keep the round **Active** and keep investor stages and ticket sizes up to date in **Deal Pipeline**. The Raised figure then updates itself, and you'll see a small chart icon next to it confirming it's auto-calculated.
-- *Once the round is done*, set the status to **Closed** and enter the final total in **Raised Amount**. That figure is then shown exactly as you entered it.
+<Warning>
+The pipeline is a paid feature; the cap table is not. If your plan does not include it, opening [Deal Pipeline](/founder-portal/pipeline) shows an **Investor CRM** lock card with a **View Pricing Plans** button instead of the board, and an **Active** round's **Raised** figure can then never be filled in. Until you upgrade, record the round with a **Status** of **Closed** or **Planned** and type the amount into **Raised Amount** yourself. See [billing](/founder-portal/billing).
+</Warning>
+
+<Steps>
+  <Step title="Add the investors to your pipeline">
+    Open [Deal Pipeline](/founder-portal/pipeline) and click **Add Investor** for each one. A shareholder row does not put anyone in the pipeline.
+  </Step>
+  <Step title="Move them to a qualifying stage">
+    Only **Hot**, **Term Sheet** (shown as **Terms** on the board) and **Closed Won** (shown as **Won**) count. **Cold** and **Warm** contribute nothing.
+  </Step>
+  <Step title="Give each one a ticket size">
+    Moving an investor to **Hot** or **Terms** from inside their detail panel opens the **Investment Ticket Size** dialog: enter the amount and click **Save**. Dragging a card between board columns does not prompt you. An investor at **Hot** or **Terms** who is still missing an amount shows an **Add ticket size** prompt on their board card and in the list view. Set the amount before you move anyone to **Won**: after that the list view stops showing the prompt, and the prompt on the board card opens the **Actions** tab, which has no ticket size control on it. An investor with no ticket size adds nothing to Raised.
+  </Step>
+  <Step title="Check the totals">
+    Back on the cap table, the round's **Raised** value now reflects the pipeline. The **Pipeline Breakdown** on the dashboard's **Fundraising Status** card splits that total by stage, showing how many investors are counted at **Closed/Won**, **Term Sheet** and **Hot** and how much each stage contributes. It shows counts and amounts, never names.
+  </Step>
+</Steps>
+
+Three things worth knowing about the calculation:
+
+- It is not scoped to the round. *Every* investor in your pipeline currently sitting at **Hot**, **Term Sheet** or **Closed Won** is counted, including ones left over from an earlier raise. Move finished investors out of those stages if you do not want them in this round's total.
+- Ticket sizes are added together as plain numbers and then displayed in the round's currency. If you record tickets in mixed currencies, the total is not converted and will be wrong.
+- Once the round is finished, set its status to **Closed** and type the final total into **Raised Amount**. When you switch an active round to **Closed** in the edit dialog, the field unlocks pre-filled with the auto-calculated figure, so check the value before you click **Save Changes**.
 
 ## Exporting and sharing
 
-Two buttons at the top of the page get your cap table in front of investors:
+Two buttons sit at the top of the page.
 
-- **Export** downloads the full cap table (ownership, share classes and rounds) as an Excel file.
-- **Copy to Data Room** generates the same Excel file and places it in the Equity & Cap Table folder of your [data room](/founder-portal/data-room), marked as shared and downloadable. Running it again replaces the previous copy, so investors always see the latest version.
+- **Export** downloads an Excel file with three sheets: Overview, Shareholders and Share Classes. Funding rounds are *not* included in the export.
+- **Copy to Data Room** generates the same spreadsheet and files it in the **Equity & Cap Table** folder of your data room, marked as shared and downloadable. Every click files a fresh entry, so copying twice on the same day leaves two entries in that folder. The file name carries the export date, so same-day entries point at the same overwritten file, while entries made on different days are genuinely different files. Delete the older ones if you do not want investors seeing them.
+
+Separately, the **Shared with investors** switch at the top of the page controls whether approved investors who already have data room access can view your cap table inside Caplia. It is off until you turn it on, and only account admins see the switch.
+
+## Who can edit
+
+Editing needs the **Admin** role on your company (**Company Admin** in the invite dialog). A **Member** sees the same data but gets **View only** instead of the edit and delete controls, and none of the add buttons, **Copy to Data Room** or **Shared with investors**. **Export** stays available to everyone. Roles are changed at `/account/team`, covered in [team](/founder-portal/team).
 
 <Tip>
-Deleting a shareholder or round gives you a few seconds to undo, but it's still worth exporting a copy before any major clean-up.
+Deleting a shareholder or a funding round asks you to confirm, then offers an **Undo** action in the toast for about seven seconds; undoing a shareholder also restores the links to their documents. Deleting a shareholder never deletes anything from your data room: it only removes the links between that shareholder and the files. Deleting a share class is different: it happens immediately, with no confirmation and no undo.
 </Tip>
 
-Not seeing the add and edit buttons? Your team account has view-only access to the cap table, so ask a colleague with management access to make changes.
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="My round shows no Raised amount while I am actively raising">
+    An **Active** round ignores anything typed into **Raised Amount** and reads the pipeline instead. If nothing qualifies, the **Raised** cell shows a dash rather than a zero. Work through the list: are the investors in [Deal Pipeline](/founder-portal/pipeline) at all, are they at **Hot**, **Term Sheet** or **Closed Won**, and does each one have a ticket size saved? The **Pipeline Breakdown** on the dashboard's **Fundraising Status** card shows how many investors are counted at each stage and what each stage contributes, so start by comparing those counts with what you expect. It does not show names: to find the specific investor, open [Deal Pipeline](/founder-portal/pipeline), switch to the list view, and look for anyone at **Hot** or **Term Sheet** still showing **Add ticket size**.
+  </Accordion>
+  <Accordion title="An investor is at Won but is not adding to the total">
+    Moving an investor straight to **Won** does not prompt for a ticket size, and the ticket size editor in the investor's **Actions** tab only appears while they are at **Hot** or **Term Sheet**. Move them back to **Terms**, enter the amount in the **Investment Ticket Size** dialog, then move them to **Won** again.
+  </Accordion>
+  <Accordion title="The Raised figure is larger than my current round">
+    The calculation counts every pipeline investor currently at **Hot**, **Term Sheet** or **Closed Won**, regardless of which round they belong to. Investors from a previous raise still parked in those stages are being added in. Move them elsewhere, or close the round and enter the final figure by hand.
+  </Accordion>
+  <Accordion title="I added shareholders but the Raised figure did not change">
+    Shareholder rows never feed the **Raised** figure. They drive **Total Shares** and the ownership percentages only. Raised comes from pipeline ticket sizes for **Active** rounds and from the **Raised Amount** field for **Closed** and **Planned** ones.
+  </Accordion>
+  <Accordion title="I uploaded my cap table file but this page is still empty">
+    Uploading a spreadsheet or PDF to the data room, including tagging it with **Set as Cap Table**, stores the file for investors to read. It does not create shareholders, share classes or rounds. There is no import feature: add the rows here by hand with **Add Shareholder** and **Add Round**. It is fine, and normal, to keep both: the structured page for Caplia, the original file in the data room for diligence.
+  </Accordion>
+  <Accordion title="My investors from the cap table are not in the Deal Pipeline">
+    They never will be. Cap table shareholders and pipeline investors are separate records with no name matching between them. Add anyone you are still in conversation with to the pipeline yourself with **Add Investor**. Doing so is what lets their ticket size count towards an active round.
+  </Accordion>
+  <Accordion title="The Raised Amount field is greyed out">
+    Expected behaviour when you edit an **Active** round. Change **Status** to **Closed** or **Planned** and the field unlocks. The field is editable in the **Add Round** dialog whatever the status, but on an **Active** round the value you type there is stored and never shown.
+  </Accordion>
+  <Accordion title="I cannot delete a share class">
+    A class still assigned to at least one shareholder cannot be deleted. Open each affected holder in **Current Ownership**, change their **Share Class**, save, then delete the class.
+  </Accordion>
+  <Accordion title="Ownership percentages do not add up to 100%">
+    Each percentage is that holder's **Shares Owned** divided by **Total Shares**, rounded to two decimal places, so small rounding differences are normal. A percentage that looks badly wrong almost always means a share count is wrong: check for anyone entered as a percentage (for example `20`) rather than as a number of shares, and for holders you have not added yet. **Total Shares** only counts shareholders listed on this page, so unissued or option-pool shares are not in the denominator.
+  </Accordion>
+  <Accordion title="I cannot see the add or edit buttons">
+    Your account has the **Member** role on this company, which is view-only for the cap table. Ask an admin to change your role at `/account/team`.
+  </Accordion>
+  <Accordion title="My export is missing the funding rounds">
+    That is how the export is built: it contains only the Overview, Shareholders and Share Classes sheets. Round history stays on this page. The dashboard's **Fundraising Status** card is not a substitute: it shows only your active round and the three most recent closed ones. Include the full history separately if an investor asks for it.
+  </Accordion>
+</AccordionGroup>
+
+<CardGroup cols={2}>
+  <Card title="Deal pipeline" icon="bars-progress" href="/founder-portal/pipeline">
+    Stages, ticket sizes and the investors that feed an active round's Raised figure.
+  </Card>
+  <Card title="Data room" icon="folder-open" href="/founder-portal/data-room">
+    Where the exported spreadsheet lands and what investors can see.
+  </Card>
+</CardGroup>

@@ -1,70 +1,257 @@
 ---
 title: "Troubleshooting"
-description: "Quick fixes for the most common issues in the founder portal"
+description: "Fixes for the issues founders hit most: scores that move unexpectedly, uploads that fail, a Raised figure stuck at zero, share links, and sign-in problems"
 icon: "wrench"
 ---
 
-Most problems in the portal have a simple explanation. Find your issue below; if it's not here, message us through the app and we'll dig in.
+Most problems in the portal have a simple explanation, and most of them come from one of two things: a document that quietly replaced another, or two features that look connected but are not.
+
+Find your issue below. Each answer links to the page with the full detail. If nothing here matches, ask Iris in the app, or open your avatar menu in the top-right corner and choose **Help & Support**.
+
+## Your score
 
 <AccordionGroup>
-  <Accordion title="I can't sign in">
-    You enter your email and password but see "Invalid email or password". This usually means a typo in one or the other, or you originally signed up with Google, LinkedIn or Microsoft rather than a password.
+  <Accordion title="My score dropped after I uploaded more documents">
+    This is almost always the same cause: a PDF that was never meant to be your deck became your deck.
 
-    Try the matching **Continue with Google**, **Continue with LinkedIn** or **Continue with Microsoft** button first. If you do use a password, click **Forgot password?** on the sign-in page: you'll see "Password reset email sent", and the email contains a link to set a new one.
+    When you upload into the **Fundraising Pack** folder, the upload dialog sets **Document Type** to **Pitch Deck** for you, because that folder has one key document. Anything you upload there as **Pitch Deck** replaces the current deck and is scored as your deck. Upload an appendix, a one-pager or a data annexe that way and your Caplia Readiness Index (CRI) is recalculated from that file instead of your real deck.
+
+    Do both of these:
+
+    <Steps>
+      <Step title="Put the extra file back where it belongs">
+        Upload it again, and in the **Upload Document** dialog move it out of **Fundraising Pack** using the **Document Category** dropdown. Everything uploaded into **Fundraising Pack** must be a PDF, and choosing **Regular Document** does not lift that rule: a non-PDF annexe is still rejected there with "Pitch decks must be PDF format". If the file is a PDF and genuinely belongs beside your deck, leave the folder as it is and set **Document Type** to **Regular Document** so it sits alongside your deck instead of replacing it.
+      </Step>
+      <Step title="Restore your real deck">
+        Go to **Data Room**, open **Key Docs**, and on the **Pitch Deck** card click the small clock button showing the number of older files. That opens **Version history**, which lists every replaced version, and **Restore** on a row makes that file current again.
+      </Step>
+    </Steps>
+
+    Restoring a version does not start a score run on its own: only an upload does. Once your real deck is current again, use **Replace** on the **Pitch Deck** card and upload the same PDF once more to force a fresh run. See [Caplia Readiness Index](/founder-portal/readiness-index) for what the score measures.
   </Accordion>
 
-  <Accordion title="It says my account isn't verified">
-    You see "Please verify your email address to continue." or "Account exists but is not verified. Please check your email." Your account exists, but you haven't clicked the verification link we emailed when you signed up.
+  <Accordion title="My score has not updated after uploading a new deck">
+    Scoring is not instant. Your upload joins a queue and is analysed step by step, which usually takes a few minutes.
 
-    Check your inbox (and spam folder) for the verification email and click the link. The sign-in page also offers a **Resend email** button if the original has expired or gone missing.
+    While it runs, the score page shows a progress banner that reads *Analyzing your pitch deck...* with a rough time estimate, and the page refreshes itself when the result lands. You do not need to reload. The estimate narrows as the job moves from queued to running; it never widens.
+
+    If the banner disappears and no new score appears, the run did not finish. Upload the deck again to start a fresh run, and contact us if it fails twice. Remember the CRI is displayed on a 0 to 1000 scale, and 700 is the threshold for Caplia Verified.
   </Accordion>
 
-  <Accordion title="My two-factor code is rejected">
-    The **Two-Factor Authentication** window says "Invalid code. Please try again." Codes are six digits and expire quickly, so a code typed too slowly, or read from the wrong account in your authenticator app, won't work.
+  <Accordion title="I deleted a document and my score did not change">
+    Score runs are queued by uploads. Deleting a document does not start one, so your score keeps reflecting the last completed run until the next time you upload something.
 
-    Wait for a fresh code and enter it promptly, then press **Verify**. If your code arrives by text message, use **Resend code** to get a new one. Also check your phone's clock is set to automatic: a drifted clock makes authenticator codes fail.
+    If a deleted document was inflating your score, upload your current deck again to force a fresh run.
   </Accordion>
 
-  <Accordion title="A feature asks me to upgrade">
-    You open a feature and see an upgrade prompt instead of the feature itself. Access in the portal depends on your plan, so features outside your current plan are locked rather than hidden.
+  <Accordion title="I cannot find the readiness index">
+    It lives under **Founder Tools** in the left sidebar, listed as **CRI**. The route is `/dashboard/score-hub`.
 
-    To unlock it, upgrade your plan: click your avatar in the top-right corner, then **Billing**. If you've just upgraded and something still looks locked, refresh the page so the portal picks up your new plan.
+    If the page shows an upgrade card instead of a score, readiness scoring is not included in your current plan. See [Billing](/founder-portal/billing).
+  </Accordion>
+</AccordionGroup>
+
+## Documents and uploads
+
+<AccordionGroup>
+  <Accordion title="My file will not upload">
+    Uploads are rejected up front, with the reason in the error message. The usual causes:
+
+    | Cause | What you will see | Fix |
+    |---|---|---|
+    | Unsupported file type | The file type is not allowed | Use PDF, Word, Excel, PowerPoint, or JPG, PNG and WebP images. CSV, plain text and Markdown are accepted too, but the file browser does not list them, so drag those into the folder instead |
+    | Too large | The file exceeds the maximum allowed size | Documents and spreadsheets can be up to 50MB; images up to 10MB |
+    | Deck is not a PDF | "Pitch decks must be PDF format" | Export your deck as a PDF and upload that |
+    | Plan limit reached | "Storage limit reached" or "Document limit reached" | Delete documents you no longer need, or upgrade from your avatar menu then **Billing** |
+    | Awkward file name | The file name contains invalid characters | Rename the file using letters, numbers, spaces, dots, hyphens and underscores |
+
+    Nothing is saved until an upload completes, so retrying after a dropped connection is safe. Full detail on folders and limits is in [Data room](/founder-portal/data-room).
   </Accordion>
 
-  <Accordion title="My document won't upload">
-    An upload fails straight away with an error message. The usual causes:
+  <Accordion title="How do I replace my pitch deck?">
+    There is one canonical path, and it keeps your old version:
 
-    - **Unsupported file type.** The data room accepts PDF, Word, Excel, CSV, PowerPoint, plain text and common image formats. Anything else is rejected.
-    - **Too large.** Documents can be up to 50MB, and images up to 10MB.
-    - **Pitch deck isn't a PDF.** You'll see "Pitch decks must be PDF format". Export your deck as a PDF and upload that.
-    - **Plan limits.** "Storage limit reached" or "Document limit reached" means your current plan's data room allowance is full. Delete documents you no longer need, or upgrade via your avatar then **Billing**.
+    <Steps>
+      <Step title="Open Key Docs">
+        Go to **Data Room** in the sidebar and select **Key Docs** at the top of the folder list.
+      </Step>
+      <Step title="Use Replace on the Pitch Deck card">
+        Hit **Replace** and choose the new PDF. The previous file is archived as a version, not deleted.
+      </Step>
+      <Step title="Check the version number">
+        The card shows a version badge once you are past v1, and a clock button appears beside **Replace** carrying the number of older files. Open it to see **Version history**, where **Restore** makes an earlier file current again.
+      </Step>
+    </Steps>
 
-    If the upload starts but never finishes, check your connection and try again: nothing is saved until the upload completes, so retrying is safe.
+    The same pattern works for **Financial Model** and **Cap Table**, which are the other two key documents. Replacing your deck queues a fresh score run automatically, because the run is triggered by the upload itself.
+
+    If the file is already in your data room and you just want to promote it, open the **Fundraising Pack** folder, find the row, open its menu and choose **Set as Pitch Deck**. That option only appears while you are viewing that folder, so if the file sits elsewhere use **Move to** on its row first. The file must be a PDF.
   </Accordion>
 
   <Accordion title="I uploaded a file and an older one disappeared">
-    You upload a document and an existing one seems to vanish. If the new file has the same name as one already in your data room, the portal treats it as a new version and replaces the old one rather than showing duplicates.
+    Two rules can archive an existing document:
 
-    Nothing is lost: the previous version is kept in that document's version history in **Data Room**, and you can restore it from there. The same applies when you replace your pitch deck, financial model or cap table.
+    - Uploading a file with the *same name* as a current document replaces it, so you never end up with duplicate rows.
+    - Uploading as one of the three key document types (**Pitch Deck**, **Financial Model**, **Cap Table**) replaces the current file of that type.
+
+    Nothing is lost when a key document is replaced. The previous file becomes a version of the new one, listed under **Version history** in **Key Docs**, and **Restore** brings it back.
+
+    A same-name replacement of an ordinary document works differently. The older file is hidden from your data room, and only the three key documents have a version history in the portal, so an ordinary file cannot be restored once it has been superseded. If you want to keep both copies, give the new file a different name before you upload it.
   </Accordion>
 
-  <Accordion title="My score hasn't updated after uploading a new deck">
-    You've uploaded a new pitch deck but your Caplia Readiness Index (CRI) still shows the old number. Scoring isn't instant: your deck joins a queue and is analysed step by step, which usually takes a few minutes.
+  <Accordion title="I deleted something by mistake">
+    It depends on what you deleted.
 
-    While it's running, the portal shows a scoring-in-progress state with an estimated wait, and the page updates itself automatically when the new result lands, so there's no need to refresh. Check progress in Score Hub, reached via **Founder Tools** in the sidebar. If the run fails, you'll see that too; upload the deck again to start a fresh run, and contact us if it fails repeatedly. Remember the CRI is shown on a 0 to 1000 scale.
+    - *Documents*: deleting one asks you to confirm and tells you that you can re-upload the file if you need it. Deleting several at once warns instead that the action cannot be undone. Either way there is no **Undo** on the toast and no restore option afterwards. If you deleted a version of a key document rather than the document itself, check **Version history** first.
+    - *Shareholders, funding rounds, pipeline investors, reminders, share links and team members*: the confirmation toast carries an **Undo** action for about seven seconds. Click it and the record comes back, along with its linked rows.
+
+    Deleting a folder is blocked while it still contains files, so empty it first.
+  </Accordion>
+</AccordionGroup>
+
+## Cap table and funding rounds
+
+<AccordionGroup>
+  <Accordion title="The Raised figure on my round shows 0 or the wrong amount">
+    Adding shareholders does not change the Raised figure. For a round whose status is **Active**, Raised is calculated from your **Deal Pipeline**: the portal adds up the ticket sizes of investors sitting in the **Hot**, **Term Sheet** and **Closed Won** stages. The **Raised Amount** field is read-only while a round is **Active** for exactly this reason.
+
+    So if it reads 0 while you are raising, check both halves in **Deal Pipeline**:
+
+    - Each committed investor has a ticket size recorded. For someone in **Hot** or **Term Sheet**, open them and use **Add Ticket Size** or **Edit Ticket Size**. For someone already in **Closed Won**, those buttons are not offered: use the **Add ticket size** prompt on their card in the board view instead.
+    - Each of them sits in **Hot**, **Term Sheet** or **Closed Won**. Investors in **Cold** or **Warm** do not count.
+
+    If the raise is finished, edit the round, set its status to **Closed**, and type the final total into **Raised Amount** yourself. Rounds set to **Planned** also take a typed figure. More in [Cap table](/founder-portal/cap-table) and [Deal pipeline](/founder-portal/pipeline).
+  </Accordion>
+
+  <Accordion title="I uploaded my cap table file but the Cap Table page is empty">
+    Uploading a cap table document to your data room does not populate the structured **Cap Table** page. They are separate: the data room stores the file for investors to read, and the **Cap Table** page holds the structured shareholder, share class and funding round records.
+
+    Fill the page in with **Add Shareholder** (and the share class and funding round dialogs beside it). There is no spreadsheet import.
+
+    The **Copy to Data Room** button on the **Cap Table** page runs the other way: it exports your structured cap table as an Excel file into the **Equity & Cap Table** folder, so investors see the same numbers you maintain. **Export** downloads that file to your computer instead.
+  </Accordion>
+
+  <Accordion title="My cap table investors do not appear in the Deal Pipeline">
+    Shareholders and pipeline investors are separate records, and there is no name matching between them. Adding a shareholder never creates a pipeline entry, and adding a pipeline investor never creates a shareholder.
+
+    The intended flow is one direction at a time: track prospects in **Deal Pipeline** with **Add Investor** while you are raising, then record the people who actually hold equity on the **Cap Table** page once the round closes.
+  </Accordion>
+
+  <Accordion title="A team member cannot edit the cap table">
+    Editing the cap table is restricted to company admins. A member sees the tables, the totals and **Export**, but no add or edit controls, and no sharing switch.
+
+    Check the role badge under your name in the avatar menu: it reads **Admin** or **Member**. To change someone's role, an admin opens **Team** from the avatar menu and updates them there. Billing is admin-only too: a member opening it sees a notice that only company admins can access billing settings. See [Team](/founder-portal/team).
+  </Accordion>
+</AccordionGroup>
+
+## Sharing and your passport
+
+<AccordionGroup>
+  <Accordion title="How do I check my passport link actually works?">
+    Two checks, depending on what you shared.
+
+    For the passport itself, open **Caplia Passport** in the sidebar and click **Open Preview**. That opens your profile exactly as an investor sees it, in a new tab.
+
+    For a share link you sent someone, open your avatar menu, choose **Sharing**, and look on the **Share Links** tab. Links you have not switched off are grouped under **Active Links**, the rest under **Inactive Links**, and each row has a switch and a **Copy Link** action.
+
+    Sitting under **Active Links** is not proof the link still works. A link can carry an expiry date, and once that date passes it stays in the same group but shows an **Expired** badge with its **Copy Link** action greyed out. Check the **Expires** column, and create a new link if yours has expired.
+
+    <Tip>
+      Paste the copied link into a private or incognito window. You are signed in as yourself in your normal browser, which can make a broken link look fine. An incognito window sees what your investor sees.
+    </Tip>
+
+    More in [Sharing and access](/founder-portal/sharing-access) and [Caplia Passport](/founder-portal/passport).
+  </Accordion>
+
+  <Accordion title="I need to stop someone seeing my data">
+    On the **Sharing** page, the **Share Links** tab lets you deactivate a link with its switch, or delete it outright. Investors you granted access to directly are listed on the **Access Control** tab instead, where **Revoke Access** ends their access.
+
+    Document visibility is separate again: each document in your data room has an investor visibility toggle, and your pitch deck is always visible to anyone with access. The cap table has its own master switch on the **Cap Table** page.
+  </Accordion>
+</AccordionGroup>
+
+## Iris and support
+
+<AccordionGroup>
+  <Accordion title="I asked Iris for a human and nobody replied">
+    Iris can hand a conversation to the Caplia team, and you will see a banner in the chat confirming that support has been notified, then the agent's name once someone joins. Replies are not instant: a person has to pick it up.
+
+    The important part is *where* the reply lands. A support conversation belongs to the chat it started in. Starting a **New chat** does not carry it over, so an answer can look like it never arrived.
+
+    <Steps>
+      <Step title="Watch the Iris button">
+        When support replies, a count appears on the Iris button in the top bar. Clicking it reopens the right conversation.
+      </Step>
+      <Step title="Or reopen the original chat">
+        Open **Recent Chats** at the bottom of the left sidebar and pick the conversation you escalated from. Inside the Iris panel the same list sits behind the clock icon at the top left.
+      </Step>
+    </Steps>
+
+    You can keep using Iris normally while you wait. You can also start an escalation deliberately with the **Caplia Support** button under the chat box. If you would rather not wait in chat, open your avatar menu and choose **Help & Support**.
+  </Accordion>
+
+  <Accordion title="Iris will not read my attachment">
+    Two limits apply to files attached inside a chat:
+
+    - Documents attached to a chat must be under 10MB. Larger files get a reply from Iris asking you to put the file in your data room instead, which she can read from there. Images are exempt from the size cap.
+    - A document has to finish processing before you can send it. If you see *Document still embedding*, wait for the attachment indicator to complete, or retry the file if it failed.
+
+    Attachments are read within the conversation you send them in. See [Iris](/founder-portal/iris).
+  </Accordion>
+</AccordionGroup>
+
+## Signing in and access
+
+<AccordionGroup>
+  <Accordion title="I cannot sign in">
+    You enter your email and password and see "Invalid email or password". Usually that is a typo, or you originally signed up with Google, LinkedIn or Microsoft rather than a password.
+
+    Try the matching **Continue with Google**, **Continue with LinkedIn** or **Continue with Microsoft** button first. If you do use a password, click **Forgot password?** on the sign-in page: you will see "Password reset email sent", and the email contains a link to set a new one.
+  </Accordion>
+
+  <Accordion title="It says my account is not verified">
+    You see "Please verify your email address to continue." or "Account exists but is not verified. Please check your email." Your account exists, but the verification link from sign-up has not been clicked.
+
+    Check your inbox and spam folder, then click the link. The message on the sign-in page is plain text, but a notification appears alongside it carrying a **Resend email** action, for when the original has expired or gone missing. If that notification has already faded, try signing in again to bring it back.
+  </Accordion>
+
+  <Accordion title="My two-factor code is rejected">
+    The **Two-Factor Authentication** window says "Invalid code. Please try again." Codes are six digits and expire quickly, so a code typed too slowly, or read from the wrong entry in your authenticator app, will not work.
+
+    Wait for a fresh code, enter it promptly and press **Verify**. Also check your phone's clock is set to update automatically: a drifted clock makes authenticator codes fail.
+  </Accordion>
+
+  <Accordion title="I keep being sent to a two-factor setup page">
+    You see **Two-factor authentication required** and cannot reach the rest of the portal. Some programmes require two-factor authentication from every founder they are connected to, and the check runs on each page you open until it is satisfied.
+
+    Set up an authenticator app on that page and verify once. You will be taken to where you were heading. The same requirement can block a programme code redemption, so clear it first if you are joining a programme. See [Link your passport](/founder-portal/link-your-passport).
   </Accordion>
 
   <Accordion title="I opened a link and landed on the sign-in page">
-    You clicked a link to a page in the portal but got the sign-in screen instead. Every page in the portal requires you to be signed in, so an expired session sends you to sign in first.
+    Your dashboard, data room, cap table, pipeline and account pages all require you to be signed in, so an expired session sends you to sign in first.
 
-    Just sign in as normal: the portal remembers where you were heading and takes you straight there afterwards, including when you sign in with Google, LinkedIn or Microsoft.
-  </Accordion>
-
-  <Accordion title="I've raised money but my funding round still shows nothing raised">
-    The Raised amount on an active funding round isn't typed in by hand, and adding shareholders to your cap table or investors to your pipeline doesn't update it by itself. It's calculated from your **Deal Pipeline**: the portal adds up the ticket sizes of investors you've moved to the Hot, Term Sheet or Closed Won stages.
-
-    If the figure looks wrong, check two things in **Deal Pipeline**: that each committed investor has a ticket size recorded, and that they're in one of those three stages. Investors in earlier stages don't count towards the total.
-
-    If your raise is already complete, the simplest fix is to edit the round, set its status to **Closed**, and enter the final total in **Raised Amount** yourself. See [Cap table](/founder-portal/cap-table) for the full picture.
+    Sign in as normal. The portal remembers where you were heading and takes you there afterwards, including when you sign in with Google, LinkedIn or Microsoft.
   </Accordion>
 </AccordionGroup>
+
+## Plans and programme codes
+
+<AccordionGroup>
+  <Accordion title="A feature asks me to upgrade">
+    Access depends on your plan, so features outside it are locked rather than hidden. The card names the feature and the plan that includes it, with a **View Pricing Plans** button.
+
+    To unlock it, open your avatar menu and choose **Billing**. If you have just upgraded and something still looks locked, refresh the page so the portal picks up the new plan. See [Billing](/founder-portal/billing).
+  </Accordion>
+
+  <Accordion title="My programme code will not redeem">
+    Programme codes are entered on the **Connect to a Programme** page, in the **Programme code** field. Codes are not case sensitive; they are stored in capitals.
+
+    If the code is rejected, the message tells you why. A generic "please check the code you entered is correct" means the code was not recognised, so confirm the exact string with your programme operator. If the page asks you to set up two-factor authentication instead, do that first and then retry.
+
+    A successful redemption is a *request*, not instant access: the programme operator reviews it, and the confirmation tells you whether to expect approval within about 48 hours or a manual review. Full walkthrough in [Link your passport](/founder-portal/link-your-passport).
+  </Accordion>
+</AccordionGroup>
+
+## Still stuck
+
+Open your avatar menu and choose **Help & Support**. That page links the main guides in this product manual, with a further link to browse the rest, and it opens Iris, who can escalate to a person for you. When you report something, say what you were trying to do, what you expected, and what happened instead. A screenshot that includes the page URL saves a round trip.

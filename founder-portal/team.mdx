@@ -1,66 +1,153 @@
 ---
 title: "Team management"
-description: "Invite colleagues to your company and manage their roles"
+description: "Invite colleagues into your company, set their role, and understand the seat limits on each plan"
 icon: "users"
 ---
 
-Fundraising is rarely a solo effort. Invite co-founders and colleagues to your company so they can work alongside you in the portal, and control what each person can manage with roles.
+Fundraising is rarely a solo effort. Invite co-founders and colleagues into your company so they work on the same data as you, and use roles to control who can change money and billing.
 
 ## Where to find it
 
-Team management is not in the left sidebar. Click your avatar in the top-right corner, choose **Account Settings**, then open the **Team** tab. You can also go straight to `/account/team`.
+Team is not in the left sidebar. On desktop, open the account menu in the top-right corner (it shows your name), then choose **Team** under the Account group. On mobile, tap **More** in the bottom bar, then **Team** under the Account group. The direct route is `/account/team`.
 
-## Roles
+The account menu also shows an **Admin** or **Member** badge under your name, which is the quickest way to check your own role.
 
-Every person on your team has one of two roles:
+Everyone in the company can open the page and see who is on the team. Only a company admin sees the invite, role and remove controls.
+
+## What each role can do
+
+There are exactly two roles.
 
 | Role | What they can do |
 | --- | --- |
-| **Company Admin** | Everything, including inviting people, changing roles and removing team members |
-| **Member** | Works in the portal but cannot manage the team |
+| **Member** | Works in the portal alongside you: dashboard, data room, pipeline, Caplia Passport and the readiness index |
+| **Company Admin** | Everything a member can do, plus the admin-only areas below |
 
-You cannot change your own role, and the last remaining admin cannot be demoted: promote someone else to admin first.
+Three areas are admin-only in the founder portal:
+
+- *Team management*: inviting, changing roles and removing people.
+- *Billing*: a member opening the billing page sees "Only company admins can access billing settings" instead of the plan controls. See [billing](/founder-portal/billing).
+- *Cap table editing*: a member can read the [cap table](/founder-portal/cap-table), but the add, edit and delete controls for shareholders, share classes and funding rounds are hidden.
+
+Two rules protect you from locking yourself out:
+
+- You cannot change your own role. Another admin has to do it.
+- The last remaining admin cannot be demoted. Promote someone else to admin first.
+
+<Note>
+If you are the only admin of a company, you also cannot delete your Caplia account without either deleting the company or handing your admin role to someone else first. See [account settings](/founder-portal/account-settings).
+</Note>
+
+## How many people you can invite
+
+Your plan sets the maximum number of *accepted* team members, and that total includes you. Pending invitations do not count until they are accepted.
+
+| Plan | Team members included (you included) |
+| --- | --- |
+| Free (no subscription) | 1 |
+| Caplia Prepare | 1 |
+| Trial | 1 |
+| Caplia Raise | 3 |
+| Caplia Enterprise | 999, effectively unlimited |
+
+So inviting anyone at all requires Caplia Raise or above. If you are an admin on the free plan, on Caplia Prepare or during a trial, the **Invite Member** button is present but disabled, because your own seat already fills the allowance.
+
+On Caplia Prepare, admins also see a usage card at the top of the page with a "1 / 1 used" badge, a progress bar and an **Upgrade to Pro** button that takes you to the billing page. That button label is older wording: the plan you are moving to is called Caplia Raise. On the free plan and during a trial there is no usage card, just the disabled button, which is expected rather than a fault. Members see neither the card nor the button on any plan, because the whole invite area is admin-only.
 
 ## Inviting a team member
 
 <Steps>
   <Step title="Open the invite dialog">
-    On the **Team** tab, click **Invite Member**.
+    On the Team page, click **Invite Member**. The **Invite Team Member** dialog opens.
   </Step>
-  <Step title="Enter their details">
-    Add their email address and choose a role: **Member** or **Company Admin**.
+  <Step title="Enter their email">
+    Type the address in the **Email** field. The invitation goes to exactly that address, so check it for typos.
+  </Step>
+  <Step title="Choose a role">
+    Under **Role**, pick **Member** or **Company Admin**. You can change this later.
   </Step>
   <Step title="Send it">
-    Click **Send Invitation**. They receive an email with a link to join, and the invite appears under **Pending Invitations** with its expiry date until it is accepted. You can cancel a pending invitation at any time.
+    Click **Send Invitation**. The invite appears in the **Pending Invitations** list with a **Pending** badge, the role you chose and the expiry date.
   </Step>
 </Steps>
 
-Each email address can only hold one pending invitation, and people who are already on your team cannot be invited again.
+Caplia emails the invitation from `invite@notifications.caplia.ai` with the subject "You've been invited to join *your company name* on Caplia". Invitations are valid for seven days from the moment you send them, and the exact expiry date is shown next to each pending invite.
+
+Two invites for the same person are blocked: one pending invitation per email address, and someone already on your team cannot be invited again.
 
 ## Accepting an invitation
 
-When your colleague opens the invitation link, they see who invited them, the company they are joining and their role. What happens next depends on whether they already use Caplia:
+Your colleague clicks the button in the email and lands on a **Team Invitation** card that names who invited them, the company and the role. What happens next depends on their account:
 
-- *Existing users* sign in with their usual details, then click **Accept Invitation**.
-- *New users* enter their full name, set a password and click **Create Account & Join Team**. No separate sign-up is needed.
+- *No Caplia account yet*: they fill in **Full Name**, **Password** and **Confirm Password** (at least six characters), then click **Create Account & Join Team**. There is no separate sign-up step and no email confirmation to wait for. They land on the dashboard already inside your company.
+- *Already signed in with the invited email*: they click **Accept Invitation**.
+- *Has an account but is signed out*: they click **Sign In**, then accept.
 
-Invitations expire, so if a link stops working, just send a fresh one.
+The invited email address has to match the account accepting. If someone signs in with a different address, Caplia refuses with an email mismatch message naming the address the invitation was sent to.
 
-## Team member limits
+When an invitation is accepted, a "Team invite accepted" item appears in your notification bell in the top bar.
 
-Some plans include a limit on team size. When a limit applies you will see a usage meter on the **Team** tab showing how many places you have used, and the **Invite Member** button is disabled once you reach it. Upgrade to Caplia Pro for unlimited team members.
+<Tip>
+A person can belong to more than one company on Caplia. Accepting an invitation makes that company the active one; after that, use the company selector in the top bar to move between them.
+</Tip>
+
+## Changing someone's role
+
+On the Team page, find the person in the **Team Members** list and use the role dropdown next to their name to switch between **Member** and **Admin**. The change applies immediately, and there is no confirmation step. Your own row shows a badge instead of a dropdown.
 
 ## Removing a team member
 
-Only company admins can remove people, and you cannot remove yourself.
+Only a company admin can remove someone, and you cannot remove yourself. If you want to leave a company, ask another admin to remove you.
 
 <Steps>
   <Step title="Find the member">
-    On the **Team** tab, locate the person in the **Team Members** list.
+    Locate the person in the **Team Members** list.
   </Step>
-  <Step title="Confirm removal">
-    Click the delete icon next to their name, then click **Remove**. They lose access to the company immediately, and you have a few seconds to undo if you change your mind.
+  <Step title="Confirm">
+    Click the delete icon next to their name, then click **Remove** in the confirmation dialog.
+  </Step>
+  <Step title="Undo if needed">
+    A toast appears for about seven seconds with an **Undo** action. After that the removal is final, though you can always invite them again.
   </Step>
 </Steps>
 
-Removing someone takes away their access to everything in the portal, including your [data room](/founder-portal/data-room).
+Removal takes away access to everything in that company, including the [data room](/founder-portal/data-room), immediately.
+
+## Cancelling a pending invitation
+
+In **Pending Invitations**, click the delete icon next to the invitation. It is removed straight away and the link stops working. Cancel and resend whenever you need to correct a typo, change the role you offered, or replace an expired invite.
+
+## Team on your Passport is a different thing
+
+The **Add Team Member** button on your [Caplia Passport](/founder-portal/passport) adds a founder profile that investors read. It does not create a login and it does not give that person access to your portal. Likewise, inviting someone here does not add them to your Passport team section, and [psychometric test](/founder-portal/psychometrics) invites are sent to Passport founder profiles, not to portal team members. If you want a co-founder in both places, do both.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The Invite Member button is greyed out">
+    You have used every seat on your plan. Your own account counts as one. On the free plan, on Caplia Prepare and during a trial the allowance is a single person, so the button is disabled from the start. Move to Caplia Raise for three seats, or contact Caplia about Enterprise for more. Remember that pending invitations do not consume a seat, but accepted members do, so removing someone frees a seat right away.
+  </Accordion>
+  <Accordion title="My colleague never received the invitation email">
+    Ask them to search their inbox and spam folder for `invite@notifications.caplia.ai`. If it is genuinely missing, cancel the invitation in **Pending Invitations** and send a fresh one, which generates a new email. If you saw a message saying the invitation was created but the email failed to send, the pending invite exists without an email having gone out: cancel it and try again, and contact support if it happens twice.
+  </Accordion>
+  <Accordion title="They say the link says the invitation has expired or has already been used">
+    Invitations last seven days and can only be accepted once. Cancel the old one and send a new invitation. "Already been used" usually means the invite was accepted; check the **Team Members** list before resending, in case they are already in.
+  </Accordion>
+  <Accordion title="They get an email mismatch error when accepting">
+    They are signed in to Caplia with a different email from the one you invited. They should sign out, sign in with the invited address, and open the link again. If they want to use a different address, cancel the invitation and send a new one to the address they actually use.
+  </Accordion>
+  <Accordion title="A team member cannot edit the cap table">
+    Cap table editing is admin-only, so members see the figures without the add and edit controls. If they need to maintain it, change their role to **Admin** on the Team page. Nothing about their data is lost when the role changes.
+  </Accordion>
+  <Accordion title="A team member cannot open billing">
+    Billing is admin-only. Members see a notice pointing them at their company admin. Either handle the plan change yourself or promote them.
+  </Accordion>
+  <Accordion title="I cannot demote or remove myself">
+    Both are blocked by design. Promote another person to **Admin** first if you want to step down, and ask that admin to remove you if you are leaving the company.
+  </Accordion>
+  <Accordion title="Someone I removed can still see old emails or downloads">
+    Removal cuts off access to the portal from that moment. It cannot recall material they already downloaded from your data room. If a departure is sensitive, review your share links and access grants too, in [sharing and access](/founder-portal/sharing-access).
+  </Accordion>
+</AccordionGroup>
+
+More common issues across the portal are collected in [troubleshooting](/founder-portal/troubleshooting).
