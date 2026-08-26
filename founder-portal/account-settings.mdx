@@ -1,60 +1,168 @@
 ---
 title: "Account settings"
-description: "Manage your profile, password, two-factor authentication and notifications"
+description: "Manage your profile, password, two-factor authentication, notification emails, WhatsApp and API keys"
 icon: "user-gear"
 ---
 
-Account settings is where you manage your personal details, keep your account secure and choose which emails you receive. It is not in the left sidebar: click your user avatar in the top-right corner, then choose **Account Settings**. **Profile**, **Security**, **Notifications** and **Display** appear as tabs within that page.
+Your account settings cover how your name and photo appear, how you sign in, and which emails you receive. Those are personal to you, so every teammate has their own set. Two of these pages belong to the company you are working in rather than to you: WhatsApp numbers and API keys, the two ways to reach your company data from outside the portal.
 
-The page also includes a **Sharing** tab for controlling investor access (see [Sharing & access](/founder-portal/sharing-access)) and a **Team** tab for inviting colleagues (see [Team](/founder-portal/team)).
+## Where to find your account settings
+
+There is no single settings page with tabs. Each area is its own page, reached from the account menu.
+
+<Steps>
+  <Step title="Open the account menu">
+    On desktop, click the button in the top-right corner of any page. It shows your name, or the word **Account** if you have not set a name yet.
+  </Step>
+  <Step title="Choose an area">
+    Under the **Account** heading you will see **Profile**, **Security & Data**, **Notifications**, **Team**, **WhatsApp**, **API Keys** and **Sharing**. **Billing** sits above that group, and **Help & Support** and **Sign Out** below it.
+  </Step>
+</Steps>
+
+On mobile, open the **More** tab in the bottom bar: the same items are listed under the *Account* heading. On desktop, the card at the bottom of the left sidebar showing your name and plan is another shortcut to your profile.
+
+| Page | Route | What you do there |
+| --- | --- | --- |
+| **Profile** | `/account/profile` | Name, photo, and a read-only email and join date |
+| **Security & Data** | `/account/security` | Password, two-factor authentication, clearing data, deleting your account |
+| **Notifications** | `/account/notifications` | Turn investor-activity emails on or off |
+| **WhatsApp** | `/account/whatsapp` | Link a phone number so you can chat to Iris on WhatsApp |
+| **API Keys** | `/account/api-keys` | Create keys so an AI agent can read your company data |
+
+Two neighbouring pages have their own guides: [Team](/founder-portal/team) for inviting colleagues and [Sharing and access](/founder-portal/sharing-access) for investor access. Plans and payment live on the [billing](/founder-portal/billing) page.
+
+<Note>
+Light and dark mode are not part of these pages. Use the sun or moon button in the top bar (on mobile, the theme row near the bottom of **More**). Your choice is remembered on that device.
+</Note>
 
 ## Profile
 
-The **Profile** tab holds your personal information. Update your profile photo, edit your **Full Name**, then click **Save Changes** (or **Cancel** to discard). A newly uploaded photo is saved straight away, so it appears across the app immediately.
+Your **Full Name** must be between 2 and 100 characters. Edit it, then click **Save Changes**. **Save Changes** and **Cancel** stay greyed out until the name actually changes, and they track that field only.
 
-Your **Email** and **Member Since** date are shown for reference but cannot be edited. Contact support if you need to update your email. A **WhatsApp** card at the bottom shows whether your WhatsApp number is linked, and clicking it takes you to the linking flow.
+Your profile photo works differently. Click **Change Photo**, pick an image, crop it in the dialog that opens, and it uploads and saves immediately: you do not need to click **Save Changes**. The file must be an image and smaller than 5MB.
 
-## Security
+**Remove** only clears the photo from the page in front of you. It does not delete the photo stored on your account, so the old picture comes back the next time you reload. To change the picture other people see, upload a replacement with **Change Photo**.
 
-The **Security** tab covers your password and two-factor authentication.
+**Email** and **Member Since** are shown for reference and cannot be edited. To change the email address on your account, contact support.
+
+A card at the bottom shows whether a WhatsApp number is linked to your company, and opens the WhatsApp page when clicked.
+
+## Security and data
 
 ### Changing your password
 
-<Steps>
-  <Step title="Enter your new password">
-    Under **Change Password**, fill in **New Password** and **Confirm New Password**. A strength meter shows how secure your new password is.
-  </Step>
-  <Step title="Update">
-    Click **Update Password**. If two-factor authentication is switched on, you will be asked for your 6-digit code first: enter it and click **Verify & Change Password**.
-  </Step>
-</Steps>
+Fill in **Current Password**, **New Password** and **Confirm New Password**, then click **Update Password**. A strength meter rates the new password from *Weak* to *Very Strong*.
+
+A password is accepted only if it has at least 8 characters, one uppercase letter, one lowercase letter and one number. Very common passwords are rejected even when they meet those rules. Adding a symbol, and going to 12 characters or more, is what moves the meter into the top bands.
+
+If two-factor authentication is on, you are asked for your 6-digit code before the change is applied: enter it and click **Verify & Change Password**.
 
 ### Two-factor authentication
 
-Two-factor authentication adds an extra layer of security by asking for a code from an authenticator app (such as Google Authenticator or 1Password) each time you sign in.
+Two-factor authentication asks for a code from an authenticator app (such as Google Authenticator or 1Password) in addition to your password.
 
 <Steps>
   <Step title="Turn it on">
-    Under **Two-Factor Authentication**, switch on the **Enable 2FA** toggle.
+    Under **Two-Factor Authentication**, switch on **Enable 2FA**.
   </Step>
   <Step title="Scan the QR code">
-    Scan the QR code with your authenticator app, or enter the setup code manually if you cannot scan.
+    Scan the QR code with your authenticator app. If you cannot scan it, copy the setup code shown underneath into the app by hand.
   </Step>
   <Step title="Verify">
-    Enter the 6-digit code from your app and click **Verify & Enable**.
+    Type the 6-digit code from the app into **Verification Code** and click **Verify & Enable**.
   </Step>
 </Steps>
 
-To turn it off, switch the toggle off, enter your current 6-digit code and click **Disable 2FA**.
+To turn it off, switch **Enable 2FA** off, enter a current 6-digit code and click **Disable 2FA**. A code is always required to disable it, so keep your authenticator app until you have deliberately turned two-factor authentication off.
 
-## Notifications
+<Warning>
+Keep a backup of your authenticator app, or of the setup code shown when you enrolled. If you lose the device and cannot generate a code, contact support rather than trying to sign in repeatedly.
+</Warning>
 
-The **Notifications** tab controls which emails you receive when investors interact with your shared profile and data room. Each has its own on/off toggle, and changes save instantly:
+### Data management
+
+Two permanent actions sit in the **Data Management** card at the bottom of the page. Neither can be undone.
+
+**Clear Company Data** wipes the company you are currently working in: documents and data room content, founders and team members, investors and pipeline data, and all scores and metrics. Your login survives. If you belong to more than one company, you are switched to another one afterwards. If it was your only company, a fresh company called "My Company" is created and you are sent back to onboarding.
+
+**Delete Account** removes your account and your personal data. Type `DELETE` in the confirmation field to enable the button. A toggle in the dialog lets you delete your companies at the same time. Leave it off and the companies stay, but only if someone else can still administer them: if you are the sole admin of a company the deletion is blocked, and you are told to either enable "Also delete my companies" or transfer your admin role to another team member first (see [Team](/founder-portal/team)). Once the deletion succeeds, access to your shared data rooms is revoked and you are signed out.
+
+## Notification emails
+
+The toggles here control emails about investor activity. Each one saves the moment you flip it, and they are personal: every teammate has their own set, so turning **Profile Views** off does not silence it for your co-founder.
 
 | Notification | You are emailed when |
 | --- | --- |
 | **Access Requests** | An investor requests access to your data room |
 | **New Messages** | Someone sends you a message |
-| **Profile Views** | An investor views your Caplia profile (at most once per investor every 24 hours) |
+| **Profile Views** | An investor views your Caplia profile |
 | **Document Downloads** | An investor downloads a document from your data room |
 | **NDA Signed** | An investor signs the NDA for your company |
+
+All five are on by default. **Profile Views** and **Document Downloads** are capped at one email per investor per company per 24 hours, so an investor reading through your data room produces one email, not twenty. The other three are not capped.
+
+These toggles only affect email. The bell in the top bar keeps showing activity either way.
+
+## WhatsApp
+
+Linking a number lets you ask Iris about your company from WhatsApp without signing in. On the WhatsApp page, **Link via QR** generates a code you scan or send from the phone you want to link, and the code expires 15 minutes after it is created. **Add Manually** lets you type the number instead: include the country code (for example +44), optionally add a display name, tick the acknowledgement, then click **Add Number**.
+
+<Warning>
+Anyone holding a linked phone can query all of your company data through Iris, including financials, documents and investor information. Only link numbers you trust, and remove a number as soon as it should no longer have access.
+</Warning>
+
+A number can be linked to one company at a time. To move it, remove it from the other company first. More on what Iris can and cannot do is on the [Iris](/founder-portal/iris) page.
+
+## API keys
+
+API keys let an AI agent read your company profile, scores and data room through the Caplia MCP. Click **Create key**, name it, and choose scopes: `read` covers all GET endpoints, `write` adds uploading decks and documents.
+
+The full key is shown once, immediately after creation. Copy it into a password manager or your agent's secret store before closing the dialog: the list afterwards shows only a prefix, the last four characters, and when the key was created and last used.
+
+Each key is scoped to one company, so pick the company at the top of the page first if you belong to several. Revoking a key takes effect immediately and cannot be undone.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Save Changes is greyed out">
+    The button only becomes active once the name field actually changes. If you have retyped the same name, nothing has changed. Photo changes do not enable it either: an upload saves on its own, and **Remove** just clears the photo from the page without saving anything.
+  </Accordion>
+  <Accordion title="My profile photo will not upload">
+    The file must be an image and under 5MB. Screenshots straight from a phone are often larger than they look. If the upload fails after cropping, reload the page and try again with a smaller file.
+  </Accordion>
+  <Accordion title="I removed my photo but it came back">
+    **Remove** only clears the photo from the page, and there is no way to save an empty photo. Upload a different image with **Change Photo** instead: that replaces the old one straight away.
+  </Accordion>
+  <Accordion title="I am not getting notification emails">
+    Check the toggle for that event is on, then check your spam folder. Remember that repeat profile views and downloads by the same investor are only emailed once per 24 hours, so a second visit that day sends nothing. Emails go to the address shown on your profile page, which cannot be changed in the portal: contact support if it is wrong.
+  </Accordion>
+  <Accordion title="My 2FA code is rejected">
+    Codes are time-based, so a phone clock that has drifted produces codes the server will not accept. Set your phone's date and time to update automatically, then try the next code the app generates rather than one that is about to expire.
+  </Accordion>
+  <Accordion title="I cannot delete my account">
+    If you are the only admin of a company, deletion is blocked so the company is not orphaned. Either turn on the option to delete your companies too, or make another team member a company admin first, then try again.
+  </Accordion>
+  <Accordion title="My WhatsApp number is already linked to another company">
+    A number can only serve one company. Remove it from that company, then add it here.
+  </Accordion>
+  <Accordion title="I cleared company data by mistake">
+    There is no undo. Documents, investors, scores and team links are gone, and you will need to upload your documents again to rebuild your [Caplia Readiness Index](/founder-portal/readiness-index).
+  </Accordion>
+</AccordionGroup>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Team" icon="users" href="/founder-portal/team">
+    Invite colleagues, set roles, and transfer admin before deleting your account.
+  </Card>
+  <Card title="Sharing and access" icon="share-nodes" href="/founder-portal/sharing-access">
+    Control what investors can see, separately from your personal settings.
+  </Card>
+  <Card title="Billing" icon="credit-card" href="/founder-portal/billing">
+    Plans, upgrades and what each tier unlocks.
+  </Card>
+  <Card title="Troubleshooting" icon="circle-question" href="/founder-portal/troubleshooting">
+    Common problems across the whole portal.
+  </Card>
+</CardGroup>

@@ -1,27 +1,126 @@
 ---
 title: "Link your Passport"
-description: "Join an accelerator or programme with a programme code"
+description: "Redeem a programme code to connect your Caplia Passport to an accelerator or investor programme"
 icon: "link"
 ---
 
-Accelerators and programmes on Caplia (like SETsquared) issue **programme codes**. Redeeming one links your Passport to their programme: they see your company in their pipeline, and you typically receive a funded Caplia licence as part of the programme.
+Accelerators and investor programmes on Caplia issue *programme codes*. Redeeming a code creates a connection between your company and that programme's workspace, so their team can see your Caplia Passport in their pipeline.
+
+A programme connection is not the same thing as investor access to your data room. The two are granted separately, and this page explains exactly what each one covers.
+
+## Where to find it
+
+Click your name in the top-right corner of the app and choose **Link Passport**. The page is at `/connect` and is titled **Connect to a Programme**.
+
+<Note>
+  **Link Passport** only appears in the account menu when programme connections are switched on for your account. The menu entry is not on the mobile **More** page, so on a phone go to `/connect` directly, or use a desktop browser.
+</Note>
+
+## Before you start
+
+You need your company name and contact email on file. If either is missing, the page shows a card headed **Finish setting up your profile first** with a **Go to profile** button instead of the code form. Those two details are sent to the programme so they know who is connecting.
+
+You also need the right Passport version selected. Caplia shares the version that is active when you submit, picked from **Your Versions** in the top bar. If you keep more than one version, switch to the right one before you redeem.
+
+## Redeem a programme code
 
 <Steps>
-  <Step title="Redeem your code">
-    Enter the code you were given where prompted (or follow the programme's invite link). One code redemption per company: if you're told a code is already used, your team may have already linked it.
+  <Step title="Enter the code">
+    Type the code your programme gave you into the **Programme code** field. The field converts what you type to capitals automatically and shows a running character count, so you can check the length against the code you were sent. The empty field shows `OVB-2026` as an example, but Caplia does not enforce that shape: enter your code exactly as your programme sent it, whatever it looks like.
   </Step>
-  <Step title="The programme reviews your connection">
-    High-confidence matches connect automatically; otherwise a programme operator approves it, usually quickly.
+  <Step title="Check the match">
+    Select **Confirm**. Caplia looks the code up and shows a small preview card.
+
+    If the programme is recognised straight away, the card is headed **Programme found**, names the programme, shows the cohort if the code has one, and carries a **Verified by Caplia** badge.
+
+    If it is headed **Code entered** with a **Verified when you share** badge instead, that is normal and not an error. Founders cannot read other organisations' programme records before they are connected, so Caplia validates the code on the server when you submit rather than up front.
   </Step>
-  <Step title="You're connected">
-    On approval: your entitlement (licence) activates, your company appears in the programme's pipeline, and their team scores you against their investment theses automatically.
+  <Step title="Confirm and share">
+    Tick the confirmation box to say this is the correct programme and you want to share your current Passport with it, then select **Share my Passport**. The button stays disabled until you have both a preview and the tick.
+  </Step>
+  <Step title="Wait for the programme to approve">
+    Caplia scores the match. A high-confidence match is confirmed as sent and usually approved within 48 hours. Anything else is sent for review by a programme operator. Either way you are returned to your dashboard.
   </Step>
 </Steps>
 
+The right-hand side of the page mirrors the first three of these stages in a **Connection flow** panel, which lights each step up as you complete it. Approval happens after you leave the page, so it is not one of the panel's steps.
+
 ## What the programme can see
 
-A linked programme sees your Passport at the level the connection grants, typically your profile, deck, and score. It's the same access model as any investor; you can review it by clicking your name in the top-right corner and choosing **Sharing**.
+The page's **Permission preview** panel sets out the effect of sharing:
 
-<Note>
-  Linking is per-programme. Redeeming SETsquared's code doesn't share anything with other organisations on Caplia.
-</Note>
+| The programme can | The programme cannot |
+| --- | --- |
+| View your Passport and readiness profile | See your private investor conversations |
+| See the status of your key uploaded material | Open your data room from this connection |
+
+Once the connection is approved, that organisation's team can also see your company profile in their deal pipeline.
+
+Redeeming a code grants no investor access. If the programme wants your data room, they have to request access separately, which you approve or decline like any other request. See [sharing and access](/founder-portal/sharing-access) for how those requests work.
+
+Linking is per-programme. Connecting to one accelerator shares nothing with any other organisation on Caplia.
+
+## If the programme requires two-factor authentication
+
+Some organisations require every connecting founder to have 2FA enabled. If yours does, your code is refused and the page shows an explainer card with a **Set up two-factor authentication** button. Enrol an authenticator app, then come back and enter the code again.
+
+<Warning>
+  Once you are connected to a programme that requires 2FA, the requirement is ongoing. If you later remove your authenticator, the app sends you back to the security setup page on your next move around the app until you re-enrol.
+</Warning>
+
+## After you connect
+
+While a request is waiting, your dashboard shows an **Awaiting approval** card naming the programme and when you submitted. The card is tied to the Passport version you connected, so it will not appear if you switch to a different version.
+
+When the programme approves you, you get a notification saying a programme accepted your request, and the connection appears in two places:
+
+- On the **Connect to a Programme** page, under **Already connected**, with the connection date and an **Active** badge.
+- In your account menu under **Sharing**, on the **Access Control** tab, in a **Connected programmes** panel showing the organisation name and a **Profile access** badge.
+
+There is a short **Watch tutorial** video on the page if you would rather see the flow than read it.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I cannot see Link Passport in the menu">
+    The entry is hidden unless programme connections are enabled for your account. Try `/connect` directly. If the page bounces you to the dashboard, the feature is switched off for your account. That happens before you enter anything, so the code itself makes no difference: contact Caplia support to have it enabled.
+  </Accordion>
+  <Accordion title="It says to check the code and try again">
+    That message means the server did not accept the code. Re-read it from your programme's email, watch for confusable characters such as `0` and `O`, and check you have not dropped a hyphen. Lower case and any spaces at the start or end are stripped for you, so those are not the cause, but a space in the middle of a pasted code is sent as typed and will be refused.
+  </Accordion>
+  <Accordion title="The code is expired or already redeemed">
+    Codes can expire, can be limited to one redemption, and can run out of places. When that happens the page shows the reason the programme's system gave. Nothing you can change on your side fixes it, so go back to the programme for a fresh code.
+  </Accordion>
+  <Accordion title="The preview does not name my programme">
+    Seeing **Code entered** and **Verified when you share** instead of the programme's name is expected for most founders. Carry on and submit. If the code is wrong, submission is what tells you.
+  </Accordion>
+  <Accordion title="The Share my Passport button is greyed out">
+    You need both a preview card and the ticked confirmation before the button becomes active. Select **Confirm** first, then tick the box.
+  </Accordion>
+  <Accordion title="I shared the wrong Passport version">
+    The version selected at the moment you submit is the one that is shared. Switch versions in **Your Versions** and contact the programme if the wrong one went across, as the app has no self-serve way to swap the version on an existing connection.
+  </Accordion>
+  <Accordion title="I want to remove a programme connection">
+    The **Connected programmes** panel is read-only, so there is no remove button in the app. Use **Help & Support** to ask Caplia to end the connection.
+  </Accordion>
+  <Accordion title="Nothing has happened after 48 hours">
+    Approval is done by a person at the programme, not by Caplia. If your dashboard still shows the **Awaiting approval** card well past that, chase your programme contact.
+  </Accordion>
+</AccordionGroup>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Sharing and access" icon="share-nodes" href="/founder-portal/sharing-access">
+    Share links, access requests and what investors can open.
+  </Card>
+  <Card title="Your Caplia Passport" icon="id-card" href="/founder-portal/passport">
+    What the programme sees when they open your profile.
+  </Card>
+  <Card title="Billing and plans" icon="credit-card" href="/founder-portal/billing">
+    Check which plan your account is on.
+  </Card>
+  <Card title="Account settings" icon="gear" href="/founder-portal/account-settings">
+    Profile details and two-factor authentication.
+  </Card>
+</CardGroup>

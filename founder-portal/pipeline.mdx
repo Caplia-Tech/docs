@@ -1,71 +1,152 @@
 ---
 title: "Deal pipeline"
-description: "Track every investor conversation from first contact to closed deal"
+description: "Track every investor conversation from first contact to closed deal, and feed the Raised figure on your cap table"
 icon: "bars-progress"
 ---
 
-The **Deal Pipeline** is your fundraising CRM: add the investors you're talking to, move them through stages as conversations progress, and log every call, email and meeting along the way. Open it from the left sidebar or go straight to `/dashboard/pipeline`.
+The **Deal Pipeline** is your fundraising CRM: add the investors you're talking to, move them through stages as conversations progress, and log every call, email and meeting along the way. Open **Deal Pipeline** in the left sidebar, or go straight to `/dashboard/pipeline`.
+
+What you record here shows up elsewhere: ticket sizes on investors at **Hot**, **Term Sheet** or **Closed Won** become the **Raised** figure on an active round in your [cap table](/founder-portal/cap-table), and overdue follow-ups appear on your dashboard with a link back to the investor.
 
 ## Adding investors
 
 <Steps>
   <Step title="Open the add dialog">
-    Click **Add Investor**. You can search Caplia's investor directory by name or firm, or click **+ Add Investor Manually** to enter someone yourself.
+    Click **Add Investor** (the button is labelled **Add** on a narrow screen). Type a name or firm to search Caplia's directory of 700+ investors, then click **Add** on the right person. Directory entries always start at **Cold** and arrive with their focus areas, stage preference, check size, geography and application details already filled into the notes.
   </Step>
-  <Step title="Fill in the details">
-    For manual entries, add a **Name** (required), plus **Firm**, **Email**, **LinkedIn URL** and **Notes** if you have them.
+  <Step title="Or enter someone yourself">
+    If they aren't in the directory, click **+ Add Investor Manually**. **Name** is the only required field; **Firm**, **Email**, **LinkedIn URL** and **Notes** are optional.
   </Step>
   <Step title="Choose a starting stage">
-    Pick an **Initial Stage** of **Cold**, **Warm** or **Hot**, then click **Add to Pipeline**. Investors added from the directory start at Cold.
+    For manual entries, pick an **Initial Stage** of **Cold**, **Warm** or **Hot**, then click **Add to Pipeline**.
   </Step>
 </Steps>
 
-Caplia checks for duplicates, so adding the same investor twice simply points you to the existing entry. On paid plans you can also click **Find Investors** to browse the directory and add matches directly.
+Caplia checks for duplicates before saving. A directory investor you already track shows **Already in Pipeline**. A manual entry whose name matches someone already in your pipeline (ignoring capitalisation) stops with a notice showing their current stage, and offers **Update with New Info**, which appends what you typed in **Notes** to the existing record's notes rather than creating a second entry. Only the notes carry across: the investor's existing details, including their **Email**, stay as they are.
 
-## Pipeline stages
+If your plan includes the investor database, **Find Investors** opens the **Investor Directory** at `/dashboard/investor-directory`, where you can filter the full list and click **Add to Pipeline** on any result. On plans without it, the same button reads **Upgrade to Discover** and takes you to [billing](/founder-portal/billing). That button is desktop only. Searching the directory from inside the **Add Investor** dialog works on any device and on any plan.
 
-Drag investors between columns on the board, or change the stage from an investor's card. Closed deals sit in a collapsible **Closed Deals** section below the board.
+<Note>
+Shareholders on your [cap table](/founder-portal/cap-table) and investors in your pipeline are separate records. Adding a shareholder never creates a pipeline entry, and adding a pipeline investor never creates a shareholder. Add the person in both places if you need them in both.
+</Note>
+
+## Stages
+
+Four active stages sit side by side on the board, with won and lost deals tucked into a collapsible **Closed Deals** section underneath.
 
 | Stage | Use it when |
 | --- | --- |
 | **Cold** | You haven't made contact yet |
 | **Warm** | The conversation has started |
 | **Hot** | There's genuine interest and momentum |
-| **Term Sheet** | Terms are on the table |
+| **Term Sheet** | Terms are on the table (the board column is labelled **Terms**) |
 | **Closed Won** | The investment is committed |
-| **Closed Lost** | The deal didn't happen (you'll be asked to record why) |
+| **Closed Lost** | The deal didn't happen |
 
-Switch between **Kanban**, **List**, **Calendar**, **Reminders** and **Activity** views using the tabs above the board. The cards at the top of the page keep a running count of **Total Investors**, **Conversations**, **Active Deals**, **Pipeline Value** and **Terms Value**.
+Change stage by dragging a card between columns in **Kanban**, by using **Move to Stage** in the three-dot menu on a **List** row, or from **Move to Stage** on an investor's **Actions** tab. The list menu covers the four active stages only: to mark a deal won or lost, use the **Actions** tab, or expand **Closed Deals** on the board and drag the card into it.
+
+Choosing **Closed Lost** on the **Actions** tab opens **Mark as Closed Lost**, which asks for a **Reason** from a grouped list (wrong thesis, too early, check size mismatch, valuation too high and so on) plus optional notes. The reason is saved to that investor's timeline for your own learning. Dragging a card into **Lost** under **Closed Deals** moves it without asking for a reason, so use the **Actions** tab whenever you want the reason recorded.
 
 ## Ticket size
 
-When an investor reaches the Hot or Term Sheet stage, Caplia prompts you for their expected **Investment Ticket Size**: the amount and currency they're likely to invest. You can skip it and add or edit it later from the investor's card. Ticket sizes power the Pipeline Value and Terms Value figures, and the ticket sizes of investors at Hot, Term Sheet or Closed Won also feed the Raised figure on an active funding round in your [Cap Table](/founder-portal/cap-table).
+Moving an investor to **Hot** or **Term Sheet** from the **Actions** tab prompts for their **Investment Ticket Size**: an amount and a currency. You can **Skip** it and add it later.
+
+To add or change it afterwards, open an investor at **Hot** or **Term Sheet** and use **Add Ticket Size** or **Edit Ticket Size** on the **Actions** tab. Those two buttons appear only at those two stages, so record the ticket size before you move a deal on to **Closed Won**. Investors at **Hot** or **Term Sheet** without one also show an orange **Add ticket size** prompt, in the **Ticket Size** column in **List** view and on the card itself in **Kanban**; either one opens the investor on the **Actions** tab.
+
+<Note>
+A card at **Closed Won** or **Closed Lost** with no ticket size shows the same orange prompt, but the **Actions** tab offers no ticket size button at those stages. To fill one in, use **Move to Stage** to put the investor back at **Hot** or **Term Sheet**, enter the amount when prompted, then move them forward again. The ticket size stays with them.
+</Note>
+
+Ticket sizes drive three numbers:
+
+- **Pipeline Value**: combined ticket sizes at **Hot** and **Term Sheet**.
+- **Terms Value**: combined ticket sizes at **Term Sheet** only.
+- The **Raised** figure of an active round on your [cap table](/founder-portal/cap-table), which sums **Hot**, **Term Sheet** and **Closed Won**.
+
+<Warning>
+The cap table adds those ticket sizes together as plain numbers and displays the total in the round's currency, without converting between currencies. Keep one currency across the investors feeding an active round, or treat the Raised figure as an estimate.
+</Warning>
+
+The other stat cards are **Total Investors**, **Conversations** (**Warm**, **Hot** and **Term Sheet** combined) and **Active Deals** (**Hot** and **Term Sheet**). Where ticket sizes use more than one currency, the value cards list each currency separately.
+
+## Views
+
+Tabs above the board switch between five views, and the app remembers your choice in that browser.
+
+| View | What it's for |
+| --- | --- |
+| **Kanban** | Drag-and-drop board by stage. Desktop only |
+| **List** | Sortable table with search and an **All Stages** filter, showing **Status**, **Ticket Size**, **Last Contact** and **Days in Stage** |
+| **Calendar** | Reminders and logged activity on a **Month**, **Week**, **Day** or **Agenda** calendar |
+| **Reminders** | Every reminder grouped into **Overdue**, **Today**, **Upcoming**, **All** and **Completed** |
+| **Activity** | One reverse-chronological feed of stage changes, logged interactions and reminders across the whole pipeline |
+
+On a phone, **Kanban** is replaced by **List**, and a row of pills lets you filter the list by stage.
 
 ## Logging interactions
 
-Keep a record of every touchpoint so you always know where a conversation stands.
-
 <Steps>
-  <Step title="Open an investor">
-    Click an investor's card to open their detail view, with **Overview**, **Activity**, **Reminders** and **Actions** tabs.
+  <Step title="Start the log">
+    Click **Log** on any card or row, or open an investor and click **Log New Activity** on the **Activity** tab.
   </Step>
-  <Step title="Log the activity">
-    Use **Log Activity** and choose an **Activity Type**: Email Sent, Email Received, Application Submitted, LinkedIn Connection, LinkedIn Message, Phone Call, Meeting, Pitch Deck Sent, Follow-up or Other.
+  <Step title="Pick a type">
+    Choose an **Activity Type**: Email Sent, Email Received, Application Submitted, LinkedIn Connection, LinkedIn Message, Phone Call, Meeting, Pitch Deck Sent, Follow-up or Other.
   </Step>
   <Step title="Add the detail">
-    Set the date, an optional duration for calls and meetings, and a **Subject** and **Notes** for context. Tick **Set follow-up reminder** to schedule your next step in the same go.
+    Set the date. Phone calls and meetings also take a start time, end time and duration. Add a **Subject** and **Notes** for context, then click **Log Activity**.
   </Step>
 </Steps>
 
-Every stage change, logged interaction and reminder appears in the **Activity** view, giving you a single timeline across your whole pipeline.
+Turn on **Set follow-up reminder** in the same dialog and pick **Remind me in** 1 day, 2 days, 3 days, 5 days, 1 week or 2 weeks. If you started from **Log** on a card or row, saving the activity opens the reminder form straight away. If you started from **Log New Activity** inside an investor, the activity is saved on its own and no reminder form appears, so create the reminder from the **Reminders** tab instead.
+
+Logged activity powers the follow-up badges: **Recently contacted** under 3 days, **Follow up soon** at 3 to 7 days, **Follow up overdue** beyond 7 days, and **No activity** if you have logged nothing. Longer context belongs in **Company Notes** on the **Overview** tab, which autosaves about a second after you stop typing.
 
 ## Reminders
 
-Set a reminder from any investor's card so no conversation goes quiet.
+Create a reminder with **Follow up** on a card or row, with **Create Reminder** on an investor's **Reminders** tab, or by clicking a future day in the calendar.
 
-- Choose a **Reminder Type**, a **Due Date** and an optional time and duration.
-- Make it repeat with **Recurrence (Optional)**: one-time, every 3 days, weekly, bi-weekly or monthly.
-- The **Reminders** view gathers everything due, with a badge showing overdue items. Mark reminders done, snooze them for a few days, or edit them as plans change.
-- Click **Subscribe to Calendar** to add your pipeline reminders to your own calendar app.
+- Pick a **Reminder Type**, a **Due Date** (or the Tomorrow, In 3 days and In 1 week shortcuts) and, for calls and meetings, a time and duration.
+- Set **Recurrence (Optional)** to repeat every 3 days, weekly, bi-weekly or monthly.
+- Add **Notes (Optional)**, then click **Set Reminder**.
 
-Investor cards also flag follow-up status for you, from recently contacted through to overdue, so a quick scan of the board shows who needs attention next.
+In the **Reminders** view, click a reminder's date badge to reschedule it, or click the row to open it and **Complete**, delete or snooze it by **+1 Day**, **+3 Days** or **+1 Week**. Tick several and use the bulk **Complete** or **Delete** buttons. The tab badge counts overdue items, and a second badge counts what's due today.
+
+## Subscribing to the calendar
+
+Click **Subscribe to Calendar** (desktop) to get a **Calendar Feed URL** for Google Calendar, Outlook or Apple Calendar; the dialog has instructions for each. Treat the URL as a secret: anyone holding it can read your pipeline events. **Regenerate URL** issues a new link and immediately stops the old one working, so you then need to resubscribe.
+
+## Removing an investor
+
+Open the investor, go to **Actions**, click **Remove from Pipeline** and confirm with **Remove**. **Delete** in the three-dot menu in **List** view does the same thing but without a confirmation step: the investor goes as soon as you click it. Either way, removal takes their notes, activity history and reminders with them. A toast offers **Undo** for about seven seconds; after that the record is gone.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Pipeline Value or Terms Value shows zero">
+    Those cards only count investors that have a ticket size saved. Switch to **List**, look for the orange **Add ticket size** prompt in the **Ticket Size** column, and fill it in for each **Hot** and **Term Sheet** investor.
+  </Accordion>
+  <Accordion title="The Raised figure on my cap table is zero or wrong">
+    Three things all have to be true: the round's status is **Active**, the investors are at **Hot**, **Term Sheet** or **Closed Won**, and each of them has a ticket size. Investors at **Cold** or **Warm** are never counted, and neither are shareholder rows on the cap table. If someone is already at **Closed Won** without a ticket size, move them back to **Hot** or **Term Sheet** with **Move to Stage**, enter the amount when prompted, then move them to **Closed Won** again. For a round you've already finished, set it to **Closed** and type the final total into the round instead. See [cap table](/founder-portal/cap-table).
+  </Accordion>
+  <Accordion title="An investor I added as a shareholder isn't in my pipeline">
+    That's expected. There is no name matching between the two, in either direction. Add them with **Add Investor** here, and add them as a shareholder on the [cap table](/founder-portal/cap-table) page, separately.
+  </Accordion>
+  <Accordion title="It says Already in Pipeline but I can't see them">
+    They exist under a slightly different name, or at a stage you aren't looking at. Switch to **List**, set the filter to **All Stages** and search their name or firm. Closed deals are hidden on the board until you expand **Closed Deals**.
+  </Accordion>
+  <Accordion title="An investor's status says No activity">
+    The badge is calculated from logged interactions, not from stage changes or notes. Click **Log** and record the contact you've already had.
+  </Accordion>
+  <Accordion title="I can't drag cards on my phone">
+    The **Kanban** board is desktop only. On mobile you get **List** instead; change stage from the three-dot menu on the row.
+  </Accordion>
+  <Accordion title="I deleted an investor by mistake">
+    Click **Undo** on the toast that appears at the bottom of the screen. It restores the investor along with their activity and reminders, but only for about seven seconds. After that, re-add them manually.
+  </Accordion>
+  <Accordion title="My reminders aren't appearing in Google or Outlook">
+    Subscribed calendars refresh on their host's schedule, and Google Calendar can take several hours. Check the feed URL was pasted in full, and note that clicking **Regenerate URL** invalidates any subscription created with the previous link.
+  </Accordion>
+  <Accordion title="I see a locked Investor CRM card instead of the board">
+    The pipeline is a paid feature. The card names the plan you need and **View Pricing Plans** takes you to [billing](/founder-portal/billing) to upgrade.
+  </Accordion>
+</AccordionGroup>

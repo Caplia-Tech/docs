@@ -1,58 +1,142 @@
 ---
 title: "Billing and subscriptions"
-description: "Choose a plan, manage payments and understand what happens between raises"
+description: "Find your plan, see what each one unlocks, subscribe, change or cancel, and understand trials and programme licences"
 icon: "credit-card"
 ---
 
-Your subscription controls which parts of Caplia are unlocked for your company. Billing is not in the left sidebar: click your user avatar in the top-right corner, then choose **Billing** (or go straight to `/billing`). Only company admins can open this page, so if you see a message asking you to contact your company admin, they hold the billing keys for your team.
+Your subscription decides which parts of Caplia are unlocked for your company. One subscription covers everyone in that company: if the admin subscribes, every team member gets the same access.
+
+Billing is not in the left sidebar. Click your name in the top-right corner, then choose **Billing**, or go straight to `/billing`. On a phone, open the **More** tab and choose **Billing** under **Other**.
+
+<Note>
+Only company admins can open the Billing page. If you are a member rather than an admin, the page shows a notice asking you to contact your company admin. The badge under your name in the account menu tells you which you are.
+</Note>
+
+## Which plan am I on
+
+- The sidebar footer, under your name, shows **Free**, **Prepare**, **Raise**, **Enterprise** or **Trial**. The standard signup trial shows **Trial**. A trial or licence granted at a named tier shows that tier with `(Trial)` after it, for example `Raise (Trial)`.
+- On the Billing page, a paid plan appears in a **Current Subscription** card with the plan name, price, billing period and renewal date.
+- A trial or a programme licence appears instead as a **Free Trial Active** banner with the days remaining, and the **Caplia Raise** card carries a **Trial Active** badge.
+
+Your current plan shows **Current Plan** on its card instead of a subscribe button. **Caplia Core** always shows **Included with every account**.
 
 ## The plans
 
-| Plan | Best for |
-| --- | --- |
-| **Caplia Core** | Keeping your profile, Passport, deck, data room and cap table organised between raises. Free, and included with every account. |
-| **Caplia Prepare** | Organising your raise: rescoring, readiness insights, unlimited Iris and cap table tools. |
-| **Caplia Raise** | Actively fundraising: unlimited Passport sharing, secure data room sharing, engagement analytics, investor CRM and messaging. |
-| **Caplia Enterprise** | Structured or high-value fundraising processes, with a dedicated account specialist and bespoke setup. |
+| Plan | Best for | Headline inclusions |
+| --- | --- | --- |
+| **Caplia Core** | Between raises. Free with every account | Passport and profile stay live, replace your deck, 10 documents in the data room, cap table, view your Caplia Readiness Index (CRI), Iris preview |
+| **Caplia Prepare** | Getting ready to raise | Core, plus rescoring, unlimited Iris including WhatsApp, CRI insights and guidance, investor update builder, in-app support. Data room storage stays at 2GB and the 10-document limit still applies |
+| **Caplia Raise** | Actively fundraising | Prepare, plus unlimited Passport sharing, NDA-protected sharing, engagement analytics, investor permission controls, two-way messaging, the Caplia investor database, investor CRM and [deal pipeline](/founder-portal/pipeline) tracking, Iris pitch coaching, Caplia Tap NFC cards, psychometric founder signals, 3 users |
+| **Caplia Enterprise** | A structured or high-value raise | Raise, plus a dedicated account specialist, bespoke data room configuration, a custom shareable landing page, matched investor discovery, direct support from Caplia venture partners, priority support |
 
-Prices for **Caplia Prepare** and **Caplia Raise** appear on each plan card in your local currency, with a **Monthly** or **Annual** toggle above the cards (annual billing is discounted). **Caplia Enterprise** is priced individually: click **Contact Sales** to talk to us.
+Every card lists what it includes: **Caplia Core** and **Caplia Prepare** under **What's Included:**, **Caplia Raise** under **Everything in Prepare, plus** and **Caplia Enterprise** under **Everything in Raise, plus**. Those lists are the live reference if this page and the app ever disagree.
 
-## Your free trial
+### Limits by plan
 
-New accounts start with a trial that unlocks the platform so you can try everything before paying. While it runs, the Billing page shows a **Free Trial Active** banner with the number of days remaining, and the **Caplia Raise** card carries a **Trial Active** badge. When the trial ends you drop back to **Caplia Core** automatically: nothing is deleted, but paid features lock until you subscribe.
+| Limit | Core | Prepare | Trial | Raise | Enterprise |
+| --- | --- | --- | --- | --- | --- |
+| Iris messages per day | 5 | Unlimited | Unlimited | Unlimited | Unlimited |
+| Data room storage | 2GB | 2GB | 2GB | 2GB | 10GB |
+| Documents in the data room | 10 | 10 | Unlimited | Unlimited | Unlimited |
+| Team members | 1 | 1 | 1 | 3 | Unlimited |
+| Psychometric test invites | 0 | 2 | 2 | Unlimited | Unlimited |
 
-## Upgrading
+On **Caplia Core** you can still see your existing [CRI](/founder-portal/readiness-index), but generating a new one needs **Caplia Prepare**. Passport sharing with investors and secure data room sharing sit on **Caplia Raise**, as does inviting [team members](/founder-portal/team). Passports you have already shared stay viewable on every plan, including Core.
+
+<Note>
+Plan contents and limits are configurable, so Caplia can adjust them without shipping a new app version. Treat the plan cards on `/billing` and the usage meters in the app as the live numbers for your account.
+</Note>
+
+## Prices and currency
+
+Prices are shown in your local currency, chosen by region: pounds in the UK, euros in Europe and dollars everywhere else. Checkout charges in that same currency. If you have paid Caplia before, your customer record may keep the currency from your first purchase.
+
+| Plan | Monthly | Annual, per month |
+| --- | --- | --- |
+| **Caplia Prepare** | £15 / $19 / €17 | £11 / $15 / €13 |
+| **Caplia Raise** | £59 / $79 / €69 | £44 / $59 / €49 |
+
+The **Monthly** and **Annual** toggle sits above the plan cards, with a **Save 25%** badge on the annual option. Annual prices are shown as the per-month equivalent and billed as one payment for the year. **Caplia Enterprise** is priced individually: its card has a **Contact Sales** button that takes you to **Help & Support**.
+
+## Subscribing or upgrading
 
 <Steps>
   <Step title="Open Billing">
-    Click your avatar in the top-right corner and choose **Billing**.
+    Click your name in the top-right corner and choose **Billing**. During a trial there is also a **See Plans** button in the top bar.
   </Step>
   <Step title="Pick monthly or annual">
-    Use the **Monthly** / **Annual** toggle to compare pricing for each billing period.
+    Use the **Monthly** and **Annual** toggle. If the toggle is missing, annual prices are not configured for your environment and monthly is the only option.
   </Step>
   <Step title="Choose a plan">
-    Click **Onboard Now** on the plan you want. A secure checkout opens where you enter your payment details.
+    Click **Onboard Now** on the plan you want. The button reads **Processing...** for a moment, then a secure Stripe checkout opens in a dialog inside Caplia. If you have a discount or promotion code, enter it there before paying.
   </Step>
   <Step title="Confirm">
-    Once payment completes, your new plan activates straight away and the page shows it under **Current Subscription**.
+    After payment you are returned to the Billing page, a confirmation appears, and your new plan shows in the **Current Subscription** card.
   </Step>
 </Steps>
 
-If you already have a paid plan and choose a different one, the change applies to your existing subscription without a fresh checkout.
+If you already have an active paid subscription and click **Onboard Now** on a different plan, no new checkout opens. Your existing subscription is switched to the new plan there and then, and Stripe charges or credits the difference pro rata.
 
-## Managing your subscription
+## Changing or cancelling
 
-When you have an active paid plan, the **Current Subscription** card shows your plan name, price, billing period and renewal date. Click **Manage Subscription** to open a secure billing portal where you can:
+With a paid plan, click **Manage Subscription** on the **Current Subscription** card. That opens the Stripe billing portal, where you can:
 
-- Update your card or payment details
-- Switch plans or change your billing period
-- View invoices and payment history
-- Cancel your subscription
+- update your card or payment details
+- switch plan or billing period
+- see invoices and payment history
+- cancel your subscription
 
-Downgrades and cancellations take effect through this portal, so you keep access until the end of the period you have paid for.
+A cancellation runs to the end of the period you have already paid for, so access does not stop the moment you cancel. A failed renewal payment does not cut you off immediately either: the card is retried while you keep working, so update your details in the portal as soon as you notice.
+
+## Your free trial
+
+New accounts start with a trial, granted once per person for life. Creating a second company or a new version of your Passport does not start another one. A standard signup trial sits on its own trial tier: it unlocks everything except live investor sharing, which stays on **Caplia Raise**.
+
+While it runs, the Billing page shows the **Free Trial Active** banner with the days remaining, and the top bar shows the same countdown next to the logo. Caplia tells you the length when you finish onboarding: a standard signup gets a 3-day trial, and a founder who joins by accepting an investor's invitation gets 6 months at the **Caplia Raise** level on the company they share.
+
+When the trial ends you drop to **Caplia Core** automatically. Nothing is deleted.
+
+## Programme and accelerator licences
+
+If your accelerator or programme funds your Caplia licence, your plan arrives as an entitlement rather than a card payment. See [Link your Passport](/founder-portal/link-your-passport) for how to redeem a programme code and what the programme can then see.
+
+Expect two differences on the Billing page. Your access appears in the **Free Trial Active** banner with the days remaining rather than in a **Current Subscription** card, because it is a granted licence and not a Stripe subscription. And there is no **Manage Subscription** button, because there is no payment for you to manage. To keep the higher plan after the licence expires, subscribe normally with **Onboard Now**.
+
+Access follows you rather than a single company: if you belong to more than one company or Passport version, the highest active plan across them applies.
 
 ## When a plan lapses
 
-If your subscription ends, your account returns to **Caplia Core**. Your Caplia Passport and company profile stay live, previously shared Passports remain viewable by investors, and your data room and cap table stay intact. Paid features show a locked card instead: it names the feature, badges the plan that includes it, and offers a **View Pricing Plans** button that brings you back to Billing. Resubscribe at any time to pick up exactly where you left off.
+Your account returns to **Caplia Core**. Your Caplia Passport and company profile stay live, Passports you have already shared remain viewable, and your [data room](/founder-portal/data-room) and [cap table](/founder-portal/cap-table) stay intact.
 
-Questions about which plan fits your raise? See [Getting started](/founder-portal/getting-started), or ask [Iris](/founder-portal/iris) once you're signed in.
+Locked features show a card naming the feature, a badge for the plan that includes it, and a **View Pricing Plans** button back to Billing. Resubscribing restores access immediately.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I see a message saying only company admins can access billing settings">
+    You are signed in as a member, not an admin, of this company. Ask whoever set the company up to open Billing. Your role is shown as a badge under your name in the account menu in the top-right corner.
+  </Accordion>
+  <Accordion title="I paid but my plan has not changed">
+    Reopen `/billing`. The page re-checks your subscription with Stripe every time it loads, which is the fix for a plan that looks out of date. If it is still wrong a couple of minutes later, contact support through **Help & Support** with your payment confirmation email to hand.
+  </Accordion>
+  <Accordion title="I get a message saying the checkout could not be started">
+    Refresh the page and try again. The same message appears if you click **Onboard Now** on the plan you are already subscribed to, in which case there is nothing to buy.
+  </Accordion>
+  <Accordion title="I click a plan and get a message saying it isn't available right now">
+    The price for that plan and billing period is not configured for your account's environment. The message appears as a notification after you click **Onboard Now**, not as text on the card. Try the other billing period, wait a few minutes, or contact support.
+  </Accordion>
+  <Accordion title="There is no Annual option">
+    The **Monthly** and **Annual** toggle only appears when annual prices exist for both paid plans. When it is absent, monthly billing is used.
+  </Accordion>
+  <Accordion title="Manage Subscription does not open anything">
+    That button needs a payment record. If your access came from a trial or a funded programme licence, there is no subscription to manage. If you paid using a different email address than the one you sign in with, contact support so the two can be linked.
+  </Accordion>
+  <Accordion title="Iris says I have used my free messages for today">
+    **Caplia Core** includes 5 Iris messages a day. The count resets the next day, or upgrade for unlimited messages. See [Iris](/founder-portal/iris).
+  </Accordion>
+  <Accordion title="A teammate cannot use a feature I can">
+    Check two things: your plan's team member limit in the table above, and their role. Admin-only actions such as billing, cap table edits and document deletion are not available to members. See [team](/founder-portal/team).
+  </Accordion>
+</AccordionGroup>
+
+Still unsure which plan fits your raise? Open **Help & Support** from the account menu, or ask [Iris](/founder-portal/iris) from anywhere in the app.

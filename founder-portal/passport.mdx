@@ -1,31 +1,147 @@
 ---
 title: "Your Passport & Score"
-description: "The investor-ready profile at the heart of Caplia"
+description: "Fill in, preview, share and track the investor-facing profile at the heart of Caplia"
 icon: "id-card"
 ---
 
-Your **Caplia Passport** is a single, verified page investors use to evaluate you: company overview, team, traction, deck, key metrics, fundraising round, and your **Caplia Score**.
+Your Caplia Passport is the investor-facing profile for your company: pitch deck, company overview, team, market, traction, fundraising round, elevator pitch video, key metrics, and the documents you have chosen to share.
 
-## The Caplia Score
+Open it from **Caplia Passport** in the left sidebar, at `/dashboard/investor-preview`. Everything on the page is edited in place, so there is no save button. A field is not saved while you type: it is written when you leave it. Click outside the field, or press Enter (Ctrl and Enter, or Cmd and Enter, in a multi-line box). Press Escape instead and the edit is thrown away. While an Overview change is being written, a saving indicator appears in the top right of the header.
 
-Your score (0–100) is built from an AI assessment of your materials against a structured rubric: team, market, product, traction, and financial readiness. It updates when you re-upload a deck or materially change your Passport.
+## Who can see your passport
 
-- See the full breakdown in **Score Hub**, including what's holding the score back.
-- Scores at or above the verification threshold earn a **Verified** badge on your Passport.
+Your passport is not public, and there is no publish switch. An investor sees it only when you give them access, in one of three ways:
+
+- a share link you create and send;
+- an access invitation to a named investor;
+- an access request from an investor that you approve.
+
+A share link grants passport access only: pitch deck, overview, team and key metrics. It does *not* open your data room. Investors who want the rest of your files request data room access separately, and you approve or decline each request.
+
+All three routes are managed in one place: click **Share** in the top bar, or **Sharing** in the menu under your avatar, to reach `/account/sharing`. That page is covered in [sharing and access](/founder-portal/sharing-access).
+
+## The four tabs
+
+| Tab | What it holds |
+|---|---|
+| **Overview** | Pitch deck, company identity, key information, fundraising round, tax incentive schemes, product, market, traction, team, primary contact |
+| **Elevator Pitch** | Your short video pitch |
+| **Key Metrics** | Revenue, MRR, margins, burn, runway, headcount and any metrics you add |
+| **Data Room** | Read-only list of the documents you have marked as shared with investors |
+
+You can deep-link to a tab by adding `?tab=elevator-pitch`, `?tab=key-metrics` or `?tab=dataroom` to the passport URL. On narrow screens the middle two tabs are shortened to Pitch and Metrics.
+
+## Filling in the Overview tab
+
+Click any field to edit it in place. Fields that are still empty are tinted amber so you can see at a glance what an investor would find missing.
+
+- **Pitch Deck** shows the current deck held in your [data room](/founder-portal/data-room). You cannot upload a deck here.
+- **Company Identity** holds your company name, website and logo. Click the logo square to upload one: it must be an image file under 2MB.
+- **Key Information** holds **Company Description** (capped at 300 characters, with a live counter), **Stage**, **Industry**, **Revenue Status** and **Location**.
+- **Fundraising** shows **Target Raise**, **Valuation** and **Fundraise Progress** for your active round, each with its own **Show to investors** switch so you can hide a figure without deleting it. With no active round, the card links you to the [cap table](/founder-portal/cap-table) to create one.
+- **Tax Incentive Schemes** is a tick list of the investor tax reliefs your company qualifies for: SEIS and EIS in the UK, QSBS and Opportunity Zone in the US, and equivalents for France, Ireland, Germany, Spain, Italy and Belgium. Tick every scheme that applies.
+- **Product** takes free text for problem, solution, competitive advantage and go-to-market, plus a **Business Model** picker.
+- **Market** takes free text for **Market Description** and **Primary Competitors**, plus **TAM**, **SAM** and **SOM** as currency amounts.
+- **Traction & Roadmap** takes free text, plus individual bullet highlights for traction and roadmap.
+- **Additional Information** is optional diversity data, and only appears on your shared passport once filled in.
+- **Team** lists founders, advisors and key hires; **Add Team Member** adds a blank card.
+- **Primary Contact** is the single person investors should approach, separate from the team list.
+
+<Note>
+  The raised figure inside **Fundraise Progress** is not typed in here. For an active round it is calculated from the ticket sizes of investors sitting at the hot, term sheet or closed won stages of your [deal pipeline](/founder-portal/pipeline). Adding shareholders on the Cap Table page does not change it.
+</Note>
 
 <Tip>
-  The fastest score improvements usually come from filling *missing* signals (e.g. no financial model uploaded) rather than polishing existing ones.
+  Once you edit any **Primary Contact** field by hand, the whole card is marked as founder-edited and the deck extractor stops overwriting it. Correcting a badly extracted name also means a later deck upload will not fill in a phone number or LinkedIn URL you left blank, so complete the card in one go.
 </Tip>
 
-## Editing your Passport
+## Elevator pitch video
 
-Use **Investor Preview** to edit your Passport in place: click any field to change it. Two constraints to know:
+On the **Elevator Pitch** tab, click **Add Video**. **Upload File** takes an MP4, MOV or WebM file up to 100MB, chosen with **Select Video File**. **Record Video** captures from your webcam and stops at 90 seconds.
 
-- **Company description** is limited to 300 characters (with a live counter).
-- Deck-derived fields refresh when you upload a new deck version, so edit the deck for anything structural.
+Keep the video to 90 seconds or less. That ceiling applies to both routes, not just recording: a video longer than 90 seconds carries a red *Video exceeds 90 seconds* badge once it is live, and anything over 60 seconds picks up a milder *Video is longer than 60 seconds* note. A separate warning appears above two minutes. A long video still uploads and still plays for investors, but it is flagged every time you open the tab.
 
-## What investors see
+To change a video you already have, use **Replace** to upload or record a new one, or **Remove** to delete it. **Download** gets you a copy of the current file.
 
-Investors view your Passport through the Venture Portal or a share link. They see what you've enabled, profile-only or full data room, and every view is tracked in your engagement analytics.
+## Key metrics
+
+The **Key Metrics** tab is a set of cards: **Revenue by Calendar Year**, **Monthly Recurring Revenue (MRR)**, **Gross Margin**, **Net Profit Margin**, **Monthly Cash Burn**, **Runway**, **Employee Metrics** and **Additional Metrics** for anything else you track. Set the currency once at the top and every card follows it.
+
+Dating a metric in a future month labels it as a forecast for investors automatically, but only on **Monthly Recurring Revenue (MRR)**, **Gross Margin**, **Net Profit Margin** and metrics you add yourself. **Monthly Cash Burn**, **Runway** and **Employee Metrics** carry a date but never a forecast label.
+
+## Data Room tab
+
+This tab is read-only and lists only the documents you have marked as shared, so it is the quickest way to check what an investor with data room access would find. Someone who arrived through a share link sees none of it until you grant them data room access separately. **Key Docs** tracks the three documents investors look for first, pitch deck, financial model and cap table, and counts them out of three. Use **Manage in Data Room** to change anything.
+
+## Check your passport before you send it
+
+<Steps>
+  <Step title="Open the preview">
+    On the passport page, click **Open Preview** in the **Investor Portal Preview** card. A new tab opens your passport rendered exactly as the investor portal shows it.
+  </Step>
+  <Step title="Test the real link">
+    The preview URL carries a token tied to your account that expires five minutes after it is issued, so it is not the link you send. To prove a share link works, paste that link into a private or incognito window and clear whatever password, name or email gate you set on it.
+  </Step>
+</Steps>
+
+## Sharing your passport
+
+Creating share links needs a plan that includes Caplia Passport Sharing. On plans without it, the **Share Passport** button shows a padlock and takes you to the sharing page instead.
+
+<Steps>
+  <Step title="Start a link">
+    Click **Share Passport** on the passport page. **Share** in the top bar does not open the dialog: it takes you to the sharing page, where **Create Share Link** opens the same one.
+  </Step>
+  <Step title="Set the gates">
+    In the **Create Share Link** dialog, give the link a name under **Link Name (optional)** so you can tell viewers apart later. **Require Password**, **Require Email** and **Require Name** are all on by default, as is **Set Expiry**, which defaults to one month ahead. Turn off anything you do not want.
+
+    While **Require Password** is on you must type a password into **Password**. Until you do, **Create Link** stays disabled and clicking it does nothing.
+  </Step>
+  <Step title="Create and send">
+    Click **Create Link**. The link is copied to your clipboard straight away, ready to paste into an email or message.
+  </Step>
+</Steps>
+
+Creating a share link also marks your current pitch deck as shared, so a new link is never sent with the deck hidden. Anyone who opens the link is granted passport access, which you can review or revoke later from the **Access Control** tab. Deactivating a link stops new visitors, but investors who already opened it keep their passport access until you revoke it individually.
+
+## Passport Analytics
+
+**Passport Analytics** in the left sidebar (`/dashboard/passport-analytics`) shows what happened after you sent the link: visits, unique visitors, average time spent, how many watched the video, and a ranked list of visitors with the sections that held their attention. It needs the same plan as sharing, and openings identified as bots are filtered out of the counts.
+
+## Your Caplia Readiness Index
+
+Your Caplia Readiness Index (CRI) is scored from the same materials your passport is built on, and is displayed on a 0 to 1000 scale in Score Hub. A score of 700 or more earns Caplia Verified. The full breakdown, what triggers a rescore and how to move the number lives on the [readiness index](/founder-portal/readiness-index) page.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="My changes are not saving">
+    Each field is saved when you leave it, not while you type. Click outside the field, or press Enter (Ctrl and Enter, or Cmd and Enter, in a multi-line box), then watch the saving indicator in the top right of the header: if it appears and then clears, the change is stored. Escape cancels an edit and puts the old value back, so anything you abandoned with Escape, or by closing the tab mid-edit, was never saved. If an error notification appears instead, the write failed: refresh the page, check whether your edit survived, and try once more. The **Key Metrics** tab shows its own saving indicator next to the currency selector rather than using the page header.
+  </Accordion>
+  <Accordion title="My company description keeps getting rejected">
+    **Company Description** is capped at 300 characters and the editor tells you the current count. Shorten the text and save again. Longer descriptions written before the cap are left alone, but you cannot save a new one over 300 characters.
+  </Accordion>
+  <Accordion title="My pitch deck is not showing on the Overview tab">
+    The passport shows the deck held in your data room, not a file uploaded on this page. Upload it in the [data room](/founder-portal/data-room), make sure it is filed as the pitch deck and is the current version, then reload the passport.
+  </Accordion>
+  <Accordion title="The Share Passport button has a padlock">
+    Your plan does not include Caplia Passport Sharing. Clicking the padlocked button takes you to the sharing page, and [billing](/founder-portal/billing) explains how to change plan. Passports you shared on a previous plan stay hosted and viewable.
+  </Accordion>
+  <Accordion title="An investor says they cannot open my data room">
+    A share link only grants passport access. The investor needs to request data room access, and you approve it under the **Requests** tab on the sharing page. See [sharing and access](/founder-portal/sharing-access).
+  </Accordion>
+  <Accordion title="Is my passport live? The link does not seem to work">
+    Open the **Share Links** tab on the sharing page and find the row for your link. Use **Copy Link** to take the current URL, then paste it into a private browsing window rather than the tab you are signed in to. If **Copy Link** is greyed out, the link is either deactivated or past its expiry date: switch it back on, or create a fresh one. If you have forgotten the password, open the row menu and use **Show Password** or **Copy Password** rather than guessing. **Open Preview** proves your content is fine, but it never proves a share link is reachable, because the preview URL only works for you.
+  </Accordion>
+  <Accordion title="A document I uploaded is missing from the Data Room tab">
+    That tab lists only documents marked as shared with investors. Open the [data room](/founder-portal/data-room), switch the document's investor visibility on, and it appears here.
+  </Accordion>
+  <Accordion title="My fundraising progress shows the wrong amount raised">
+    For an active round the figure comes from your deal pipeline, not from the passport and not from shareholder rows. Check that each committed investor has a ticket size and sits at the hot, term sheet or closed won stage. The [cap table](/founder-portal/cap-table) page explains how the two connect.
+  </Accordion>
+  <Accordion title="Nothing is showing in Passport Analytics">
+    Analytics only populate once a real visitor opens a shared link, and openings identified as bots are filtered out. If you have just sent your first link, wait for someone to open it before expecting numbers.
+  </Accordion>
+</AccordionGroup>
 
 {/* SCREENSHOT: Passport as seen from the investor side */}

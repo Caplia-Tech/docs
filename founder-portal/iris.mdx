@@ -1,27 +1,153 @@
 ---
-title: "Iris: your AI copilot"
-description: "Ask questions, improve materials, and prep for investors"
+title: "Iris, your AI assistant"
+description: "What Iris can and cannot do, how chats and files work, and how to reach a human"
 icon: "sparkles"
 ---
 
-Iris is Caplia's AI assistant, available throughout the Founder Portal. She knows your company's materials: Passport, deck, and data room. She answers in that context.
+Iris is Caplia's AI assistant, built into the Founder Portal. She answers questions about your own company data and documents, searches the web, explains how Caplia works, and can hand you over to a human. She opens in a panel over whatever page you are on, so you never lose your place.
 
-## What founders use Iris for
+## Opening Iris
 
-- *Onboarding*: she runs your initial setup conversationally and keeps your basics up to date.
-- *Improving your materials*: "what's weak in my deck?", "rewrite my one-liner", "what's missing for a seed raise?"
-- *Investor prep*: practise answering the questions investors will actually ask based on your score gaps.
-- *Quick answers*: anything about your own data ("what did I put as CAC?") or how Caplia works.
+Iris is a panel, not a page. Open it from any of these:
 
-## Modes
+- the **Iris** button in the top bar, on desktop
+- the **Iris** tab in the bottom bar, on mobile
+- the **Ask Iris** button on a recommendation card in the **Improvement Roadmap** on your [Caplia Readiness Index](/founder-portal/readiness-index) page, which opens Iris with that recommendation already asked
+- any conversation under **Recent Chats** at the bottom of the left sidebar, on desktop
 
-| Mode | When to use |
+The panel header holds **Chat history**, **New chat**, minimise, expand and close controls. Press `Esc` or click outside the panel to close it. Closing does not end the conversation: the same chat reopens as you move between pages, for as long as that browser tab stays open.
+
+<Note>
+There is no separate Iris page in the portal. An old bookmark to one will land on the "page not found" screen. Use the top-bar button instead.
+</Note>
+
+## What Iris can and cannot do
+
+| Iris can | Iris cannot |
 | --- | --- |
-| **Instant** | Quick factual answers from your materials |
-| **Thinking** | Deeper questions that need web research or multi-document reasoning |
+| Answer from your company profile, score and documents | Change anything in your workspace for you |
+| Search the web for live information | Upload a document, edit your cap table, or add a pipeline investor |
+| Answer product questions about Caplia and link you to the right page | Update your account, team or billing settings |
+| Read files you attach to a message | See what you said in a different chat |
+| Return data as a table you can export | See another company's data, or your teammates' chats |
+| Pass you to a human support agent | Act on your behalf outside the chat |
+
+The buttons that appear under an Iris answer only ever act inside the chat. One takes you to a page, for example **Open Data Room**. One switches her between **Instant** and **Thinking** and runs your question again. One sends a suggested follow-up question for you. None of them change your data, and everything else is you clicking. If Iris says she has changed something in your account, treat it as a mistake and check the page yourself.
+
+Chats are scoped to the company selected in the company switcher and to you personally, so switching company starts a fresh chat and your teammates never see your conversations.
+
+## Chats do not share memory
+
+Every chat is separate. A new chat cannot see what you discussed in an earlier one, and Iris will not remember it unless you paste it in again. Keep one topic in one chat, and start a new chat when you change subject.
+
+Your past conversations are reachable two ways. In the panel, click **Chat history** in the header to slide the list out. This works on desktop and mobile. On desktop you can also use **Recent Chats** at the bottom of the left sidebar, clicking the heading to expand it. In either list:
+
+- click a conversation to reopen it exactly where you left off
+- use the search box to find one: it matches the chat title and the full text of the questions you asked, but not Iris's replies, so search for a phrase you typed rather than one she wrote
+- titles are generated automatically from your first message, so an untitled chat is simply a very new one
+- delete a chat with the bin icon that appears on hover, then confirm. Deletion is permanent
+
+## Instant and Thinking
+
+The panel has two modes, on the left above the conversation.
+
+| Mode | What it does |
+| --- | --- |
+| **Instant** | A fast, single-pass answer. Best for quick factual questions about your own data |
+| **Thinking** | The default. Iris plans the answer, runs research steps, then writes. Best for anything needing the web or several documents |
+
+In **Thinking** mode a step card appears while she works, listing each step as it runs. When she finishes it collapses to a one-line summary of what she searched, such as web sources, your documents, help articles or the investor directory.
+
+A second toggle on the right sets answer length: **Concise** (the default), **Balanced** or **Detailed**. It applies from your next message onwards.
+
+## Attaching files
+
+<Steps>
+  <Step title="Open the attachment picker">
+    Click the attachment button to the left of the message box. You can also drag files onto the message box at the bottom of the panel, which highlights as you drag over it, or paste an image straight into it. Dropping a file on the conversation above the message box does nothing.
+  </Step>
+  <Step title="Choose the files">
+    In the **Attach Documents** dialog, use **Upload New** and **Choose Files** to pick from your computer, or **From Data Room** to tick documents you have already stored in Caplia. The dialog title counts what you have selected. Click **Attach** at the bottom to add them to your message: nothing reaches the chat until you do, and **Attach** stays greyed out until at least one file is selected.
+  </Step>
+  <Step title="Wait for the file to be read">
+    Each uploaded document shows **Embedding…** while Iris reads it, then **Ready**. The send button stays disabled until every attachment is ready. If one fails, click **Retry** on it.
+  </Step>
+  <Step title="Send your question">
+    Type the question and send. The attachment goes with that one message, and the attachment box is empty again afterwards.
+  </Step>
+</Steps>
+
+Limits and formats:
+
+- Two files per message, maximum.
+- An uploaded document must be 10MB or smaller. Images are exempt from that cap.
+- Accepted types: PDF, Word, plain text, Markdown, Excel, CSV, PowerPoint, JSON, XML, HTML, CSS, JS, PY, and JPG, PNG, GIF or WebP images.
+- Documents picked under **From Data Room** are not subject to the 10MB cap, because they are already stored and indexed. That is the route to use for a large deck.
+
+If a file is too big, Iris says so in the conversation and offers an **Open Data Room** button. Put the file in your [data room](/founder-portal/data-room) and attach it from there instead.
+
+## Exporting a table
+
+When an answer contains a table, its header shows the row count with a **Copy** button and a **CSV** button. **CSV** downloads the table as a file you can open in Excel or Sheets.
+
+## Getting a human
+
+<Steps>
+  <Step title="Ask for support">
+    Click **Caplia Support** under the message box. A **Product Support** banner appears at the top of the chat. **Exit** on that banner returns you to a normal conversation.
+  </Step>
+  <Step title="Let Iris try first">
+    Iris answers product questions herself and passes the conversation on when she cannot resolve it. You will see a banner saying the support team has been notified.
+  </Step>
+  <Step title="Wait for a reply">
+    When an agent joins, their name appears in the banner and their replies arrive in the same chat. This is not instant. Carry on using Iris, or close the panel. On desktop a count badge on the **Iris** button tells you when support has replied. On mobile there is no badge, so tap the **Iris** tab to check. Either way, opening Iris takes you straight back to the conversation the reply landed in.
+  </Step>
+</Steps>
+
+While an agent is with you, a **Screenshot** button in the banner captures your current page and sends it to them, which is usually faster than describing a problem. When the agent closes the conversation you will see **Support session resolved**.
 
 ## Iris on WhatsApp
 
-Link your WhatsApp number under **Account** and Iris can answer on the go, including sending your own documents to you ("send me my pitch deck").
+Iris can answer on WhatsApp, so you can ask questions without logging in. Open the account menu in the top bar and choose **WhatsApp**, or open **Founder Tools** and choose **WhatsApp Iris**. Both go to `/account/whatsapp`.
+
+On that page, use **Link via QR** to scan a code, or **Add Manually** to type a number including its country code, for example +44 for the UK. Adding a number manually asks you to tick a confirmation first: anyone with access to a linked number can query all your company data through Iris, including financials, documents and investor information. **Add Number** stays greyed out until you tick it, so only link numbers you trust. Once linked, WhatsApp gives you Iris in chat, alerts when investors view your profile or data room, and daily tips.
+
+## How many messages you get
+
+On the free base plan Iris is a preview: 5 messages a day. When you use them up, Iris replies with a message and a link to the plans page rather than an error, and the allowance returns the next day. Paid plans have no practical daily cap. To change plan, click your name in the top bar, then **Billing**. See [billing and plans](/founder-portal/billing) for what each plan includes.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Iris has forgotten what we discussed">
+    You are almost certainly in a different chat. Chats do not share memory, so a new conversation starts with no knowledge of an old one. Click **Chat history** in the panel header, search for a phrase you typed, and reopen that conversation instead of starting a new one. On desktop the same list is under **Recent Chats** in the sidebar.
+  </Accordion>
+
+  <Accordion title="The send button is greyed out">
+    An attachment is still being read. Wait for every chip to change from **Embedding…** to **Ready**. If a chip shows an error instead, click **Retry** on it, or remove it and send without it.
+  </Accordion>
+
+  <Accordion title="My file will not attach">
+    Three common causes. The file is over 10MB, in which case Iris says so in the chat and offers **Open Data Room**: upload it there and attach it with **From Data Room**, which has no size cap. The file type is not supported, in which case you will see an "Invalid file type" message. Or you already have two files attached, which is the per-message maximum.
+  </Accordion>
+
+  <Accordion title="Iris did not use the document I meant">
+    Iris searches your documents, but she chooses what to search. To force a specific file, attach it: open the attachment picker, switch to **From Data Room**, tick that document, and click **Attach**. An attachment is sent with the one message you attach it to and is not carried forward, so if a follow-up answer ignores the document, attach it again on that message.
+  </Accordion>
+
+  <Accordion title="I asked for a human and nobody has replied">
+    Escalations are answered by people, not instantly. The banner tells you whether the team has been notified or an agent has joined. You can close the panel and carry on working. On desktop a count badge appears on the **Iris** button when a reply lands; on mobile there is no badge, so tap the **Iris** tab to check. Either way, opening Iris reopens the conversation the reply is in. Do not start a new chat to chase it, because the reply arrives in the original one.
+  </Accordion>
+
+  <Accordion title="Iris says I have used my free messages">
+    You are on the free base plan, which includes 5 Iris messages a day. The allowance resets the next day. To remove the limit, click your name in the top bar, then **Billing**, and upgrade.
+  </Accordion>
+
+  <Accordion title="Iris gave me a wrong or outdated answer">
+    Answers are AI-generated and can be wrong, which is why the panel carries that warning under the message box. Check anything that matters against the page itself: your score on the readiness page, your figures on the **Cap Table** page, your files in the **Data Room**. If Iris describes a Caplia feature that you cannot find, ask for a human with **Caplia Support** rather than acting on the answer.
+  </Accordion>
+</AccordionGroup>
+
+More fixes for the rest of the portal are on the [troubleshooting](/founder-portal/troubleshooting) page.
 
 {/* VIDEO: Connor: Iris highlights reel */}

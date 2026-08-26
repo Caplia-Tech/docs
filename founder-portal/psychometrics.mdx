@@ -1,52 +1,105 @@
 ---
 title: "Psychometric testing"
-description: "Invite your team to a Big Five personality assessment and review the results"
+description: "Run the Big Five assessment across your founding team, share the test links and read the results"
 icon: "brain"
 ---
 
-Psychometric testing gives every member of your founding team a personality profile across five key dimensions. Completed assessments strengthen your profile and help investors understand your leadership and team dynamics.
+Psychometric testing gives each member of your founding team a personality profile across five dimensions. You take the assessment yourself and invite other people by link, then read everyone's results together on one page.
 
 ## Where to find it
 
-Psychometric testing lives inside Founder Tools rather than the left sidebar. Click **Founder Tools** in the sidebar, then open the **Psychometric Testing** card. You can also go straight to `/dashboard/psychometrics`.
+In the left sidebar, expand **Founder Tools** and choose **Psychometrics**. You can also open the Founder Tools page and click the **Psychometric Testing** card, or go straight to `/dashboard/psychometrics`.
+
+Psychometric testing is included from the Caplia Prepare plan upwards. On Caplia Core, the free plan, the page shows a locked card with a **View Pricing Plans** button instead of the tool. See [billing and plans](/founder-portal/billing) for what each plan includes.
 
 ## The assessment at a glance
 
 | | |
 | --- | --- |
-| Length | 10 to 15 minutes |
-| Format | 50 validated questions |
-| Attempts | One only: the assessment cannot be retaken |
+| Test | IPIP-50 Big Five Factor Markers |
+| Length | 50 questions, roughly 10 to 15 minutes |
+| Answer scale | Five options, from **Very Inaccurate** to **Very Accurate** |
+| Attempts | One only. An assessment cannot be retaken |
+| Account needed | No. Invitees answer through a personal link without signing in |
 
 ## Taking your own assessment
 
-The banner at the top of the page invites you to complete your own profile. Click **Take Test** to start straight away: no invitation email needed. When you finish, your results appear alongside the rest of the team's.
+<Steps>
+  <Step title="Open the page">
+    Go to `/dashboard/psychometrics`. The banner at the top is titled **Complete Your Psychometric Assessment**.
+  </Step>
+  <Step title="Start the test">
+    Click **Take Test** in the banner. This opens your own assessment straight away, with no invitation email involved.
+  </Step>
+  <Step title="Answer all 50 questions">
+    Work through the questions in one sitting, then submit. Your results appear on the page alongside the rest of the team.
+  </Step>
+</Steps>
+
+Once you have finished, the **Take Test** button is replaced by a confirmation line in the banner. Your own assessment counts as one invite against your plan's allowance.
+
+<Note>
+The **Take Test** button only appears if your Caplia account is linked to an entry in your company's team list. If it is missing and you have not completed the assessment, invite yourself through the invite dialog described below and open the link you receive.
+</Note>
 
 ## Inviting your team
 
 <Steps>
   <Step title="Open the invite dialog">
-    Click **Invite Someone** in the Assessments section.
+    Click **Invite Someone** in the **Assessments** section. The dialog is titled **Invite to Psychometric Test**.
   </Step>
-  <Step title="Choose who to invite">
-    Pick a team member from the list, or invite someone new by entering their **Name**, **Email** and **Role (optional)**, then clicking **Invite to Test**. New invitees receive their test link by email.
+  <Step title="Pick an existing team member">
+    People already on your company's team list appear under **Team Members**. Click a row and the invite is created immediately. Only people who have not been invited yet are listed here.
   </Step>
-  <Step title="Share the link">
-    Each invited person gets a card with **Copy Link** and **WhatsApp** buttons, so you can nudge them through whichever channel works best. Invitees do not need a Caplia account to take the test.
+  <Step title="Or add someone new">
+    Fill in **Name**, **Email** and **Role (optional)**, then click **Invite to Test**. If you leave the role blank it is saved as Team Member.
   </Step>
 </Steps>
 
-Each card shows a status: **Pending** while the test is outstanding, **Completed** once it is done. A **Tests Completed** counter tracks progress across the team.
+The two routes behave differently, and the difference causes most of the confusion:
 
-## Invite limits
+- Picking someone from **Team Members** creates the invite but does not email anyone. You have to share the link yourself.
+- Adding someone new sends them an invitation email from `notifications.caplia.ai`, with a subject line of your company name followed by "Complete Your Psychometric Assessment", and also adds them to the **Team** list on your [Caplia Passport](/founder-portal/passport). Use this route only for people who are not on that list already, otherwise you end up with a duplicate team card.
 
-Invites are limited on some plans. Where a limit applies, a **Psychometric Test Invites** meter at the top of the page shows how many you have used. Your own assessment counts towards the limit too.
+The **Team Members** list is drawn from the **Team** card on your Caplia Passport at `/dashboard/investor-preview`. If someone is missing from the dialog, add them there first with **Add Team Member**. This list is separate from portal access: inviting a colleague to sign in to Caplia is a different flow, covered in [team management](/founder-portal/team).
 
-Once the limit is reached, the invite and sharing buttons are disabled. Click **Upgrade to Pro** to move to a plan with unlimited psychometric test invites.
+## Sharing a test link
+
+Every invited person gets a card in the **Assessments** section. While their status is **Pending**, the card carries two sharing buttons:
+
+- **Copy Link** puts their unique test URL on your clipboard, ready to paste into an email or a chat.
+- **WhatsApp** opens WhatsApp with a pre-written message containing the link. On desktop, if WhatsApp cannot be opened, the message is copied to your clipboard instead.
+
+Once that person submits, the sharing buttons come off their card and their results take that space instead. You cannot re-share a link from a completed card, and you do not need to: an assessment can only be taken once.
+
+Each link is personal to one participant, and test links do not expire. Anyone holding a link can complete that person's assessment, so treat it like a private invitation.
+
+## Inside the assessment
+
+Participants land on a welcome screen naming your company, with a short terms and privacy note, and start by clicking **Continue to Assessment**. Questions are shown one at a time under the heading **Big Five Personality Test**, with a progress bar and a question counter.
+
+- Press the number keys 1 to 5 to answer, which selects the option and moves on automatically.
+- Use the left and right arrow keys, or **Previous** and **Next**, to move between questions and change an earlier answer.
+- **Submit Test** only becomes available on the last question once all 50 have an answer.
+
+<Warning>
+Answers are only saved when the assessment is submitted. If a participant closes the tab part-way through, their progress is lost and they need to start again from the beginning of the link.
+</Warning>
+
+## Tracking progress
+
+A card appears in the **Assessments** section only once someone has been invited, and it shows one of two statuses:
+
+| Status | Meaning |
+| --- | --- |
+| **Pending** | Invited, but the assessment has not been submitted |
+| **Completed** | Submitted, and results are on the card |
+
+A **Tests Completed** counter above the cards shows how many of your invited participants have finished. Results load when the page opens, so refresh the page if someone tells you they have just finished.
 
 ## Understanding results
 
-When someone completes their assessment, their card shows **Big Five Traits** as percentage scores:
+A completed card shows **Big Five Traits** as percentage scores, where a higher percentage means more of that trait:
 
 | Trait | What it reflects |
 | --- | --- |
@@ -56,8 +109,44 @@ When someone completes their assessment, their card shows **Big Five Traits** as
 | **Agreeableness** | Cooperation, trust and warmth |
 | **Neuroticism** | Sensitivity to stress and negative emotion |
 
-Below the scores you may see an **Iris Summary**, a short written interpretation of the profile. For a deeper read, click **Analyse with Iris** to open [Iris](/founder-portal/iris) with the results pre-loaded: she will highlight strengths and watch-outs in the context of your company.
+Below the scores you may see an **Iris Summary**, a short written interpretation generated when the assessment was submitted. If the summary failed to generate, the rest of the results are still saved and shown.
+
+For a deeper read, click **Analyse with Iris**. This opens [Iris](/founder-portal/iris) with the scores pre-loaded and asks her for strengths and watch-outs in the context of your company.
+
+## Invite limits
+
+Invites are capped by plan. The current allowances are 2 on Prepare, 2 during a trial, and effectively unlimited on Raise and Enterprise. Your own assessment counts towards the cap, and every invite you create counts, including ones that have already been completed. Invites are not returned to your allowance.
+
+On the Prepare plan a **Psychometric Test Invites** meter at the top of the page shows the count as *used against your allowance*. When the allowance is gone, **Invite Someone**, **Copy Link** and **WhatsApp** are disabled and an **Upgrade to Pro** button appears in the meter, which takes you to `/billing`.
 
 ## Who can see results
 
-Results appear on this page for your company's team: anyone who signs in to your founder workspace can view them. People you invite by link only take the test through their personal link; they do not get access to your workspace or to anyone else's results.
+Results are stored against your company, and anyone signed in to your Caplia workspace can view them on this page. People you invite by link only ever see their own assessment: they do not get access to your workspace or to anyone else's results.
+
+The terms shown to every participant before they start state that their profile will be shared with your company and with investors you choose to share it with. Making psychometric founder signals visible to investors is listed as a Caplia Raise plan feature, so on Prepare treat the results as an internal view of your team.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The Take Test button is not showing for me">
+    Either you have already completed your assessment, in which case the banner shows a confirmation line instead, or your account is not linked to an entry in the team list. In the second case, open **Invite Someone**, enter your own name and email under the new person fields, click **Invite to Test** and use the link that arrives by email.
+  </Accordion>
+  <Accordion title="A team member is not in the invite dialog">
+    The **Team Members** list only shows people who are on your Caplia Passport team list and have not been invited yet. If they have already been invited, their card is in the **Assessments** section instead. If they are not on the team list at all, add them on the passport page with **Add Team Member**, or invite them as a new person from the dialog.
+  </Accordion>
+  <Accordion title="They did not receive the invitation email">
+    Only invites created through the new person fields send an email. Picking an existing team member creates the invite silently. Either way, open their card and use **Copy Link**, then send the link yourself. Ask them to check their spam folder for a message from `notifications.caplia.ai`.
+  </Accordion>
+  <Accordion title="The WhatsApp button did not open WhatsApp">
+    On desktop, if neither the WhatsApp app nor WhatsApp Web can be opened, the invitation message is copied to your clipboard automatically. Open WhatsApp yourself and paste it into a chat.
+  </Accordion>
+  <Accordion title="Someone says they finished but I cannot see results">
+    Refresh the page. Results are read when the page loads, so a session opened before they submitted still shows **Pending**. If the status stays pending after a refresh, they may have closed the tab before pressing **Submit Test**, which discards the answers. Send them their link again so they can retake it from the start.
+  </Accordion>
+  <Accordion title="Someone answered dishonestly or the profile looks wrong">
+    An assessment is one-time and cannot be retaken from the same link once it is submitted. Contact support through the portal to discuss resetting it rather than creating a second team entry for the same person.
+  </Accordion>
+  <Accordion title="The invite buttons are greyed out">
+    You have used your plan's psychometric invite allowance. The **Psychometric Test Invites** meter at the top of the page shows the count. Upgrade from `/billing` to lift the cap. Completed assessments still display normally while the cap is reached.
+  </Accordion>
+</AccordionGroup>
