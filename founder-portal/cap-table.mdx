@@ -43,6 +43,8 @@ Click **Add Round** and fill in the dialog. **Round Type** runs from **Bootstrap
 
 The rest of the dialog is **Currency** (GBP, USD or EUR, used to display every amount on the round), **Status** of **Active**, **Closed** or **Planned**, **Target Amount**, **Raised Amount**, **Valuation** and a **Round Start Date**.
 
+**Status** starts at **Active**, and while it is **Active** the dialog explains what that means underneath the field. If you pick a **Round Start Date** in the past before you have touched **Status** yourself, the status switches to **Closed** for you, on the assumption that the round is historic. Pick a status yourself and your choice is kept whatever date you then choose.
+
 <Note>
 Only one round can be **Active** at a time. If you add or edit a round and set it to **Active**, every other active round is automatically switched to **Closed**.
 </Note>
@@ -53,10 +55,10 @@ This is the single most common surprise on this page. The **Raised** column beha
 
 | Round status | Where Raised comes from |
 | --- | --- |
-| **Active** | Calculated from your **Deal Pipeline**: the total of the ticket sizes of every investor currently at the **Hot**, **Term Sheet** or **Closed Won** stage. Anything typed into **Raised Amount** is ignored while the round is active, and the field is locked when you edit the round. A small chart icon sits next to the figure to show it is auto-calculated |
+| **Active** | Calculated from your **Deal Pipeline**: the total of the ticket sizes of every investor currently at the **Hot**, **Term Sheet** or **Closed Won** stage. **Raised Amount** cannot be typed in while the status is **Active**: the field is locked in both the add and edit dialogs. A small chart icon sits next to the figure to show it is auto-calculated |
 | **Closed** or **Planned** | Exactly the amount you type into **Raised Amount** |
 
-The **Add Round** dialog does show a **Raised Amount** box even when **Status** is set to **Active**, and whatever you type into it is saved, but it is never displayed while the round is live. To make £180,000 appear on a live round:
+Whenever **Status** is set to **Active**, the **Raised Amount** box is disabled and labelled **(Auto-calculated from pipeline)**, in both the **Add Round** and **Edit Funding Round** dialogs. To make £180,000 appear on a live round:
 
 <Warning>
 The pipeline is a paid feature; the cap table is not. If your plan does not include it, opening [Deal Pipeline](/founder-portal/pipeline) shows an **Investor CRM** lock card with a **View Pricing Plans** button instead of the board, and an **Active** round's **Raised** figure can then never be filled in. Until you upgrade, record the round with a **Status** of **Closed** or **Planned** and type the amount into **Raised Amount** yourself. See [billing](/founder-portal/billing).
@@ -104,7 +106,7 @@ Deleting a shareholder or a funding round asks you to confirm, then offers an **
 
 <AccordionGroup>
   <Accordion title="My round shows no Raised amount while I am actively raising">
-    An **Active** round ignores anything typed into **Raised Amount** and reads the pipeline instead. If nothing qualifies, the **Raised** cell shows a dash rather than a zero. Work through the list: are the investors in [Deal Pipeline](/founder-portal/pipeline) at all, are they at **Hot**, **Term Sheet** or **Closed Won**, and does each one have a ticket size saved? The **Pipeline Breakdown** on the dashboard's **Fundraising Status** card shows how many investors are counted at each stage and what each stage contributes, so start by comparing those counts with what you expect. It does not show names: to find the specific investor, open [Deal Pipeline](/founder-portal/pipeline), switch to the list view, and look for anyone at **Hot** or **Term Sheet** still showing **Add ticket size**.
+    An **Active** round reads the pipeline rather than the **Raised Amount** field. If nothing qualifies, the **Raised** cell shows a dash rather than a zero. Work through the list: are the investors in [Deal Pipeline](/founder-portal/pipeline) at all, are they at **Hot**, **Term Sheet** or **Closed Won**, and does each one have a ticket size saved? The **Pipeline Breakdown** on the dashboard's **Fundraising Status** card shows how many investors are counted at each stage and what each stage contributes, so start by comparing those counts with what you expect. It does not show names: to find the specific investor, open [Deal Pipeline](/founder-portal/pipeline), switch to the list view, and look for anyone at **Hot** or **Term Sheet** still showing **Add ticket size**.
   </Accordion>
   <Accordion title="An investor is at Won but is not adding to the total">
     Moving an investor straight to **Won** does not prompt for a ticket size, and the ticket size editor in the investor's **Actions** tab only appears while they are at **Hot** or **Term Sheet**. Move them back to **Terms**, enter the amount in the **Investment Ticket Size** dialog, then move them to **Won** again.
@@ -122,7 +124,10 @@ Deleting a shareholder or a funding round asks you to confirm, then offers an **
     They never will be. Cap table shareholders and pipeline investors are separate records with no name matching between them. Add anyone you are still in conversation with to the pipeline yourself with **Add Investor**. Doing so is what lets their ticket size count towards an active round.
   </Accordion>
   <Accordion title="The Raised Amount field is greyed out">
-    Expected behaviour when you edit an **Active** round. Change **Status** to **Closed** or **Planned** and the field unlocks. The field is editable in the **Add Round** dialog whatever the status, but on an **Active** round the value you type there is stored and never shown.
+    Expected behaviour whenever **Status** is **Active**, in the **Add Round** dialog as well as when you edit a round. Change **Status** to **Closed** or **Planned** and the field unlocks.
+  </Accordion>
+  <Accordion title="My round was saved as Closed when I wanted it Active">
+    Picking a **Round Start Date** in the past sets **Status** to **Closed** for you, but only while you have not chosen a status yourself. Set **Status** back to **Active** after picking the date, or choose the status before the date.
   </Accordion>
   <Accordion title="I cannot delete a share class">
     A class still assigned to at least one shareholder cannot be deleted. Open each affected holder in **Current Ownership**, change their **Share Class**, save, then delete the class.
