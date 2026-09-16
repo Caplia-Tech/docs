@@ -102,7 +102,24 @@ curl https://api.phronel.ai/v1/runs/4094b86f-fa9c-464c-aab5-aae779c562c3 \
 }
 ```
 
-If you passed `webhook_url`, the same run object arrives as a POST with `event` set to `run.complete` or `run.failed`, plus a `scores` object. If you passed `notify_email` (or left the workspace default on), an email from `phronel@notifications.caplia.ai` links to the report.
+If you passed `webhook_url`, the same run object arrives as a POST with `event` set to `run.complete` or `run.failed`, plus a `scores` object and the report's priority questions. If you passed `notify_email` (or left the workspace default on), an email from `phronel@notifications.caplia.ai` links to the report.
+
+### Verify the webhook
+
+Every POST carries `x-phronel-signature: t=<unix seconds>,v1=<hex>` where `v1` is HMAC-SHA256 of `"<t>.<raw body>"` keyed by your workspace secret (`GET /v1/webhook-secret`, or the Settings page). Recompute it over the exact bytes you received and reject timestamps older than five minutes. Same scheme as Stripe.
+
+```js Node
+import { createHmac, timingSafeEqual } from "node:crypto";
+
+export function verifyPhronel(rawBody, header, secret) {
+  const { t, v1 } = Object.fromEntries(header.split(",").map((kv) => kv.split("=")));
+  if (Math.abs(Date.now() / 1000 - Number(t)) > 300) return false;
+  const expected = createHmac("sha256", secret).update(`${t}.${rawBody}`).digest("hex");
+  return expected.length === v1.length && timingSafeEqual(Buffer.from(expected), Buffer.from(v1));
+}
+```
+
+Rotate the secret with `POST /v1/webhook-secret/rotate`; deliveries signed from then on use the new one.
 
 ## Step 5: Add a deck and a thesis
 
