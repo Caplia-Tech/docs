@@ -74,6 +74,8 @@ curl https://api.phronel.ai/v1/runs \
 
 A `402` with code `insufficient_credits` means the free allowance is used and the paid balance is empty. Buy credits on the billing page of the console.
 
+Runs are idempotent by company: if you retry while a run for the same company is in flight, or within ten minutes of one completing, you get that run back with a `200` and `deduplicated: true`, and no credit is used. Failed runs never count, so retrying a failure starts a fresh run.
+
 ## Step 4: Poll until complete
 
 Reading a run advances it, so polling every 30 seconds is the right cadence. Expect `enrolled` for a few minutes, then `scored`, then `composing`, then `complete`.
