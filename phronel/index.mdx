@@ -1,0 +1,44 @@
+---
+title: "Phronel.ai"
+description: "Type a company in, get the decision back. P15 market waves, CRI readiness and thesis fit as one API call, one CLI command or one MCP tool."
+icon: "brain-circuit"
+---
+
+phronel.ai is the headless version of Phronel, Caplia's decision-intelligence model. You give it a company (a name, a website or a Companies House number) and it returns a decision report: where the company sits in its market waves (P15), how ready it is to raise (CRI, when you attach a deck) and how well it fits your thesis (when you add one).
+
+It is built for AI agents first. Three surfaces, one key:
+
+<CardGroup cols={3}>
+  <Card title="REST" icon="code" href="/phronel/quickstart">
+    `POST /v1/runs` then poll. Every response is JSON; the report is JSON, HTML or PDF.
+  </Card>
+  <Card title="Command line" icon="terminal" href="/phronel/cli">
+    `npx phronel run monzo.com --wait`. JSON when piped, structured errors, exit codes.
+  </Card>
+  <Card title="MCP" icon="plug" href="/phronel/mcp">
+    Add `https://mcp.phronel.ai` to Claude, Cursor or ChatGPT and ask for a run in plain language.
+  </Card>
+</CardGroup>
+
+## How a run works
+
+1. You start a run with a company. Phronel resolves it (or creates it in your pipeline) and enrols it for collection.
+2. Phronel collects the company's market-wave signals from the open web: hiring, funding, product, press, competitors. This is deep research and takes a few minutes.
+3. The decision report is composed from those signals, plus CRI and thesis fit if a deck and a thesis are present.
+4. You get the report back by polling, by email, or by webhook. Reading a run also advances it, so a poll is never wasted.
+
+Run states are `enrolled`, `scored`, `composing`, `complete` and `failed`. A failed run refunds a paid credit.
+
+## Pricing
+
+Three runs a month are free on every workspace. After that you buy credits in advance; the per-run price falls with monthly volume. `GET https://api.phronel.ai/v1/pricing` returns the live ladder without a key.
+
+## The same key everywhere
+
+A Phronel key is a Caplia investor key (`cap_inv_live_…` or `cap_inv_test_…`). It works on `api.phronel.ai`, on `mcp.phronel.ai`, and on the wider [Venture API](/api-overview) on the same host, so a run can be followed by deck upload, thesis management, deal-flow reads and everything else in this documentation.
+
+Test keys route to the sandbox (`api-sandbox.phronel.ai`, `mcp-sandbox.phronel.ai`); live keys route to production.
+
+## Validation
+
+Phronel's scoring was validated with the University of Oxford's entrepreneurship programme, where CRI was scored against real investment outcomes. The [phronel.ai](https://phronel.ai) landing page carries the current figures.

@@ -1,0 +1,41 @@
+---
+title: "Command line"
+description: "The phronel CLI: zero dependencies, JSON when piped, made for agents and shell scripts."
+icon: "terminal"
+---
+
+`phronel` is a Node CLI (Node 18.17 or newer) with no runtime dependencies. It is the fastest way to give a coding agent access to Phronel: one login, then plain commands that print JSON whenever stdout is not a terminal.
+
+```bash
+npx phronel login                                     # paste a key from phronel.ai
+npx phronel run monzo.com --wait                      # P15 market waves + decision report
+npx phronel run "Acme Ltd" --deck ./deck.pdf --wait   # adds CRI readiness and thesis fit
+```
+
+Install it once with `npm install -g phronel` if you prefer `phronel` to `npx phronel`.
+
+## Commands
+
+| Command | Does |
+|---|---|
+| `login`, `whoami` | store the key (verified against the API) and show which key is in use |
+| `run <company> [--deck f.pdf] [--deck-url u] [--webhook u] [--wait]` | start a run; `--wait` polls until complete or failed |
+| `runs list`, `runs get <id> [--wait]` | runs, newest first; reading a run advances it |
+| `scores <company_id>` | P15, CRI, thesis fit and the scoring jobs in flight |
+| `report <company_id> [--html] [--out f] [--regenerate]` | the decision report as JSON or HTML |
+| `deck add <company_id> f.pdf` or `--url u` | attach a deck; queues CRI and thesis fit |
+| `theses list`, `theses create <name> --criterion "Team:4:…"`, `theses delete <id>` | theses for fit scoring |
+| `credits`, `pricing` | allowance and the price ladder |
+| `skill --install` | write an agent skill file into `.claude/skills/phronel/` |
+
+## Conventions
+
+- Output is a table on a terminal and JSON when piped. `--json` forces JSON.
+- Errors go to stderr as `{"error": {…}, "fix": "…"}`; the `fix` line says what to do next.
+- Exit codes: `0` ok, `1` API error or a failed run, `2` usage, `3` authentication, `4` network.
+- `PHRONEL_API_KEY` and `PHRONEL_API_URL` override the stored config, which lives in `~/.config/phronel` (or `PHRONEL_CONFIG_DIR`).
+- Test keys route to the sandbox host automatically; live keys to production.
+
+## For agents
+
+`phronel skill --install` writes a skill file that teaches Claude Code (or any agent that reads `.claude/skills/`) when and how to call the CLI. The typical loop is `run … --wait`, then `report … --html --out report.html` for a human, or the JSON for the agent's own reasoning.
