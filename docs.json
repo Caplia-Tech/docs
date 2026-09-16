@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Caplia Docs",
-  "description": "Documentation for Caplia \u2014 the Founder and Venture portals, video guides, and the developer APIs.",
+  "description": "Documentation for Caplia — the Founder and Venture portals, video guides, and the developer APIs.",
   "colors": {
     "primary": "#344365",
     "light": "#02A0FD",
@@ -186,6 +186,25 @@
           {
             "group": "Endpoints",
             "openapi": "/api-reference/openapi.json"
+          }
+        ]
+      },
+      {
+        "tab": "Phronel.ai",
+        "groups": [
+          {
+            "group": "Start here",
+            "pages": [
+              "phronel/index",
+              "phronel/quickstart"
+            ]
+          },
+          {
+            "group": "Surfaces",
+            "pages": [
+              "phronel/cli",
+              "phronel/mcp"
+            ]
           }
         ]
       }

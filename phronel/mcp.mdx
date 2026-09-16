@@ -1,0 +1,47 @@
+---
+title: "MCP server"
+description: "Add mcp.phronel.ai to Claude, Cursor, ChatGPT or any MCP client and run companies in plain language."
+icon: "plug"
+---
+
+`https://mcp.phronel.ai` is a remote MCP server with OAuth. Add it as a connector, approve it with your phronel.ai key on the consent page, and the agent gets the Phronel tools plus the whole [Caplia MCP toolset](/integrations/mcp) on the same connection.
+
+Sandbox: `https://mcp-sandbox.phronel.ai` with a `cap_inv_test_…` key.
+
+## Set-up
+
+<Tabs>
+  <Tab title="Claude">
+    Settings, Connectors, Add custom connector. Paste `https://mcp.phronel.ai` and follow the sign-in. The consent page asks for a phronel.ai key; create one on the API keys page of the console.
+  </Tab>
+  <Tab title="Cursor">
+    Add to `mcp.json`:
+
+    ```json
+    { "mcpServers": { "phronel": { "url": "https://mcp.phronel.ai" } } }
+    ```
+
+    Cursor opens the OAuth flow on first use.
+  </Tab>
+  <Tab title="ChatGPT">
+    Settings, Connectors, Create, paste `https://mcp.phronel.ai`. Approve it with your key when asked.
+  </Tab>
+</Tabs>
+
+## Tools
+
+| Tool | Does |
+|---|---|
+| `phronel_run_company` | start a run for a company (name, domain or Companies House number); optional deck URL and webhook |
+| `phronel_get_run` | read a run; reading advances it, so the agent can poll |
+| `phronel_list_runs` | recent runs, newest first |
+| `phronel_company_scores` | P15, CRI, thesis fit and scoring jobs for a company |
+| `phronel_add_deck` | attach a pitch deck by URL; queues CRI and thesis fit |
+| `phronel_list_theses`, `phronel_create_thesis`, `phronel_deactivate_thesis` | theses for fit scoring |
+| `phronel_credits`, `phronel_pricing` | free runs left, paid balance and the price ladder |
+
+Prompts that work well: "Run monzo.com through Phronel and tell me the verdict", "Attach this deck to Monzo and re-score it against our seed thesis", "Which of my last ten runs scored above 600 on P15?".
+
+## How it fits with the Caplia connector
+
+Phronel keys are Caplia investor keys, so the same connection also exposes `caplia_*` tools: pipeline, data room, jobs and decks. If you already use the [Caplia connector](/integrations/caplia-connector), you can keep it; the Phronel server is the same service with the Phronel tools added and a phronel.ai sign-in page.

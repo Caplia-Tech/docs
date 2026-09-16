@@ -1,0 +1,151 @@
+---
+title: "Quickstart"
+description: "Create a key, start a run, read the decision report. About five minutes, most of it waiting for the research."
+icon: "bolt"
+---
+
+You will need a terminal with `curl` and a phronel.ai account. Sign up at [phronel.ai](https://phronel.ai); the first three runs a month are free.
+
+## Step 1: Create a key
+
+In the phronel.ai console, open the API keys page and create a key with write scope. The plaintext is shown once and looks like `cap_inv_live_…`. Keep it in your shell:
+
+```bash
+export PHRONEL_KEY=cap_inv_live_8H3jK9pQrM2nXz7vL4tBwY6cF1aRdNeS
+```
+
+Live keys work on `https://api.phronel.ai`. Test keys (`cap_inv_test_…`) work on `https://api-sandbox.phronel.ai`, which runs against the staging estate and never touches production data.
+
+## Step 2: Check your allowance
+
+```bash
+curl https://api.phronel.ai/v1/credits \
+  -H "Authorization: Bearer $PHRONEL_KEY"
+```
+
+```json Response
+{
+  "month": "2026-09",
+  "free_allowance": 3,
+  "free_used": 0,
+  "free_remaining": 3,
+  "paid_balance": 0,
+  "purchased_this_month": 0,
+  "runs_this_month": 0
+}
+```
+
+## Step 3: Start a run
+
+`query` accepts a company name, a website or a Companies House number. The optional fields help disambiguation and unlock more of the report.
+
+```bash
+curl https://api.phronel.ai/v1/runs \
+  -H "Authorization: Bearer $PHRONEL_KEY" \
+  -H "content-type: application/json" \
+  -d '{
+    "query": "monzo.com",
+    "deck_url": "https://example.com/monzo-seed-deck.pdf",
+    "webhook_url": "https://hooks.example.com/phronel",
+    "notify_email": "you@fund.com"
+  }'
+```
+
+```json Response (202)
+{
+  "id": "4094b86f-fa9c-464c-aab5-aae779c562c3",
+  "status": "enrolled",
+  "status_message": "Collecting public signals from the open web (usually a few minutes)",
+  "company": { "id": "36b93e80-6aac-4a65-a308-ddcffaf6ff2f", "name": "Monzo", "website": "https://monzo.com" },
+  "credit_source": "free",
+  "created_at": "2026-09-16T10:38:00Z",
+  "poll": "https://api.phronel.ai/v1/runs/4094b86f-fa9c-464c-aab5-aae779c562c3",
+  "report": null
+}
+```
+
+| Field | Notes |
+|---|---|
+| `query` | Required. Name, domain or Companies House number. |
+| `name`, `domain`, `companies_house_number`, `description`, `industry` | Optional hints when the query alone is ambiguous. |
+| `deck_url` | Public https URL of the pitch deck PDF. Unlocks CRI readiness and thesis fit. You can also attach a deck later (step 5). |
+| `webhook_url` | https URL that receives one POST when the run completes or fails. |
+| `notify_email` | Address for the run-ready email. Defaults to the workspace setting. |
+
+A `402` with code `insufficient_credits` means the free allowance is used and the paid balance is empty. Buy credits on the billing page of the console.
+
+## Step 4: Poll until complete
+
+Reading a run advances it, so polling every 30 seconds is the right cadence. Expect `enrolled` for a few minutes, then `scored`, then `composing`, then `complete`.
+
+```bash
+curl https://api.phronel.ai/v1/runs/4094b86f-fa9c-464c-aab5-aae779c562c3 \
+  -H "Authorization: Bearer $PHRONEL_KEY"
+```
+
+```json Response (complete)
+{
+  "id": "4094b86f-fa9c-464c-aab5-aae779c562c3",
+  "status": "complete",
+  "status_message": "Ready",
+  "company": { "id": "36b93e80-6aac-4a65-a308-ddcffaf6ff2f", "name": "Monzo", "website": "https://monzo.com" },
+  "credit_source": "free",
+  "completed_at": "2026-09-16T10:44:12Z",
+  "report": {
+    "json": "https://api.phronel.ai/v1/companies/36b93e80-6aac-4a65-a308-ddcffaf6ff2f/report",
+    "html": "https://api.phronel.ai/v1/companies/36b93e80-6aac-4a65-a308-ddcffaf6ff2f/report?format=html",
+    "pdf": "https://api.phronel.ai/v1/companies/36b93e80-6aac-4a65-a308-ddcffaf6ff2f/report?format=pdf",
+    "link": "https://api.phronel.ai/v1/companies/36b93e80-6aac-4a65-a308-ddcffaf6ff2f/report/link"
+  }
+}
+```
+
+If you passed `webhook_url`, the same run object arrives as a POST with `event` set to `run.complete` or `run.failed`, plus a `scores` object. If you passed `notify_email` (or left the workspace default on), an email from `phronel@notifications.caplia.ai` links to the report.
+
+## Step 5: Add a deck and a thesis
+
+CRI readiness needs a pitch deck. Thesis fit needs a deck and at least one thesis. Both can be added after the run; the scores are queued and appear in the company's scores and in the regenerated report.
+
+```bash
+# Attach the deck (multipart, field name "file"), or send {"url": "https://…"} as JSON
+curl https://api.phronel.ai/v1/companies/36b93e80-6aac-4a65-a308-ddcffaf6ff2f/deck \
+  -H "Authorization: Bearer $PHRONEL_KEY" \
+  -F file=@./monzo-deck.pdf
+```
+
+```bash
+# Create a thesis; every company with a deck is scored against it
+curl https://api.phronel.ai/v1/theses \
+  -H "Authorization: Bearer $PHRONEL_KEY" \
+  -H "content-type: application/json" \
+  -d '{
+    "name": "Seed fintech, UK",
+    "one_line_mandate": "UK consumer fintech at seed with a live product",
+    "criteria": [
+      { "name": "Team", "weight": 4, "description": "Founders with domain depth" },
+      { "name": "Traction", "weight": 3 }
+    ]
+  }'
+```
+
+```bash
+# Read every score for the company, and the jobs still in flight
+curl https://api.phronel.ai/v1/companies/36b93e80-6aac-4a65-a308-ddcffaf6ff2f/scores \
+  -H "Authorization: Bearer $PHRONEL_KEY"
+```
+
+## Errors
+
+Every error is `{"error": {"code", "message", "request_id"}}`. Quote the `request_id` when you contact support.
+
+| Status | Code | Meaning |
+|---|---|---|
+| 401 | `unauthenticated` | Missing, malformed or revoked key, or a test key on the live host. |
+| 402 | `insufficient_credits` | No free runs left this month and no paid balance. |
+| 403 | `forbidden` | Key lacks write scope, or the workspace is suspended. |
+| 404 | `not_found` | Unknown run, company or thesis for this workspace. |
+| 429 | `rate_limited` | More than 30 runs started on one key in an hour. |
+
+## Reference
+
+The full OpenAPI document, which also covers the wider Venture API on the same host, is at `https://api.phronel.ai/v1/openapi.json`.
