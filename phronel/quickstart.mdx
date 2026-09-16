@@ -66,7 +66,7 @@ curl https://api.phronel.ai/v1/runs \
 
 | Field | Notes |
 |---|---|
-| `query` | Required. Name, domain or Companies House number. |
+| `query` | Required. Name, domain or Companies House number. A bare name is looked up on Companies House and at the obvious website; the response says what was resolved under `identifiers`. |
 | `name`, `domain`, `companies_house_number`, `description`, `industry` | Optional hints when the query alone is ambiguous. |
 | `deck_url` | Public https URL of the pitch deck PDF. Unlocks CRI readiness and thesis fit. You can also attach a deck later (step 5). |
 | `webhook_url` | https URL that receives one POST when the run completes or fails. |
@@ -141,6 +141,7 @@ Every error is `{"error": {"code", "message", "request_id"}}`. Quote the `reques
 | Status | Code | Meaning |
 |---|---|---|
 | 401 | `unauthenticated` | Missing, malformed or revoked key, or a test key on the live host. |
+| 400 | `company_unresolved` | A bare name matched no active Companies House entry and no obvious website. Pass `domain` or `companies_house_number`. No credit used. |
 | 402 | `insufficient_credits` | No free runs left this month and no paid balance. |
 | 403 | `forbidden` | Key lacks write scope, or the workspace is suspended. |
 | 404 | `not_found` | Unknown run, company or thesis for this workspace. |
